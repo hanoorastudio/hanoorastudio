@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+  Hanoora Studio — landing page
+  BUILD: 2026-08-06 · v4 (rate card Rp 1jt/2,5jt/5jt + intro + slider 3D)
+  Cara cek versi: buka Console browser, ketik  HANOORA_BUILD
+-->
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -745,6 +750,10 @@ tailwind.config = {
 </div>
 
 <script>
+/* Penanda versi — untuk memastikan build mana yang sedang tampil */
+window.HANOORA_BUILD = '2026-08-06 · v4 · rate card 1jt/2,5jt/5jt';
+console.log('%cHanoora build: ' + window.HANOORA_BUILD, 'color:#1E5F53;font-weight:600');
+
 /* ============================================================
    PENGAMAN — intro tidak boleh menahan halaman lebih dari 4 detik,
    berapa pun kesalahan yang terjadi di skrip bawah.
