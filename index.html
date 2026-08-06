@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanoora Studio — Commercial Visual & Brand Campaign</title>
+<meta name="description" content="Hanoora Studio adalah creative studio yang memproduksi visual komersial, kampanye brand, dan konten sosial untuk brand lokal dan internasional.">
+<link rel="icon" href="web/logo/favicon.png">
+<meta property="og:title" content="Hanoora Studio — Commercial Visual & Brand Campaign">
+<meta property="og:description" content="Creative studio untuk visual komersial, kampanye brand, dan konten sosial. Melayani klien Indonesia & internasional.">
+<meta property="og:image" content="web/og-image.jpg">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter','system-ui','sans-serif'],
+        display: ['Poppins','system-ui','sans-serif'],
+        serif: ['Instrument Serif','Georgia','serif'],
+      },
+      colors: {
+        teal:  { DEFAULT:'#1E5F53', deep:'#0F3D35', soft:'#2E7A6B' },
+        sage:  { DEFAULT:'#9DBAB0', light:'#C9D9D3', pale:'#E4EDE9' },
+        cream: '#F7F5F0',
+        ink:   '#14231F',
+      },
+      letterSpacing: { kicker: '0.22em' },
+    },
+  },
+};
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { -webkit-font-smoothing: antialiased; }
+  ::selection { background:#1E5F53; color:#fff; }
+
+  .serif-it { font-family:'Instrument Serif',Georgia,serif; font-style:italic; font-weight:400; }
+
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in { opacity:1; transform:none; }
+
+  .marquee-wrap { overflow:hidden; }
+  .marquee { display:flex; width:max-content; animation:slide 38s linear infinite; }
+  @keyframes slide { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  .lift { transition:transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease; }
+  .lift:hover { transform:translateY(-6px); box-shadow:0 30px 60px -30px rgba(15,61,53,.45); }
+
+  .zoom img, .zoom video { transition:transform .7s cubic-bezier(.2,.8,.2,1); }
+  .zoom:hover img, .zoom:hover video { transform:scale(1.05); }
+
+  .lang-btn.active { background:#1E5F53; color:#fff; }
+
+  details[open] .chev { transform:rotate(180deg); }
+  .chev { transition:transform .25s ease; }
+  summary::-webkit-details-marker { display:none; }
+
+  #lightbox { transition:opacity .3s ease; }
+  #lightbox.hidden-lb { opacity:0; pointer-events:none; }
+
+  .noise:before{
+    content:''; position:absolute; inset:0; pointer-events:none; opacity:.5;
+    background-image:radial-gradient(circle at 1px 1px, rgba(30,95,83,.10) 1px, transparent 0);
+    background-size:22px 22px;
+  }
+
+  /* ============ INTRO PEMBUKA ============ */
+  #intro{position:fixed;inset:0;z-index:100}
+  #intro .panel{position:absolute;left:0;right:0;height:50.2%;background:#0F3D35;
+                transition:transform 1.05s cubic-bezier(.72,0,.2,1)}
+  #intro .panel-t{top:0}
+  #intro .panel-b{bottom:0}
+  #intro.split .panel-t{transform:translateY(-101%)}
+  #intro.split .panel-b{transform:translateY(101%)}
+  #intro .mark{position:absolute;inset:0;display:grid;place-items:center;
+               transition:opacity .5s ease, transform .8s cubic-bezier(.2,.8,.2,1)}
+  #intro.split .mark{opacity:0;transform:scale(1.12)}
+  #intro .mark{perspective:900px}
+  #intro .mark img{width:min(230px,46vw);opacity:0;
+                   transform:rotateY(-118deg) scale(.78);transform-style:preserve-3d;
+                   animation:markIn 1.35s cubic-bezier(.16,.84,.24,1) forwards}
+  #intro .tagline{position:absolute;left:0;right:0;bottom:calc(50% - 118px);text-align:center;
+                  font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#9DBAB0;
+                  opacity:0;animation:tagIn .9s ease .45s forwards}
+  @keyframes markIn{
+    45%{opacity:1}
+    to{opacity:1;transform:rotateY(0deg) scale(1)}
+  }
+
+  /* ============ EFEK 3D ============ */
+  .tilt-wrap{perspective:1100px}
+  .tilt{transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+  .tilt.live{transition:transform .12s ease-out}
+
+  .depth-wrap{perspective:1200px}
+  .depth{transform-style:preserve-3d;will-change:transform;
+         transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+
+  /* kartu layanan & paket: dimiringkan halus, elemen dalam tetap datar */
+  .tilt-wrap-i{transform-style:preserve-3d;will-change:transform;
+               transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease}
+  .tilt-wrap-i.live{transition:transform .14s ease-out, box-shadow .5s ease}
+  .tilt-wrap-i.lift:hover{transform:none}
+  @keyframes tagIn{to{opacity:.9}}
+  #intro.done{display:none}
+  body.locked{overflow:hidden}
+
+  /* ============ AURORA HERO ============ */
+  .aurora{position:absolute;inset:-18% -12% -2% -12%;pointer-events:none;z-index:-1;
+          -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 46%,rgba(0,0,0,.55) 68%,rgba(0,0,0,.18) 84%,transparent 97%);
+          mask-image:linear-gradient(to bottom,#000 0%,#000 46%,rgba(0,0,0,.55) 68%,rgba(0,0,0,.18) 84%,transparent 97%)}
+  .aurora span{position:absolute;border-radius:9999px;filter:blur(88px);opacity:.38;
+               will-change:transform}
+  .a1{width:46vw;height:46vw;background:#1E5F53;top:-6%;left:-8%;animation:drift1 19s ease-in-out infinite}
+  .a2{width:40vw;height:40vw;background:#E0A128;top:2%;right:-6%;animation:drift2 23s ease-in-out infinite}
+  .a3{width:36vw;height:36vw;background:#3E9BD6;top:38%;left:24%;animation:drift3 21s ease-in-out infinite}
+  .a4{width:28vw;height:28vw;background:#D9557E;top:52%;right:14%;opacity:.24;animation:drift1 26s ease-in-out infinite reverse}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(7%,9%) scale(1.14)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-9%,7%) scale(1.1)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(6%,-8%) scale(1.16)}}
+
+  /* ============ JUDUL TERSINGKAP ============ */
+  .line{display:block;overflow:hidden;padding-bottom:.14em;margin-bottom:-.08em}
+  .line>span{display:inline-block;transform:translateY(118%);
+             transition:transform 1.05s cubic-bezier(.19,.9,.24,1)}
+  .go .line:nth-child(1)>span{transition-delay:.05s}
+  .go .line:nth-child(2)>span{transition-delay:.17s}
+  .go .line>span{transform:translateY(0)}
+
+  .hero-el{opacity:0;transform:translateY(20px);
+           transition:opacity .85s ease, transform .85s cubic-bezier(.2,.8,.2,1)}
+  .go .hero-el{opacity:1;transform:none}
+  .go .he1{transition-delay:.30s} .go .he2{transition-delay:.42s}
+  .go .he3{transition-delay:.54s} .go .he4{transition-delay:.66s}
+  .go .he5{transition-delay:.78s}
+
+  /* ============ SLIDER PORTOFOLIO 3D ============ */
+  .rail-wrap{position:relative}
+  .rail{--cw:clamp(238px,25vw,320px);
+        display:flex;gap:1.5rem;overflow-x:auto;overflow-y:hidden;
+        scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+        perspective:1500px;perspective-origin:50% 45%;
+        padding:2.5rem max(1.25rem,calc(50% - var(--cw)/2)) 3rem;
+        scrollbar-width:none;cursor:grab}
+  .rail::-webkit-scrollbar{display:none}
+  .rail.dragging{cursor:grabbing;scroll-snap-type:none}
+  .rail.dragging *{pointer-events:none}
+  .work-card{flex:0 0 var(--cw);scroll-snap-align:center;transform-style:preserve-3d;
+             will-change:transform;transition:transform .12s linear}
+  .work-inner{position:relative;border-radius:1.5rem;overflow:hidden;background:#F7F5F0;
+              border:1px solid rgba(30,95,83,.10);transform-style:preserve-3d;
+              transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease, border-color .45s ease}
+  .work-card:hover .work-inner{border-color:color-mix(in srgb,var(--accent) 55%,transparent);
+              box-shadow:0 30px 64px -26px color-mix(in srgb,var(--accent) 72%,transparent)}
+  .rail-btn{position:absolute;top:38%;z-index:20;width:3rem;height:3rem;border-radius:9999px;
+            background:#F7F5F0;border:1px solid rgba(30,95,83,.15);color:#1E5F53;
+            display:grid;place-items:center;box-shadow:0 10px 30px -12px rgba(15,61,53,.35);
+            transition:background .3s, transform .3s, opacity .3s}
+  .rail-btn:hover{background:#1E5F53;color:#F7F5F0;transform:scale(1.08)}
+  .rail-btn[disabled]{opacity:.25;pointer-events:none}
+  .rail-prev{left:-.5rem} .rail-next{right:-.5rem}
+  @media (max-width:1024px){ .rail-btn{display:none} }
+  .rail-track{height:2px;background:rgba(30,95,83,.14);border-radius:9999px;overflow:hidden}
+  .rail-bar{display:block;height:100%;width:20%;background:#1E5F53;border-radius:9999px;
+            transition:transform .18s ease, width .3s ease;transform-origin:left}
+  .rail-hint{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,35,31,.4)}
+
+  .work-media{position:relative;display:block;width:100%;aspect-ratio:9/13;overflow:hidden;background:#0F3D35}
+  .work-media img,.work-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .work-media video{opacity:0;transition:opacity .5s ease}
+  .work-card.playing .work-media video{opacity:1}
+  .work-media img{transition:opacity .5s ease, transform .9s cubic-bezier(.2,.8,.2,1)}
+  .work-card.playing .work-media img{opacity:0}
+  .work-card:hover .work-media img{transform:scale(1.06)}
+  .work-veil{position:absolute;inset:0;
+             background:linear-gradient(to top,rgba(15,61,53,.82) 0%,rgba(15,61,53,.16) 42%,transparent 68%);
+             transition:opacity .45s ease}
+  .work-card.playing .work-veil{opacity:.75}
+  .work-tint{position:absolute;inset:0;background:var(--accent);mix-blend-mode:soft-light;
+             opacity:0;transition:opacity .5s ease}
+  .work-card:hover .work-tint{opacity:.55}
+  .work-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1);
+             width:3.5rem;height:3.5rem;border-radius:9999px;background:rgba(247,245,240,.92);
+             display:grid;place-items:center;transition:opacity .4s ease, transform .5s cubic-bezier(.2,.8,.2,1)}
+  .work-card.playing .work-play{opacity:0;transform:translate(-50%,-50%) scale(.7)}
+  .work-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--accent);
+            transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+  .work-card:hover .work-bar,.work-card.playing .work-bar{transform:scaleX(1)}
+  .work-tag{color:var(--accent);filter:brightness(1.45) saturate(1.2)}
+  .work-dot{width:.45rem;height:.45rem;border-radius:9999px;background:var(--accent);display:inline-block}
+
+  /* ============ GALERI ============ */
+  .gal-item{opacity:0;transform:translateY(26px) scale(.985);filter:blur(6px);
+            transition:opacity .8s ease, transform .9s cubic-bezier(.2,.8,.2,1), filter .8s ease}
+  .gal-item.in{opacity:1;transform:none;filter:none}
+
+  .stat-num{font-variant-numeric:tabular-nums}
+
+  @media (hover:none){
+    .work-card:hover{transform:none;box-shadow:none}
+    .work-card:hover .work-tint{opacity:.4}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .marquee{animation:none}
+    .reveal{opacity:1;transform:none;transition:none}
+    .zoom img,.zoom video{transition:none}
+    .aurora span{animation:none}
+    .line>span{transform:none;transition:none}
+    .hero-el{opacity:1;transform:none;transition:none}
+    .gal-item{opacity:1;transform:none;filter:none;transition:none}
+    #intro{display:none}
+  }
+</style>
+</head>
+<body class="font-sans bg-cream text-ink overflow-x-hidden locked">
+
+<!-- ===================== INTRO PEMBUKA ===================== -->
+<div id="intro" aria-hidden="true">
+  <div class="panel panel-t"></div>
+  <div class="panel panel-b"></div>
+  <div class="mark">
+    <img src="web/logo/logo-white.png" alt="">
+  </div>
+  <div class="tagline">Produksi Visual Bertenaga AI</div>
+</div>
+
+<!-- ===================== NAV ===================== -->
+<header id="nav" class="fixed top-0 inset-x-0 z-40 transition-all duration-300">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8">
+    <div id="navbar" class="mt-3 sm:mt-4 rounded-full bg-cream/85 backdrop-blur-xl border border-teal/12 px-5 sm:px-7 py-3 flex items-center justify-between gap-5 transition-shadow duration-300">
+
+      <a href="#hero" class="shrink-0">
+        <img src="web/logo/logo.png" alt="Hanoora Studio" class="h-8 sm:h-9 w-auto">
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-8 text-[15px] font-medium text-ink/65">
+        <a href="#layanan" class="hover:text-teal transition" data-i18n="nav_services">Layanan</a>
+        <a href="#karya" class="hover:text-teal transition" data-i18n="nav_work">Karya</a>
+        <a href="#galeri" class="hover:text-teal transition" data-i18n="nav_gallery">Galeri</a>
+        <a href="#proses" class="hover:text-teal transition" data-i18n="nav_process">Proses</a>
+        <a href="#harga" class="hover:text-teal transition" data-i18n="nav_pricing">Rate Card</a>
+        <a href="#faq" class="hover:text-teal transition" data-i18n="nav_faq">FAQ</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <div class="flex items-center rounded-full border border-teal/20 p-0.5 text-[12px] font-semibold tracking-wide">
+          <button onclick="setLang('id')" data-lang-btn="id" class="lang-btn active px-2.5 py-1 rounded-full transition">ID</button>
+          <button onclick="setLang('en')" data-lang-btn="en" class="lang-btn px-2.5 py-1 rounded-full transition">EN</button>
+        </div>
+        <a href="#" data-wa="nav" class="hidden sm:inline-flex bg-teal hover:bg-teal-deep text-cream font-semibold text-sm px-5 py-2.5 rounded-full transition-colors" data-i18n="nav_cta">Mulai Proyek</a>
+        <button onclick="toggleMenu()" class="lg:hidden w-10 h-10 grid place-items-center rounded-full border border-teal/20 text-teal" aria-label="Menu">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="lg:hidden hidden mt-2 rounded-3xl bg-cream border border-teal/12 shadow-xl p-3">
+      <a href="#layanan" onclick="toggleMenu()" class="block px-4 py-3 rounded-2xl hover:bg-sage-pale font-medium" data-i18n="nav_services">Layanan</a>
+      <a href="#karya" onclick="toggleMenu()" class="block px-4 py-3 rounded-2xl hover:bg-sage-pale font-medium" data-i18n="nav_work">Karya</a>
+      <a href="#galeri" onclick="toggleMenu()" class="block px-4 py-3 rounded-2xl hover:bg-sage-pale font-medium" data-i18n="nav_gallery">Galeri</a>
+      <a href="#proses" onclick="toggleMenu()" class="block px-4 py-3 rounded-2xl hover:bg-sage-pale font-medium" data-i18n="nav_process">Proses</a>
+      <a href="#harga" onclick="toggleMenu()" class="block px-4 py-3 rounded-2xl hover:bg-sage-pale font-medium" data-i18n="nav_pricing">Rate Card</a>
+      <a href="#faq" onclick="toggleMenu()" class="block px-4 py-3 rounded-2xl hover:bg-sage-pale font-medium" data-i18n="nav_faq">FAQ</a>
+      <a href="#" data-wa="nav" class="block text-center bg-teal text-cream font-semibold px-4 py-3 rounded-2xl mt-2" data-i18n="nav_cta">Mulai Proyek</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section id="hero" class="relative pt-32 sm:pt-40 pb-0 noise overflow-hidden">
+  <div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span><span class="a4"></span></div>
+  <div class="relative max-w-[1400px] mx-auto px-5 sm:px-8">
+
+    <div class="max-w-4xl">
+      <div class="hero-el he1 inline-flex items-center gap-2.5 rounded-full border border-teal/15 bg-sage-pale/60 backdrop-blur px-4 py-1.5 text-[13px] font-medium text-teal mb-8">
+        <span class="w-1.5 h-1.5 rounded-full bg-teal"></span>
+        <span data-i18n="hero_badge">Creative studio — Indonesia &amp; internasional</span>
+      </div>
+
+      <h1 class="font-display font-semibold tracking-tight text-[2.7rem] leading-[1.06] sm:text-6xl lg:text-[4.6rem] text-teal-deep">
+        <span class="line"><span data-i18n="hero_t1">Visual yang bikin brand</span></span>
+        <span class="line"><span class="serif-it text-teal" data-i18n="hero_t2">terlihat semahal harganya.</span></span>
+      </h1>
+
+      <p class="hero-el he2 mt-7 text-lg sm:text-xl text-ink/60 max-w-2xl leading-relaxed" data-i18n="hero_sub">
+        Hanoora Studio memproduksi visual komersial, kampanye brand, dan konten sosial untuk brand yang tidak mau terlihat biasa saja.
+      </p>
+
+      <div class="hero-el he3 mt-9 flex flex-col sm:flex-row gap-3">
+        <a href="#" data-wa="hero" class="inline-flex items-center justify-center gap-2.5 bg-teal hover:bg-teal-deep text-cream font-semibold px-7 py-4 rounded-full transition-colors">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35M12.05 21.8h-.02a9.8 9.8 0 0 1-4.99-1.37l-.36-.21-3.71.97.99-3.62-.23-.37a9.78 9.78 0 0 1-1.5-5.22c0-5.4 4.4-9.8 9.82-9.8 2.62 0 5.08 1.03 6.93 2.88a9.74 9.74 0 0 1 2.87 6.93c0 5.4-4.4 9.8-9.8 9.8M20.52 3.45A11.75 11.75 0 0 0 12.05 0C5.5 0 .18 5.32.17 11.86c0 2.09.55 4.13 1.59 5.93L.07 24l6.36-1.67a11.9 11.9 0 0 0 5.62 1.43h.01c6.55 0 11.87-5.32 11.88-11.86a11.8 11.8 0 0 0-3.42-8.4"/></svg>
+          <span data-i18n="hero_cta1">Diskusi Proyek</span>
+        </a>
+        <a href="#karya" class="inline-flex items-center justify-center border border-teal/25 hover:border-teal hover:bg-sage-pale/50 text-teal-deep font-semibold px-7 py-4 rounded-full transition" data-i18n="hero_cta2">Lihat Karya</a>
+      </div>
+    </div>
+
+    <!-- strip visual -->
+    <div class="hero-el he4 depth-wrap mt-16 sm:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      <div class="depth zoom overflow-hidden rounded-3xl aspect-[4/5]" data-depth="1.35"><img src="web/img/foto-09.jpg" alt="Takara commercial" class="w-full h-full object-cover" loading="eager"></div>
+      <div class="depth zoom overflow-hidden rounded-3xl aspect-[4/5] sm:mt-8" data-depth="0.55"><img src="web/img/foto-03.jpg" alt="Vitalis commercial" class="w-full h-full object-cover" loading="eager"></div>
+      <div class="depth zoom overflow-hidden rounded-3xl aspect-[4/5]" data-depth="1.05"><img src="web/img/foto-14.jpg" alt="Corkcicle commercial" class="w-full h-full object-cover" loading="lazy"></div>
+      <div class="depth zoom overflow-hidden rounded-3xl aspect-[4/5] sm:mt-8" data-depth="0.35"><img src="web/img/foto-13.jpg" alt="FFAR commercial" class="w-full h-full object-cover" loading="lazy"></div>
+    </div>
+
+    <!-- stats -->
+    <div class="hero-el he5 mt-16 sm:mt-20 grid grid-cols-2 sm:grid-cols-4 gap-y-8 gap-x-6 border-t border-teal/12 pt-10">
+      <div>
+        <div class="font-display font-semibold text-4xl text-teal"><span class="stat-num" data-count="120">0</span><span class="text-sage">+</span></div>
+        <div class="text-[15px] text-ink/50 mt-1" data-i18n="stat_1">Proyek selesai</div>
+      </div>
+      <div>
+        <div class="font-display font-semibold text-4xl text-teal"><span class="stat-num" data-count="40">0</span><span class="text-sage">+</span></div>
+        <div class="text-[15px] text-ink/50 mt-1" data-i18n="stat_2">Brand partner</div>
+      </div>
+      <div>
+        <div class="font-display font-semibold text-4xl text-teal"><span class="stat-num" data-count="8">0</span></div>
+        <div class="text-[15px] text-ink/50 mt-1" data-i18n="stat_3">Negara terlayani</div>
+      </div>
+      <div>
+        <div class="font-display font-semibold text-4xl text-teal">5<span class="text-sage">.0</span></div>
+        <div class="text-[15px] text-ink/50 mt-1" data-i18n="stat_4">Rata-rata rating klien</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CLIENT MARQUEE ===================== -->
+<section class="mt-20 sm:mt-28 py-9 bg-teal-deep text-cream marquee-wrap">
+  <p class="text-center text-[11px] font-semibold uppercase tracking-kicker text-sage mb-6" data-i18n="trusted">Dipercaya oleh</p>
+  <div class="marquee gap-12 sm:gap-16 items-center">
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">GARMIN</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">VITALIS</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">CORKCICLE</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">ORTUSEIGHT</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">TAKARA</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">FFAR</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">KESHVARA</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">SLAVINA</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">GARMIN</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">VITALIS</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">CORKCICLE</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">ORTUSEIGHT</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">TAKARA</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">FFAR</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">KESHVARA</span>
+    <span class="font-display font-semibold text-xl sm:text-2xl whitespace-nowrap opacity-85">SLAVINA</span>
+  </div>
+</section>
+
+<!-- ===================== LAYANAN ===================== -->
+<section id="layanan" class="py-24 sm:py-32">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-3xl">
+      <span class="text-[11px] font-semibold uppercase tracking-kicker text-teal/60" data-i18n="services_kicker">Layanan</span>
+      <h2 class="font-display font-semibold text-4xl sm:text-5xl tracking-tight text-teal-deep mt-4 leading-[1.1]">
+        <span data-i18n="services_t1">Tiga lini kerja,</span> <span class="serif-it text-teal" data-i18n="services_t2">satu standar.</span>
+      </h2>
+      <p class="mt-5 text-lg text-ink/60 leading-relaxed" data-i18n="services_sub">Kami tidak mengerjakan semuanya. Kami mengerjakan tiga hal ini sampai layak tayang di mana pun brand Anda muncul.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5 mt-14">
+      <!-- 01 -->
+      <article class="reveal lift tilt-wrap-i rounded-[1.75rem] bg-white border border-teal/10 p-8 sm:p-9">
+        <div class="flex items-baseline justify-between">
+          <span class="font-display font-semibold text-sm text-sage">01</span>
+          <span class="w-11 h-11 rounded-full bg-sage-pale grid place-items-center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E5F53" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><circle cx="15" cy="15" r="6"/></svg>
+          </span>
+        </div>
+        <h3 class="font-display font-semibold text-2xl text-teal-deep mt-6" data-i18n="svc1_t">Branding &amp; Design</h3>
+        <p class="mt-3 text-ink/60 leading-relaxed" data-i18n="svc1_d">Identitas visual yang bertahan bertahun-tahun, bukan yang terlihat usang enam bulan lagi.</p>
+        <ul class="mt-7 space-y-3 text-[15px] text-ink/75">
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc1_1">Logo &amp; identitas visual</span></li>
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc1_2">Brand guideline</span></li>
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc1_3">Desain kemasan &amp; label</span></li>
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc1_4">Art direction kampanye</span></li>
+        </ul>
+      </article>
+
+      <!-- 02 -->
+      <article class="reveal lift tilt-wrap-i rounded-[1.75rem] bg-teal-deep text-cream p-8 sm:p-9 relative overflow-hidden">
+        <div class="flex items-baseline justify-between">
+          <span class="font-display font-semibold text-sm text-sage">02</span>
+          <span class="w-11 h-11 rounded-full bg-white/10 grid place-items-center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9D9D3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2.5"/></svg>
+          </span>
+        </div>
+        <h3 class="font-display font-semibold text-2xl mt-6" data-i18n="svc2_t">Commercial Video &amp; Photo</h3>
+        <p class="mt-3 text-cream/65 leading-relaxed" data-i18n="svc2_d">Foto produk dan video iklan berstandar brand global — untuk katalog, e-commerce, maupun kampanye berbayar.</p>
+        <ul class="mt-7 space-y-3 text-[15px] text-cream/85">
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc2_1">Product &amp; still life photography</span></li>
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc2_2">Video iklan &amp; brand film</span></li>
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc2_3">Konsep, styling &amp; art direction</span></li>
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc2_4">Retouching &amp; color grading</span></li>
+        </ul>
+      </article>
+
+      <!-- 03 -->
+      <article class="reveal lift tilt-wrap-i rounded-[1.75rem] bg-white border border-teal/10 p-8 sm:p-9">
+        <div class="flex items-baseline justify-between">
+          <span class="font-display font-semibold text-sm text-sage">03</span>
+          <span class="w-11 h-11 rounded-full bg-sage-pale grid place-items-center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E5F53" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          </span>
+        </div>
+        <h3 class="font-display font-semibold text-2xl text-teal-deep mt-6" data-i18n="svc3_t">Social Media Management</h3>
+        <p class="mt-3 text-ink/60 leading-relaxed" data-i18n="svc3_d">Kanal sosial yang tampil konsisten setiap minggu, dengan materi sekelas kampanye — bukan konten seadanya.</p>
+        <ul class="mt-7 space-y-3 text-[15px] text-ink/75">
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc3_1">Strategi &amp; content plan</span></li>
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc3_2">Produksi konten bulanan</span></li>
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc3_3">Copywriting ID &amp; EN</span></li>
+          <li class="flex gap-3"><span class="text-sage">—</span><span data-i18n="svc3_4">Laporan performa</span></li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== KARYA (VIDEO) ===================== -->
+<section id="karya" class="py-24 sm:py-32 bg-white border-y border-teal/10">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8">
+    <div class="reveal flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-2xl">
+        <span class="text-[11px] font-semibold uppercase tracking-kicker text-teal/60" data-i18n="work_kicker">Karya terpilih</span>
+        <h2 class="font-display font-semibold text-4xl sm:text-5xl tracking-tight text-teal-deep mt-4 leading-[1.1]">
+          <span data-i18n="work_t1">Delapan brand,</span> <span class="serif-it text-teal" data-i18n="work_t2">delapan cerita.</span>
+        </h2>
+        <p class="mt-5 text-lg text-ink/60 leading-relaxed" data-i18n="work_sub">Klik salah satu untuk memutar videonya.</p>
+      </div>
+      <a href="#" data-wa="portfolio" class="text-sm font-semibold border border-teal/25 hover:border-teal hover:bg-sage-pale/50 rounded-full px-6 py-3 text-teal-deep transition" data-i18n="work_cta">Minta portofolio lengkap</a>
+    </div>
+
+    <div class="rail-wrap mt-8">
+      <div id="workRail" class="rail"></div>
+
+      <button class="rail-btn rail-prev" onclick="railMove(-1)" aria-label="Sebelumnya">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="rail-btn rail-next" onclick="railMove(1)" aria-label="Berikutnya">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+
+      <div class="flex items-center gap-5 max-w-lg">
+        <div class="rail-track flex-1"><span id="railBar" class="rail-bar"></span></div>
+        <span class="rail-hint whitespace-nowrap" data-i18n="rail_hint">Geser untuk lihat semua</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GALERI FOTO ===================== -->
+<section id="galeri" class="py-24 sm:py-32">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl">
+      <span class="text-[11px] font-semibold uppercase tracking-kicker text-teal/60" data-i18n="gal_kicker">Galeri</span>
+      <h2 class="font-display font-semibold text-4xl sm:text-5xl tracking-tight text-teal-deep mt-4 leading-[1.1]">
+        <span data-i18n="gal_t1">Detail yang</span> <span class="serif-it text-teal" data-i18n="gal_t2">tidak bisa dipalsukan.</span>
+      </h2>
+      <p class="mt-5 text-lg text-ink/60 leading-relaxed" data-i18n="gal_sub">Setiap frame dikerjakan dari konsep, styling, sampai retouching akhir.</p>
+    </div>
+
+    <div id="galGrid" class="columns-2 md:columns-3 lg:columns-4 gap-3 sm:gap-4 mt-14 [&>*]:mb-3 sm:[&>*]:mb-4"></div>
+  </div>
+</section>
+
+<!-- ===================== PROSES ===================== -->
+<section id="proses" class="py-24 sm:py-32 bg-teal-deep text-cream">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl">
+      <span class="text-[11px] font-semibold uppercase tracking-kicker text-sage" data-i18n="proc_kicker">Cara kerja</span>
+      <h2 class="font-display font-semibold text-4xl sm:text-5xl tracking-tight mt-4 leading-[1.1]">
+        <span data-i18n="proc_t1">Empat tahap,</span> <span class="serif-it text-sage" data-i18n="proc_t2">tanpa drama.</span>
+      </h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 mt-16">
+      <div class="reveal border-t border-cream/20 pt-6">
+        <span class="font-display font-semibold text-sm text-sage">01</span>
+        <h3 class="font-display font-semibold text-xl mt-3" data-i18n="s1_t">Discovery</h3>
+        <p class="text-cream/60 mt-2.5 leading-relaxed" data-i18n="s1_d">Kita bicara soal brand, target, dan tolok ukur keberhasilan. Gratis, tanpa komitmen.</p>
+      </div>
+      <div class="reveal border-t border-cream/20 pt-6">
+        <span class="font-display font-semibold text-sm text-sage">02</span>
+        <h3 class="font-display font-semibold text-xl mt-3" data-i18n="s2_t">Konsep &amp; penawaran</h3>
+        <p class="text-cream/60 mt-2.5 leading-relaxed" data-i18n="s2_d">Moodboard, rencana kerja, timeline, dan harga final dikirim dalam 2×24 jam.</p>
+      </div>
+      <div class="reveal border-t border-cream/20 pt-6">
+        <span class="font-display font-semibold text-sm text-sage">03</span>
+        <h3 class="font-display font-semibold text-xl mt-3" data-i18n="s3_t">Produksi</h3>
+        <p class="text-cream/60 mt-2.5 leading-relaxed" data-i18n="s3_d">Pemotretan, produksi, dan pascaproduksi. Anda dapat pratinjau di setiap tahap.</p>
+      </div>
+      <div class="reveal border-t border-cream/20 pt-6">
+        <span class="font-display font-semibold text-sm text-sage">04</span>
+        <h3 class="font-display font-semibold text-xl mt-3" data-i18n="s4_t">Serah terima</h3>
+        <p class="text-cream/60 mt-2.5 leading-relaxed" data-i18n="s4_d">Seluruh file final dan hak pakainya menjadi milik Anda sepenuhnya.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== RATE CARD ===================== -->
+<section id="harga" class="py-24 sm:py-32">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl">
+      <span class="text-[11px] font-semibold uppercase tracking-kicker text-teal/60" data-i18n="price_kicker">Rate Card</span>
+      <h2 class="font-display font-semibold text-4xl sm:text-5xl tracking-tight text-teal-deep mt-4 leading-[1.1]">
+        <span data-i18n="price_t1">Transparan</span> <span class="serif-it text-teal" data-i18n="price_t2">sejak percakapan pertama.</span>
+      </h2>
+      <p class="mt-5 text-lg text-ink/60 leading-relaxed" data-i18n="price_sub">Angka di bawah adalah harga mulai. Nominal final menyesuaikan skala, jumlah deliverable, dan durasi kerja sama.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5 mt-14 items-start">
+      <!-- P1 -->
+      <div class="reveal lift tilt-wrap-i rounded-[1.75rem] bg-white border border-teal/10 p-8 sm:p-9">
+        <h3 class="font-display font-semibold text-2xl text-teal-deep" data-i18n="p1_n">Starter</h3>
+        <p class="text-ink/55 mt-2.5 text-[15px]" data-i18n="p1_f">Untuk yang baru mulai jualan online.</p>
+        <div class="mt-7 pb-7 border-b border-teal/10">
+          <span class="text-[13px] text-ink/45 uppercase tracking-wide font-medium" data-i18n="from">Mulai dari</span>
+          <div class="font-display font-semibold text-[2.1rem] text-teal mt-1.5" data-price="p1">Rp 1.000.000</div>
+          <span class="text-sm text-ink/45" data-i18n="p1_u">/ paket</span>
+        </div>
+        <ul class="mt-7 space-y-3 text-[15px] text-ink/75">
+          <li class="flex gap-3"><span class="text-teal">✓</span><span data-i18n="p1_1">5 foto produk</span></li>
+          <li class="flex gap-3"><span class="text-teal">✓</span><span data-i18n="p1_2">2 video social media</span></li>
+          <li class="flex gap-3"><span class="text-teal">✓</span><span data-i18n="p1_3">Etalase basic</span></li>
+        </ul>
+        <a href="#" data-wa="p1" class="mt-9 block text-center border border-teal/25 hover:border-teal hover:bg-sage-pale/50 text-teal-deep font-semibold py-3.5 rounded-full transition" data-i18n="price_cta">Tanya paket ini</a>
+      </div>
+
+      <!-- P2 -->
+      <div class="reveal lift tilt-wrap-i rounded-[1.75rem] bg-teal-deep text-cream p-8 sm:p-9 relative md:-mt-5 shadow-2xl shadow-teal/25">
+        <span class="absolute -top-3 left-8 text-[10px] font-semibold uppercase tracking-kicker bg-sage text-teal-deep px-3.5 py-1.5 rounded-full" data-i18n="badge_best">Paling sering diambil</span>
+        <h3 class="font-display font-semibold text-2xl" data-i18n="p2_n">Populer</h3>
+        <p class="text-cream/60 mt-2.5 text-[15px]" data-i18n="p2_f">Paling pas untuk toko yang sudah jalan.</p>
+        <div class="mt-7 pb-7 border-b border-cream/20">
+          <span class="text-[13px] text-cream/45 uppercase tracking-wide font-medium" data-i18n="from">Mulai dari</span>
+          <div class="font-display font-semibold text-[2.1rem] text-sage-light mt-1.5" data-price="p2">Rp 2.500.000</div>
+          <span class="text-sm text-cream/45" data-i18n="p2_u">/ paket</span>
+        </div>
+        <ul class="mt-7 space-y-3 text-[15px] text-cream/85">
+          <li class="flex gap-3"><span class="text-sage">✓</span><span data-i18n="p2_1">10 foto produk</span></li>
+          <li class="flex gap-3"><span class="text-sage">✓</span><span data-i18n="p2_2">1 video cinematic</span></li>
+          <li class="flex gap-3"><span class="text-sage">✓</span><span data-i18n="p2_3">4 video social media</span></li>
+          <li class="flex gap-3"><span class="text-sage">✓</span><span data-i18n="p2_4">Etalase + carousel</span></li>
+        </ul>
+        <a href="#" data-wa="p2" class="mt-9 block text-center bg-sage hover:bg-sage-light text-teal-deep font-semibold py-3.5 rounded-full transition-colors" data-i18n="price_cta">Tanya paket ini</a>
+      </div>
+
+      <!-- P3 -->
+      <div class="reveal lift tilt-wrap-i rounded-[1.75rem] bg-white border border-teal/10 p-8 sm:p-9">
+        <h3 class="font-display font-semibold text-2xl text-teal-deep" data-i18n="p3_n">Premium</h3>
+        <p class="text-ink/55 mt-2.5 text-[15px]" data-i18n="p3_f">Untuk brand yang butuh materi lengkap sekaligus.</p>
+        <div class="mt-7 pb-7 border-b border-teal/10">
+          <span class="text-[13px] text-ink/45 uppercase tracking-wide font-medium" data-i18n="from">Mulai dari</span>
+          <div class="font-display font-semibold text-[2.1rem] text-teal mt-1.5" data-price="p3">Rp 5.000.000</div>
+          <span class="text-sm text-ink/45" data-i18n="p3_u">/ paket</span>
+        </div>
+        <ul class="mt-7 space-y-3 text-[15px] text-ink/75">
+          <li class="flex gap-3"><span class="text-teal">✓</span><span data-i18n="p3_1">20 foto produk</span></li>
+          <li class="flex gap-3"><span class="text-teal">✓</span><span data-i18n="p3_2">3 video cinematic</span></li>
+          <li class="flex gap-3"><span class="text-teal">✓</span><span data-i18n="p3_3">8 video social media</span></li>
+          <li class="flex gap-3"><span class="text-teal">✓</span><span data-i18n="p3_4">Etalase lengkap + banner</span></li>
+        </ul>
+        <a href="#" data-wa="p3" class="mt-9 block text-center border border-teal/25 hover:border-teal hover:bg-sage-pale/50 text-teal-deep font-semibold py-3.5 rounded-full transition" data-i18n="price_cta">Tanya paket ini</a>
+      </div>
+    </div>
+
+    <p class="reveal text-ink/50 mt-10 text-[15px]" data-i18n="price_note">Butuh sesuatu di luar paket? Kami juga menerima proyek custom dan kerja sama jangka panjang.</p>
+  </div>
+</section>
+
+<!-- ===================== TESTIMONI ===================== -->
+<section class="py-24 sm:py-32 bg-white border-y border-teal/10">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8">
+    <div class="reveal max-w-2xl">
+      <span class="text-[11px] font-semibold uppercase tracking-kicker text-teal/60" data-i18n="testi_kicker">Testimoni</span>
+      <h2 class="font-display font-semibold text-4xl sm:text-5xl tracking-tight text-teal-deep mt-4 leading-[1.1]">
+        <span data-i18n="testi_t1">Kata mereka</span> <span class="serif-it text-teal" data-i18n="testi_t2">yang sudah kerja bareng.</span>
+      </h2>
+    </div>
+    <div id="testiGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-14"></div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section id="faq" class="py-24 sm:py-32">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8 grid lg:grid-cols-[0.8fr_1.2fr] gap-12 lg:gap-20">
+    <div class="reveal">
+      <span class="text-[11px] font-semibold uppercase tracking-kicker text-teal/60" data-i18n="faq_kicker">FAQ</span>
+      <h2 class="font-display font-semibold text-4xl sm:text-5xl tracking-tight text-teal-deep mt-4 leading-[1.1]">
+        <span data-i18n="faq_t1">Pertanyaan</span> <span class="serif-it text-teal" data-i18n="faq_t2">yang sering masuk.</span>
+      </h2>
+      <p class="mt-5 text-ink/60 leading-relaxed" data-i18n="faq_sub">Belum terjawab? Tanyakan langsung, biasanya dibalas dalam satu jam.</p>
+      <a href="#" data-wa="faq" class="mt-6 inline-flex text-sm font-semibold border border-teal/25 hover:border-teal hover:bg-sage-pale/50 rounded-full px-6 py-3 text-teal-deep transition" data-i18n="faq_cta">Tanya via WhatsApp</a>
+    </div>
+
+    <div class="space-y-2.5">
+      <details class="reveal bg-white rounded-2xl border border-teal/10 overflow-hidden">
+        <summary class="flex items-center justify-between gap-4 p-6 cursor-pointer font-semibold text-[17px] text-teal-deep list-none">
+          <span data-i18n="q1">Berapa lama pengerjaan satu proyek?</span>
+          <svg class="chev shrink-0 text-sage" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <p class="px-6 pb-6 text-ink/60 leading-relaxed" data-i18n="a1">Brand identity umumnya 3–5 minggu. Produksi kampanye 2–3 minggu sejak konsep disetujui. Kerja sama bulanan mulai berjalan dalam sepekan setelah brief final.</p>
+      </details>
+
+      <details class="reveal bg-white rounded-2xl border border-teal/10 overflow-hidden">
+        <summary class="flex items-center justify-between gap-4 p-6 cursor-pointer font-semibold text-[17px] text-teal-deep list-none">
+          <span data-i18n="q2">Bisa menangani klien luar negeri?</span>
+          <svg class="chev shrink-0 text-sage" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <p class="px-6 pb-6 text-ink/60 leading-relaxed" data-i18n="a2">Bisa. Kami sudah mengerjakan proyek untuk brand di beberapa negara. Komunikasi dalam bahasa Inggris, pembayaran via transfer internasional, dan jadwal menyesuaikan zona waktu Anda.</p>
+      </details>
+
+      <details class="reveal bg-white rounded-2xl border border-teal/10 overflow-hidden">
+        <summary class="flex items-center justify-between gap-4 p-6 cursor-pointer font-semibold text-[17px] text-teal-deep list-none">
+          <span data-i18n="q3">Produk harus dikirim ke studio?</span>
+          <svg class="chev shrink-0 text-sage" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <p class="px-6 pb-6 text-ink/60 leading-relaxed" data-i18n="a3">Untuk pemotretan produk, ya — sampel dikirim ke studio kami dan dikembalikan setelah produksi selesai. Untuk klien luar negeri, kami juga bisa bekerja dari aset 3D atau produk yang dibeli lokal.</p>
+      </details>
+
+      <details class="reveal bg-white rounded-2xl border border-teal/10 overflow-hidden">
+        <summary class="flex items-center justify-between gap-4 p-6 cursor-pointer font-semibold text-[17px] text-teal-deep list-none">
+          <span data-i18n="q4">Berapa kali revisi yang diberikan?</span>
+          <svg class="chev shrink-0 text-sage" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <p class="px-6 pb-6 text-ink/60 leading-relaxed" data-i18n="a4">Dua putaran revisi mayor di setiap tahap sudah termasuk. Karena konsep disetujui sebelum produksi dimulai, revisi besar jarang terjadi.</p>
+      </details>
+
+      <details class="reveal bg-white rounded-2xl border border-teal/10 overflow-hidden">
+        <summary class="flex items-center justify-between gap-4 p-6 cursor-pointer font-semibold text-[17px] text-teal-deep list-none">
+          <span data-i18n="q5">Bagaimana sistem pembayarannya?</span>
+          <svg class="chev shrink-0 text-sage" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <p class="px-6 pb-6 text-ink/60 leading-relaxed" data-i18n="a5">Proyek satuan: 50% di awal sebagai tanda jadi, sisanya saat serah terima. Kerja sama bulanan dibayar di muka setiap bulan. Semua disertai invoice resmi.</p>
+      </details>
+
+      <details class="reveal bg-white rounded-2xl border border-teal/10 overflow-hidden">
+        <summary class="flex items-center justify-between gap-4 p-6 cursor-pointer font-semibold text-[17px] text-teal-deep list-none">
+          <span data-i18n="q6">Siapa pemilik hak atas file akhir?</span>
+          <svg class="chev shrink-0 text-sage" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <p class="px-6 pb-6 text-ink/60 leading-relaxed" data-i18n="a6">Anda. Setelah pelunasan, seluruh file final beserta hak pakainya menjadi milik Anda sepenuhnya.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA AKHIR ===================== -->
+<section class="pb-24 sm:pb-32">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8">
+    <div class="reveal relative rounded-[2rem] sm:rounded-[2.5rem] bg-teal-deep text-cream overflow-hidden px-7 py-16 sm:px-16 sm:py-24">
+      <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full border-[3rem] border-sage/10"></div>
+      <div class="absolute -right-8 top-16 w-64 h-64 rounded-full border-[2.5rem] border-sage/10"></div>
+
+      <div class="relative max-w-2xl">
+        <h2 class="font-display font-semibold text-4xl sm:text-6xl tracking-tight leading-[1.05]">
+          <span data-i18n="cta_t1">Punya produk bagus?</span><br>
+          <span class="serif-it text-sage" data-i18n="cta_t2">Ayo bikin orang melihatnya.</span>
+        </h2>
+        <p class="mt-6 text-lg text-cream/65 leading-relaxed" data-i18n="cta_sub">Ceritakan proyek Anda lewat WhatsApp. Konsultasi awal gratis, tanpa kewajiban lanjut.</p>
+        <div class="mt-9 flex flex-col sm:flex-row gap-3">
+          <a href="#" data-wa="final" class="inline-flex items-center justify-center gap-2.5 bg-sage hover:bg-sage-light text-teal-deep font-semibold text-base px-8 py-4 rounded-full transition-colors">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35M12.05 21.8h-.02a9.8 9.8 0 0 1-4.99-1.37l-.36-.21-3.71.97.99-3.62-.23-.37a9.78 9.78 0 0 1-1.5-5.22c0-5.4 4.4-9.8 9.82-9.8 2.62 0 5.08 1.03 6.93 2.88a9.74 9.74 0 0 1 2.87 6.93c0 5.4-4.4 9.8-9.8 9.8M20.52 3.45A11.75 11.75 0 0 0 12.05 0C5.5 0 .18 5.32.17 11.86c0 2.09.55 4.13 1.59 5.93L.07 24l6.36-1.67a11.9 11.9 0 0 0 5.62 1.43h.01c6.55 0 11.87-5.32 11.88-11.86a11.8 11.8 0 0 0-3.42-8.4"/></svg>
+            <span data-i18n="cta_btn">Mulai obrolan</span>
+          </a>
+          <a href="#karya" class="inline-flex items-center justify-center border border-cream/25 hover:bg-cream/10 font-semibold px-8 py-4 rounded-full transition" data-i18n="cta_btn2">Lihat karya dulu</a>
+        </div>
+        <p class="mt-5 text-sm text-cream/45" data-i18n="cta_note">Rata-rata dibalas kurang dari 1 jam pada jam kerja.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="bg-white border-t border-teal/10 pt-16 pb-8">
+  <div class="max-w-[1400px] mx-auto px-5 sm:px-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-teal/10">
+      <div class="lg:col-span-2">
+        <img src="web/logo/logo.png" alt="Hanoora Studio" class="h-9 w-auto">
+        <p class="mt-5 text-ink/55 max-w-sm leading-relaxed" data-i18n="foot_desc">Creative studio yang memproduksi visual komersial, kampanye brand, dan konten sosial untuk brand lokal dan internasional.</p>
+        <div class="flex gap-2.5 mt-7">
+          <a href="#" data-social="ig" aria-label="Instagram" class="w-10 h-10 rounded-full border border-teal/15 hover:bg-sage-pale text-teal grid place-items-center transition">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href="#" data-social="tiktok" aria-label="TikTok" class="w-10 h-10 rounded-full border border-teal/15 hover:bg-sage-pale text-teal grid place-items-center transition">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 1 1 .77-5.06V9.7a5.68 5.68 0 1 0 4.91 5.62V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.28 4.28 0 0 1-3.24-1.48z"/></svg>
+          </a>
+          <a href="#" data-social="linkedin" aria-label="LinkedIn" class="w-10 h-10 rounded-full border border-teal/15 hover:bg-sage-pale text-teal grid place-items-center transition">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0M7 8.48H3V21h4zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91z"/></svg>
+          </a>
+          <a href="#" data-wa="footer" aria-label="WhatsApp" class="w-10 h-10 rounded-full border border-teal/15 hover:bg-sage-pale text-teal grid place-items-center transition">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35M12.05 21.8h-.02a9.8 9.8 0 0 1-4.99-1.37l-.36-.21-3.71.97.99-3.62-.23-.37a9.78 9.78 0 0 1-1.5-5.22c0-5.4 4.4-9.8 9.82-9.8 2.62 0 5.08 1.03 6.93 2.88a9.74 9.74 0 0 1 2.87 6.93c0 5.4-4.4 9.8-9.8 9.8M20.52 3.45A11.75 11.75 0 0 0 12.05 0C5.5 0 .18 5.32.17 11.86c0 2.09.55 4.13 1.59 5.93L.07 24l6.36-1.67a11.9 11.9 0 0 0 5.62 1.43h.01c6.55 0 11.87-5.32 11.88-11.86a11.8 11.8 0 0 0-3.42-8.4"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="font-display font-semibold text-teal-deep mb-4" data-i18n="foot_nav">Navigasi</h4>
+        <ul class="space-y-2.5 text-ink/55">
+          <li><a href="#layanan" class="hover:text-teal transition" data-i18n="nav_services">Layanan</a></li>
+          <li><a href="#karya" class="hover:text-teal transition" data-i18n="nav_work">Karya</a></li>
+          <li><a href="#galeri" class="hover:text-teal transition" data-i18n="nav_gallery">Galeri</a></li>
+          <li><a href="#proses" class="hover:text-teal transition" data-i18n="nav_process">Proses</a></li>
+          <li><a href="#harga" class="hover:text-teal transition" data-i18n="nav_pricing">Rate Card</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-display font-semibold text-teal-deep mb-4" data-i18n="foot_contact">Kontak</h4>
+        <ul class="space-y-2.5 text-ink/55">
+          <li><a href="#" data-wa="footer2" class="hover:text-teal transition">WhatsApp</a></li>
+          <li><a href="#" data-email class="hover:text-teal transition break-all">hanoorastudio@gmail.com</a></li>
+          <li data-i18n="foot_loc">Indonesia — melayani klien global</li>
+          <li data-i18n="foot_hours">Sen–Sab, 09.00–18.00 WIB</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-ink/40">
+      <span>© <span id="year"></span> Hanoora Studio. <span data-i18n="foot_rights">Seluruh hak cipta dilindungi.</span></span>
+      <span data-i18n="foot_made">Dibuat dengan sepenuh hati di Indonesia.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== FLOATING WA ===================== -->
+<a href="#" data-wa="float" class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-teal hover:bg-teal-deep shadow-xl shadow-teal/30 grid place-items-center text-cream transition-colors" aria-label="WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35M12.05 21.8h-.02a9.8 9.8 0 0 1-4.99-1.37l-.36-.21-3.71.97.99-3.62-.23-.37a9.78 9.78 0 0 1-1.5-5.22c0-5.4 4.4-9.8 9.82-9.8 2.62 0 5.08 1.03 6.93 2.88a9.74 9.74 0 0 1 2.87 6.93c0 5.4-4.4 9.8-9.8 9.8M20.52 3.45A11.75 11.75 0 0 0 12.05 0C5.5 0 .18 5.32.17 11.86c0 2.09.55 4.13 1.59 5.93L.07 24l6.36-1.67a11.9 11.9 0 0 0 5.62 1.43h.01c6.55 0 11.87-5.32 11.88-11.86a11.8 11.8 0 0 0-3.42-8.4"/></svg>
+</a>
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div id="lightbox" class="hidden-lb fixed inset-0 z-50 bg-teal-deep/95 backdrop-blur-sm grid place-items-center p-4 sm:p-8" onclick="closeLb(event)">
+  <button onclick="closeLb()" class="absolute top-5 right-5 w-11 h-11 rounded-full bg-cream/10 hover:bg-cream/20 text-cream grid place-items-center transition" aria-label="Tutup">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <div id="lbBody" class="max-h-full max-w-full flex flex-col items-center gap-4"></div>
+</div>
+
+<script>
+/* ============================================================
+   PENGAMAN — intro tidak boleh menahan halaman lebih dari 4 detik,
+   berapa pun kesalahan yang terjadi di skrip bawah.
+   ============================================================ */
+setTimeout(function () {
+  var el = document.getElementById('intro');
+  if (el && !el.dataset.done) {
+    el.dataset.done = '1';
+    el.classList.add('split');
+    setTimeout(function () { el.classList.add('done'); }, 900);
+  }
+  document.body.classList.remove('locked');
+  var h = document.getElementById('hero');
+  if (h) h.classList.add('go');
+}, 4000);
+
+/* ============================================================
+   KONFIGURASI — ubah bagian ini saja
+   ============================================================ */
+const WA_NUMBER   = '6285731185092';
+const IG_URL      = 'https://www.instagram.com/hanoora.studio/';
+const TIKTOK_URL  = 'https://www.tiktok.com/@hanoora.studio';
+const LINKEDIN_URL= 'https://www.linkedin.com/company/hanoora-studio/';  // PERIKSA: tebakan alamat, ganti kalau berbeda
+const EMAIL       = 'hanoorastudio@gmail.com';
+
+/* ============================================================
+   DATA KARYA — 8 proyek
+   ============================================================ */
+const WORKS = [
+  { slug:'garmin',            brand:'Garmin',     c:'#2F6FB5', tag:{id:'Video Cinematic',    en:'Cinematic Video'},   t:{id:'Kampanye jam tangan olahraga',        en:'Sports watch campaign'} },
+  { slug:'vitalis',           brand:'Vitalis',    c:'#B01E3C', tag:{id:'Video Cinematic',    en:'Cinematic Video'},   t:{id:'Peluncuran parfum Red Majesty',       en:'Red Majesty fragrance launch'} },
+  { slug:'corkcicle',         brand:'Corkcicle',  c:'#3E9BD6', tag:{id:'Video Cinematic',    en:'Cinematic Video'},   t:{id:'Botol minum untuk gaya hidup aktif',  en:'Drinkware for an active lifestyle'} },
+  { slug:'ortuseight',        brand:'Ortuseight', c:'#E8562A', tag:{id:'Video Cinematic',    en:'Cinematic Video'},   t:{id:'Kampanye alas kaki performa',         en:'Performance footwear campaign'} },
+  { slug:'takara',            brand:'Takara',     c:'#E0A128', tag:{id:'Video Cinematic',    en:'Cinematic Video'},   t:{id:'Rangkaian perawatan rambut salon',    en:'Professional haircare series'} },
+  { slug:'ffar',              brand:'FFAR',       c:'#7A828C', tag:{id:'Video Cinematic',    en:'Cinematic Video'},   t:{id:'Perawatan tubuh pria, nuansa gelap',  en:'Men’s body care, dark aesthetic'} },
+  { slug:'keshvara',          brand:'Keshvara',   c:'#C08A3E', tag:{id:'Video Social Media', en:'Social Media Video'},t:{id:'Koleksi eyewear musiman',             en:'Seasonal eyewear collection'} },
+  { slug:'slavina-firstkiss', brand:'Slavina',    c:'#D9557E', tag:{id:'Video Social Media', en:'Social Media Video'},t:{id:'Seri First Kiss',                     en:'First Kiss series'} },
+];
+
+/* GALERI — 18 foto + brand */
+const GALLERY = [
+  {f:'foto-09.jpg',b:'Takara'},   {f:'foto-03.jpg',b:'Vitalis'},   {f:'foto-11.jpg',b:'FFAR'},
+  {f:'foto-01.jpg',b:'Garmin'},   {f:'foto-14.jpg',b:'Corkcicle'}, {f:'foto-06.jpg',b:'Keshvara'},
+  {f:'foto-13.jpg',b:'FFAR'},     {f:'foto-16.jpg',b:'Garmin'},    {f:'foto-02.jpg',b:'Vitalis'},
+  {f:'foto-10.jpg',b:'Takara'},   {f:'foto-18.jpg',b:'Corkcicle'}, {f:'foto-07.jpg',b:'Keshvara'},
+  {f:'foto-12.jpg',b:'FFAR'},     {f:'foto-17.jpg',b:'Garmin'},    {f:'foto-04.jpg',b:'Corkcicle'},
+  {f:'foto-08.jpg',b:'Keshvara'}, {f:'foto-15.jpg',b:'Ortuseight'},{f:'foto-05.jpg',b:'Keshvara'},
+];
+
+/* TESTIMONI */
+const TESTI = [
+  { id:'Hanoora Studio bantu kami bangun branding dari nol sampai sekarang jadi lebih percaya diri tampil di semua platform.',
+    en:'Hanoora Studio helped us build our branding from scratch. We finally feel confident showing up on every platform.' },
+  { id:'Konten yang dibuat Hanoora kreatif, estetik, dan benar-benar menggambarkan brand kami. Engagement naik drastis setelah kerja sama bareng mereka.',
+    en:'The content Hanoora creates is inventive, refined, and truly represents our brand. Engagement climbed sharply after we started working together.' },
+  { id:'Tim Hanoora responsif, profesional, dan selalu punya ide di luar dugaan. Proyek selesai tepat waktu dengan hasil melebihi ekspektasi.',
+    en:'The Hanoora team is responsive, professional, and always brings ideas we would not have thought of. Delivered on time and beyond expectations.' },
+  { id:'Kerja sama dengan Hanoora itu mulus sekali. Mereka mendengarkan kebutuhan kami dan menerjemahkannya jadi hasil yang relevan dan on brand.',
+    en:'Working with Hanoora is remarkably smooth. They listen closely and translate our needs into work that is relevant and on brand.' },
+  { id:'Iklan yang dibuat Hanoora benar-benar strategis dan hasilnya terasa langsung ke penjualan. ROI meningkat signifikan.',
+    en:'The ads Hanoora produced were genuinely strategic and the impact showed up in sales. Our ROI improved significantly.' },
+  { id:'Branding kami jadi lebih kuat dan konsisten berkat arahan Hanoora Studio. Mereka bukan sekadar agency, tapi partner yang peduli pertumbuhan brand kami.',
+    en:'Our branding became stronger and more consistent under Hanoora Studio’s direction. Not just an agency, but a partner invested in our growth.' },
+];
+
+/* PESAN WHATSAPP */
+const WA_MESSAGES = {
+  id: {
+    nav:'Halo Hanoora Studio, saya ingin membicarakan sebuah proyek.',
+    hero:'Halo Hanoora Studio! Saya tertarik bekerja sama dan ingin berdiskusi dulu.',
+    portfolio:'Halo Hanoora Studio, boleh saya minta portofolio lengkapnya?',
+    faq:'Halo Hanoora Studio, saya ada pertanyaan yang belum terjawab di website.',
+    p1:'Halo Hanoora Studio, saya ingin bertanya soal paket Starter (Rp 1 juta).',
+    p2:'Halo Hanoora Studio, saya ingin bertanya soal paket Populer (Rp 2,5 juta).',
+    p3:'Halo Hanoora Studio, saya ingin bertanya soal paket Premium (Rp 5 juta).',
+    final:'Halo Hanoora Studio, saya siap memulai proyek. Boleh dibantu?',
+    footer:'Halo Hanoora Studio, saya ingin bertanya soal layanan kalian.',
+    footer2:'Halo Hanoora Studio, saya ingin bertanya soal layanan kalian.',
+    float:'Halo Hanoora Studio, saya ingin bertanya-tanya dulu.',
+    work:'Halo Hanoora Studio, saya tertarik dengan karya untuk {brand}. Bisa buatkan yang serupa untuk brand saya?',
+  },
+  en: {
+    nav:'Hi Hanoora Studio, I would like to discuss a project.',
+    hero:'Hi Hanoora Studio! I am interested in working together and would love to talk.',
+    portfolio:'Hi Hanoora Studio, could you share your full portfolio?',
+    faq:'Hi Hanoora Studio, I have a question that is not answered on your site.',
+    p1:'Hi Hanoora Studio, I would like to ask about the Starter package.',
+    p2:'Hi Hanoora Studio, I would like to ask about the Popular package.',
+    p3:'Hi Hanoora Studio, I would like to ask about the Premium package.',
+    final:'Hi Hanoora Studio, I am ready to start a project. Can you help?',
+    footer:'Hi Hanoora Studio, I have a question about your services.',
+    footer2:'Hi Hanoora Studio, I have a question about your services.',
+    float:'Hi Hanoora Studio, I have a few questions.',
+    work:'Hi Hanoora Studio, I love the {brand} work. Could you create something similar for my brand?',
+  },
+};
+
+/* HARGA */
+const PRICES = {
+  id: { p1:'Rp 1.000.000', p2:'Rp 2.500.000', p3:'Rp 5.000.000' },
+  en: { p1:'$65',          p2:'$159',         p3:'$319' },
+};
+
+/* ============================================================
+   TERJEMAHAN
+   ============================================================ */
+const I18N = {
+  id: {
+    nav_services:'Layanan', nav_work:'Karya', nav_gallery:'Galeri', nav_process:'Proses',
+    nav_pricing:'Rate Card', nav_faq:'FAQ', nav_cta:'Mulai Proyek',
+
+    hero_badge:'Creative studio — Indonesia & internasional',
+    hero_t1:'Visual yang bikin brand', hero_t2:'terlihat semahal harganya.',
+    hero_sub:'Hanoora Studio memproduksi visual komersial, kampanye brand, dan konten sosial untuk brand yang tidak mau terlihat biasa saja.',
+    hero_cta1:'Diskusi Proyek', hero_cta2:'Lihat Karya',
+    stat_1:'Proyek selesai', stat_2:'Brand partner', stat_3:'Negara terlayani', stat_4:'Rata-rata rating klien',
+    trusted:'Dipercaya oleh',
+
+    services_kicker:'Layanan', services_t1:'Tiga lini kerja,', services_t2:'satu standar.',
+    services_sub:'Kami tidak mengerjakan semuanya. Kami mengerjakan tiga hal ini sampai layak tayang di mana pun brand Anda muncul.',
+    svc1_t:'Branding & Design',
+    svc1_d:'Identitas visual yang bertahan bertahun-tahun, bukan yang terlihat usang enam bulan lagi.',
+    svc1_1:'Logo & identitas visual', svc1_2:'Brand guideline',
+    svc1_3:'Desain kemasan & label', svc1_4:'Art direction kampanye',
+    svc2_t:'Commercial Video & Photo',
+    svc2_d:'Foto produk dan video iklan berstandar brand global — untuk katalog, e-commerce, maupun kampanye berbayar.',
+    svc2_1:'Product & still life photography', svc2_2:'Video iklan & brand film',
+    svc2_3:'Konsep, styling & art direction', svc2_4:'Retouching & color grading',
+    svc3_t:'Social Media Management',
+    svc3_d:'Kanal sosial yang tampil konsisten setiap minggu, dengan materi sekelas kampanye — bukan konten seadanya.',
+    svc3_1:'Strategi & content plan', svc3_2:'Produksi konten bulanan',
+    svc3_3:'Copywriting ID & EN', svc3_4:'Laporan performa',
+
+    work_kicker:'Karya terpilih', work_t1:'Delapan brand,', work_t2:'delapan cerita.',
+    work_sub:'Sorot untuk melihat cuplikannya, klik untuk memutar penuh.', work_cta:'Minta portofolio lengkap',
+    work_play:'Putar', rail_hint:'Geser untuk lihat semua',
+
+    gal_kicker:'Galeri', gal_t1:'Detail yang', gal_t2:'tidak bisa dipalsukan.',
+    gal_sub:'Setiap frame dikerjakan dari konsep, styling, sampai retouching akhir.',
+
+    proc_kicker:'Cara kerja', proc_t1:'Empat tahap,', proc_t2:'tanpa drama.',
+    s1_t:'Discovery', s1_d:'Kita bicara soal brand, target, dan tolok ukur keberhasilan. Gratis, tanpa komitmen.',
+    s2_t:'Konsep & penawaran', s2_d:'Moodboard, rencana kerja, timeline, dan harga final dikirim dalam 2×24 jam.',
+    s3_t:'Produksi', s3_d:'Pemotretan, produksi, dan pascaproduksi. Anda dapat pratinjau di setiap tahap.',
+    s4_t:'Serah terima', s4_d:'Seluruh file final dan hak pakainya menjadi milik Anda sepenuhnya.',
+
+    price_kicker:'Rate Card', price_t1:'Transparan', price_t2:'sejak percakapan pertama.',
+    price_sub:'Tersedia juga harga satuan sesuai kebutuhan. Nominal final menyesuaikan jumlah produk dan tingkat kerumitan.',
+    from:'Mulai dari', price_cta:'Tanya paket ini', badge_best:'Paling laris',
+    p1_n:'Starter', p1_f:'Untuk yang baru mulai jualan online.', p1_u:'/ paket',
+    p1_1:'5 foto produk', p1_2:'2 video social media', p1_3:'Etalase basic',
+    p2_n:'Populer', p2_f:'Paling pas untuk toko yang sudah jalan.', p2_u:'/ paket',
+    p2_1:'10 foto produk', p2_2:'1 video cinematic', p2_3:'4 video social media', p2_4:'Etalase + carousel',
+    p3_n:'Premium', p3_f:'Untuk brand yang butuh materi lengkap sekaligus.', p3_u:'/ paket',
+    p3_1:'20 foto produk', p3_2:'3 video cinematic', p3_3:'8 video social media', p3_4:'Etalase lengkap + banner',
+    price_note:'Butuh di luar paket? Kami juga menerima pesanan satuan dan kerja sama jangka panjang.',
+
+    testi_kicker:'Testimoni', testi_t1:'Kata mereka', testi_t2:'yang sudah kerja bareng.',
+    testi_role:'Klien Hanoora Studio',
+
+    faq_kicker:'FAQ', faq_t1:'Pertanyaan', faq_t2:'yang sering masuk.',
+    faq_sub:'Belum terjawab? Tanyakan langsung, biasanya dibalas dalam satu jam.',
+    faq_cta:'Tanya via WhatsApp',
+    q1:'Berapa lama pengerjaan satu proyek?',
+    a1:'Brand identity umumnya 3–5 minggu. Produksi kampanye 2–3 minggu sejak konsep disetujui. Kerja sama bulanan mulai berjalan dalam sepekan setelah brief final.',
+    q2:'Bisa menangani klien luar negeri?',
+    a2:'Bisa. Kami sudah mengerjakan proyek untuk brand di beberapa negara. Komunikasi dalam bahasa Inggris, pembayaran via transfer internasional, dan jadwal menyesuaikan zona waktu Anda.',
+    q3:'Produk harus dikirim ke studio?',
+    a3:'Untuk pemotretan produk, ya — sampel dikirim ke studio kami dan dikembalikan setelah produksi selesai. Untuk klien luar negeri, kami juga bisa bekerja dari aset 3D atau produk yang dibeli lokal.',
+    q4:'Berapa kali revisi yang diberikan?',
+    a4:'Dua putaran revisi mayor di setiap tahap sudah termasuk. Karena konsep disetujui sebelum produksi dimulai, revisi besar jarang terjadi.',
+    q5:'Bagaimana sistem pembayarannya?',
+    a5:'Proyek satuan: 50% di awal sebagai tanda jadi, sisanya saat serah terima. Kerja sama bulanan dibayar di muka setiap bulan. Semua disertai invoice resmi.',
+    q6:'Siapa pemilik hak atas file akhir?',
+    a6:'Anda. Setelah pelunasan, seluruh file final beserta hak pakainya menjadi milik Anda sepenuhnya.',
+
+    cta_t1:'Punya produk bagus?', cta_t2:'Ayo bikin orang melihatnya.',
+    cta_sub:'Ceritakan proyek Anda lewat WhatsApp. Konsultasi awal gratis, tanpa kewajiban lanjut.',
+    cta_btn:'Mulai obrolan', cta_btn2:'Lihat karya dulu',
+    cta_note:'Rata-rata dibalas kurang dari 1 jam pada jam kerja.',
+
+    foot_desc:'Creative studio yang memproduksi visual komersial, kampanye brand, dan konten sosial untuk brand lokal dan internasional.',
+    foot_nav:'Navigasi', foot_contact:'Kontak',
+    foot_loc:'Indonesia — melayani klien global',
+    foot_hours:'Sen–Sab, 09.00–18.00 WIB',
+    foot_rights:'Seluruh hak cipta dilindungi.',
+    foot_made:'Dibuat dengan sepenuh hati di Indonesia.',
+  },
+
+  en: {
+    nav_services:'Services', nav_work:'Work', nav_gallery:'Gallery', nav_process:'Process',
+    nav_pricing:'Rate Card', nav_faq:'FAQ', nav_cta:'Start a Project',
+
+    hero_badge:'Creative studio — Indonesia & worldwide',
+    hero_t1:'Visuals that make a brand', hero_t2:'look worth every rupiah.',
+    hero_sub:'Hanoora Studio produces commercial visuals, brand campaigns, and social content for brands that refuse to look ordinary.',
+    hero_cta1:'Discuss a Project', hero_cta2:'View Work',
+    stat_1:'Projects delivered', stat_2:'Brand partners', stat_3:'Countries served', stat_4:'Average client rating',
+    trusted:'Trusted by',
+
+    services_kicker:'Services', services_t1:'Three disciplines,', services_t2:'one standard.',
+    services_sub:'We do not do everything. We do these three things well enough to run wherever your brand appears.',
+    svc1_t:'Branding & Design',
+    svc1_d:'Visual identity built to last years, not one that looks dated in six months.',
+    svc1_1:'Logo & visual identity', svc1_2:'Brand guidelines',
+    svc1_3:'Packaging & label design', svc1_4:'Campaign art direction',
+    svc2_t:'Commercial Video & Photo',
+    svc2_d:'Product photography and advertising film at global brand standard — for catalogues, e-commerce, and paid campaigns.',
+    svc2_1:'Product & still life photography', svc2_2:'Advertising film & brand film',
+    svc2_3:'Concept, styling & art direction', svc2_4:'Retouching & colour grading',
+    svc3_t:'Social Media Management',
+    svc3_d:'Social channels that show up consistently every week, with campaign-grade material — not filler content.',
+    svc3_1:'Strategy & content plan', svc3_2:'Monthly content production',
+    svc3_3:'Copywriting in EN & ID', svc3_4:'Performance reporting',
+
+    work_kicker:'Selected work', work_t1:'Eight brands,', work_t2:'eight stories.',
+    work_sub:'Hover to preview, click to play in full.', work_cta:'Request full portfolio',
+    work_play:'Play', rail_hint:'Drag to see all',
+
+    gal_kicker:'Gallery', gal_t1:'Detail you', gal_t2:'cannot fake.',
+    gal_sub:'Every frame built from concept and styling through to final retouching.',
+
+    proc_kicker:'How we work', proc_t1:'Four stages,', proc_t2:'zero drama.',
+    s1_t:'Discovery', s1_d:'We talk through your brand, audience, and how success will be measured. Free, no commitment.',
+    s2_t:'Concept & quote', s2_d:'Moodboard, work plan, timeline, and final pricing sent within 48 hours.',
+    s3_t:'Production', s3_d:'Shoot, production, and post. You see a preview at every stage.',
+    s4_t:'Handover', s4_d:'All final files and their usage rights become entirely yours.',
+
+    price_kicker:'Rate Card', price_t1:'Transparent', price_t2:'from the first conversation.',
+    price_sub:'Individual items are also available. Final figures depend on how many products and how complex the shoot is.',
+    from:'Starting from', price_cta:'Ask about this', badge_best:'Best seller',
+    p1_n:'Starter', p1_f:'For sellers just getting started online.', p1_u:'/ package',
+    p1_1:'5 product photos', p1_2:'2 social media videos', p1_3:'Basic storefront assets',
+    p2_n:'Popular', p2_f:'The right fit for a store already running.', p2_u:'/ package',
+    p2_1:'10 product photos', p2_2:'1 cinematic video', p2_3:'4 social media videos', p2_4:'Storefront + carousel',
+    p3_n:'Premium', p3_f:'For brands that need the full set at once.', p3_u:'/ package',
+    p3_1:'20 product photos', p3_2:'3 cinematic videos', p3_3:'8 social media videos', p3_4:'Full storefront + banners',
+    price_note:'Need something outside these packages? We also take individual orders and long-term arrangements.',
+
+    testi_kicker:'Testimonials', testi_t1:'What clients say', testi_t2:'after working with us.',
+    testi_role:'Hanoora Studio client',
+
+    faq_kicker:'FAQ', faq_t1:'Questions', faq_t2:'we get a lot.',
+    faq_sub:'Still unanswered? Ask us directly — we usually reply within the hour.',
+    faq_cta:'Ask on WhatsApp',
+    q1:'How long does a project take?',
+    a1:'Brand identity typically runs 3–5 weeks. Campaign production takes 2–3 weeks once the concept is approved. Monthly retainers begin within a week of the final brief.',
+    q2:'Do you work with international clients?',
+    a2:'Yes. We have delivered projects for brands in several countries. We communicate in English, accept international transfers, and schedule around your time zone.',
+    q3:'Do products need to be shipped to your studio?',
+    a3:'For product shoots, yes — samples come to our studio and are returned once production wraps. For overseas clients we can also work from 3D assets or products sourced locally.',
+    q4:'How many revisions are included?',
+    a4:'Two major revision rounds at each stage are included. Because the concept is signed off before production starts, large revisions are rare.',
+    q5:'How does payment work?',
+    a5:'One-off projects: 50% to confirm the booking, the balance on handover. Monthly retainers are paid at the start of each month. Everything comes with a formal invoice.',
+    q6:'Who owns the final files?',
+    a6:'You do. Once payment is settled, all final files and their usage rights are entirely yours.',
+
+    cta_t1:'Got a product worth showing?', cta_t2:'Let us make people look.',
+    cta_sub:'Tell us about your project on WhatsApp. The first consultation is free, with no obligation.',
+    cta_btn:'Start a conversation', cta_btn2:'See the work first',
+    cta_note:'We reply in under an hour on average during business hours.',
+
+    foot_desc:'A creative studio producing commercial visuals, brand campaigns, and social content for local and international brands.',
+    foot_nav:'Navigation', foot_contact:'Contact',
+    foot_loc:'Indonesia — serving clients globally',
+    foot_hours:'Mon–Sat, 9am–6pm (GMT+7)',
+    foot_rights:'All rights reserved.',
+    foot_made:'Made with care in Indonesia.',
+  },
+};
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+let currentLang = 'id';
+
+function waLink(key, brand) {
+  let msg = WA_MESSAGES[currentLang][key] || WA_MESSAGES[currentLang].float;
+  if (brand) msg = msg.replace('{brand}', brand);
+  return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
+}
+
+function renderWorks() {
+  const d = I18N[currentLang];
+  document.getElementById('workRail').innerHTML = WORKS.map((w, i) => `
+    <article class="work-card" style="--accent:${w.c}" data-idx="${i}">
+      <div class="work-inner">
+        <button class="work-media" onclick="openVideo('${w.slug}','${w.brand}')" aria-label="${d.work_play} ${w.brand}">
+          <img src="web/video/${w.slug}.jpg" alt="${w.brand}" loading="lazy">
+          <video data-src="web/video/${w.slug}.mp4" muted loop playsinline preload="none"></video>
+          <span class="work-tint"></span>
+          <span class="work-veil"></span>
+          <span class="work-play">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#1E5F53"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+          <span class="absolute left-4 bottom-4 text-left z-10">
+            <span class="flex items-center gap-2 mb-1">
+              <span class="work-dot"></span>
+              <span class="work-tag text-[11px] font-semibold uppercase tracking-wider">${w.tag[currentLang]}</span>
+            </span>
+            <span class="block font-display font-semibold text-cream text-lg leading-tight">${w.brand}</span>
+          </span>
+          <span class="work-bar"></span>
+        </button>
+        <div class="p-5">
+          <p class="text-[15px] text-ink/70 leading-snug">${w.t[currentLang]}</p>
+          <a href="${waLink('work', w.brand)}" target="_blank" rel="noopener"
+             class="mt-3 inline-block text-[13px] font-semibold text-teal hover:text-teal-deep transition">
+            ${currentLang === 'id' ? 'Mau yang seperti ini →' : 'I want something like this →'}
+          </a>
+        </div>
+      </div>
+    </article>`).join('');
+  bindWorkCards();
+  initRail();
+  bindWorkTilt();
+}
+
+/* ---------- SLIDER: coverflow, panah, drag ---------- */
+let railRAF = null;
+function railGeom() {
+  const rail = document.getElementById('workRail');
+  const card = rail.querySelector('.work-card');
+  return { rail, step: card ? card.offsetWidth + 24 : 300 };
+}
+function railMove(dir) {
+  const { rail, step } = railGeom();
+  rail.scrollBy({ left: dir * step, behavior: 'smooth' });
+}
+function railPaint() {
+  const rail = document.getElementById('workRail');
+  if (!rail) return;
+  const slow = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mid = rail.scrollLeft + rail.clientWidth / 2;
+
+  rail.querySelectorAll('.work-card').forEach(c => {
+    const cc = c.offsetLeft + c.offsetWidth / 2;
+    const d = Math.max(-1.6, Math.min(1.6, (cc - mid) / (rail.clientWidth / 2.1)));
+    const a = Math.abs(d);
+    c.style.transform = slow ? 'none'
+      : `rotateY(${-d * 26}deg) translateZ(${-a * 110}px) scale(${1 - a * 0.1})`;
+    c.style.opacity = 1 - a * 0.42;
+    c.style.zIndex = Math.round(100 - a * 50);
+  });
+
+  const max = rail.scrollWidth - rail.clientWidth;
+  const bar = document.getElementById('railBar');
+  if (bar) bar.style.transform = `translateX(${max > 0 ? (rail.scrollLeft / max) * 400 : 0}%)`;
+
+  const prev = document.querySelector('.rail-prev'), next = document.querySelector('.rail-next');
+  if (prev) prev.disabled = rail.scrollLeft < 8;
+  if (next) next.disabled = rail.scrollLeft > max - 8;
+}
+function initRail() {
+  const rail = document.getElementById('workRail');
+  if (!rail || rail.dataset.bound) { railPaint(); return; }
+  rail.dataset.bound = '1';
+
+  rail.addEventListener('scroll', () => {
+    if (railRAF) return;
+    railRAF = requestAnimationFrame(() => { railPaint(); railRAF = null; });
+  }, { passive: true });
+  window.addEventListener('resize', railPaint);
+
+  // seret dengan tetikus
+  let down = false, sx = 0, sl = 0, moved = 0;
+  rail.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse') return;
+    down = true; moved = 0; sx = e.clientX; sl = rail.scrollLeft;
+  });
+  rail.addEventListener('pointermove', e => {
+    if (!down) return;
+    const dx = e.clientX - sx;
+    if (Math.abs(dx) > 4 && !rail.classList.contains('dragging')) rail.classList.add('dragging');
+    moved = Math.abs(dx);
+    rail.scrollLeft = sl - dx;
+  });
+  const up = () => { down = false; rail.classList.remove('dragging'); };
+  rail.addEventListener('pointerup', up);
+  rail.addEventListener('pointerleave', up);
+  rail.addEventListener('click', e => { if (moved > 6) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+  requestAnimationFrame(railPaint);
+  setTimeout(railPaint, 300);
+}
+
+/* Hover memutar video (desktop) & autoplay bergantian (HP) */
+function bindWorkCards() {
+  const cards = [...document.querySelectorAll('.work-card')];
+  const touch = window.matchMedia('(hover:none)').matches;
+  const slow  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const play = card => {
+    const v = card.querySelector('video');
+    if (!v.src) v.src = v.dataset.src;
+    card.classList.add('playing');
+    v.play().catch(() => {});
+  };
+  const stop = card => {
+    const v = card.querySelector('video');
+    card.classList.remove('playing');
+    v.pause();
+  };
+
+  if (!touch && !slow) {
+    cards.forEach(c => {
+      c.addEventListener('mouseenter', () => play(c));
+      c.addEventListener('mouseleave', () => stop(c));
+    });
+  }
+
+  // di HP: kartu yang sedang di tengah layar ikut berputar
+  if (touch && !slow) {
+    const mo = new IntersectionObserver((es) => {
+      es.forEach(e => e.isIntersecting ? play(e.target) : stop(e.target));
+    }, { threshold: 0.75 });
+    cards.forEach(c => mo.observe(c));
+  }
+}
+
+function renderGallery() {
+  const accent = Object.fromEntries(WORKS.map(w => [w.brand, w.c]));
+  document.getElementById('galGrid').innerHTML = GALLERY.map((g, i) => `
+    <button class="gal-item zoom relative block w-full overflow-hidden rounded-2xl break-inside-avoid group"
+            style="--accent:${accent[g.b] || '#1E5F53'}" onclick="openImage(${i})" aria-label="${g.b}">
+      <img src="web/img/${g.f}" alt="${g.b}" class="w-full h-auto object-cover" loading="lazy">
+      <span class="absolute inset-0 opacity-0 group-hover:opacity-45 transition-opacity duration-500"
+            style="background:var(--accent);mix-blend-mode:soft-light"></span>
+      <span class="absolute inset-0 bg-gradient-to-t from-teal-deep/75 via-transparent to-transparent
+                   opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+      <span class="absolute left-3 bottom-3 flex items-center gap-2 translate-y-2 opacity-0
+                   group-hover:translate-y-0 group-hover:opacity-100 transition duration-500">
+        <span class="w-1.5 h-1.5 rounded-full" style="background:var(--accent)"></span>
+        <span class="text-[11px] font-semibold uppercase tracking-wider text-cream">${g.b}</span>
+      </span>
+    </button>`).join('');
+
+  const io2 = new IntersectionObserver((es) => {
+    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io2.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('#galGrid .gal-item').forEach((el, i) => {
+    el.style.transitionDelay = (i % 5) * 70 + 'ms';
+    io2.observe(el);
+  });
+}
+
+function renderTesti() {
+  const d = I18N[currentLang];
+  document.getElementById('testiGrid').innerHTML = TESTI.map(t => `
+    <figure class="reveal in lift rounded-[1.5rem] bg-cream border border-teal/10 p-8 flex flex-col">
+      <div class="text-teal text-sm tracking-[0.25em]">★★★★★</div>
+      <blockquote class="mt-5 text-[17px] leading-relaxed text-ink/80 flex-1">${t[currentLang]}</blockquote>
+      <figcaption class="mt-7 pt-5 border-t border-teal/10 flex items-center gap-3">
+        <img src="web/logo/favicon.png" alt="" class="w-9 h-9 rounded-full object-contain bg-sage-pale p-1">
+        <span class="text-sm text-ink/50">${d.testi_role}</span>
+      </figcaption>
+    </figure>`).join('');
+}
+
+/* ---------- LIGHTBOX ---------- */
+function openVideo(slug, brand) {
+  const b = document.getElementById('lbBody');
+  b.innerHTML = `
+    <video src="web/video/${slug}.mp4" controls autoplay playsinline
+           class="max-h-[78vh] w-auto rounded-2xl shadow-2xl bg-black"></video>
+    <p class="font-display font-semibold text-cream text-lg">${brand}</p>`;
+  showLb();
+}
+
+function openImage(i) {
+  const g = GALLERY[i];
+  const b = document.getElementById('lbBody');
+  b.innerHTML = `
+    <img src="web/img/${g.f}" alt="${g.b}" class="max-h-[80vh] w-auto rounded-2xl shadow-2xl">
+    <p class="font-display font-semibold text-cream text-lg">${g.b}</p>`;
+  showLb();
+}
+
+function showLb() {
+  document.getElementById('lightbox').classList.remove('hidden-lb');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLb(e) {
+  if (e && e.target.closest('#lbBody')) return;
+  document.getElementById('lightbox').classList.add('hidden-lb');
+  document.getElementById('lbBody').innerHTML = '';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+
+/* ---------- BAHASA ---------- */
+function setLang(lang) {
+  currentLang = lang;
+  const d = I18N[lang];
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (d[k] !== undefined) el.textContent = d[k];
+  });
+
+  document.querySelectorAll('[data-price]').forEach(el => {
+    el.textContent = PRICES[lang][el.getAttribute('data-price')];
+  });
+
+  document.querySelectorAll('[data-lang-btn]').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-lang-btn') === lang);
+  });
+
+  document.querySelectorAll('[data-wa]').forEach(el => {
+    el.href = waLink(el.getAttribute('data-wa'));
+    el.target = '_blank'; el.rel = 'noopener';
+  });
+
+  document.documentElement.lang = lang;
+  renderWorks(); renderGallery(); renderTesti();
+}
+
+function toggleMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+/* ---------- MISC ---------- */
+const SOCIAL = { ig: IG_URL, tiktok: TIKTOK_URL, linkedin: LINKEDIN_URL };
+document.querySelectorAll('[data-social]').forEach(a => {
+  a.href = SOCIAL[a.getAttribute('data-social')];
+  a.target = '_blank'; a.rel = 'noopener';
+});
+
+document.querySelectorAll('[data-email]').forEach(a => {
+  a.href = 'mailto:' + EMAIL;
+  a.textContent = EMAIL;
+});
+
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('shadow-xl', window.scrollY > 20);
+  document.getElementById('navbar').classList.toggle('shadow-teal/10', window.scrollY > 20);
+});
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.transitionDelay = (i % 4) * 80 + 'ms';
+  io.observe(el);
+});
+
+/* ---------- EFEK 3D ---------- */
+const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+/* Kartu memiringkan diri mengikuti kursor */
+function bindTilt(selector, maxDeg, lift) {
+  if (noMotion || !finePointer) return;
+  document.querySelectorAll(selector).forEach(el => {
+    if (el.dataset.tilt) return;
+    el.dataset.tilt = '1';
+    let raf = null;
+    el.addEventListener('pointermove', e => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - .5;
+        const py = (e.clientY - r.top) / r.height - .5;
+        el.classList.add('live');
+        el.style.transform =
+          `rotateX(${-py * maxDeg}deg) rotateY(${px * maxDeg}deg) translateY(${-lift}px) scale(1.012)`;
+        raf = null;
+      });
+    });
+    el.addEventListener('pointerleave', () => {
+      el.classList.remove('live');
+      el.style.transform = '';
+    });
+  });
+}
+
+/* Kartu portofolio: tilt di lapisan dalam supaya tak bentrok slider */
+function bindWorkTilt() {
+  if (noMotion || !finePointer) return;
+  document.querySelectorAll('.work-card').forEach(card => {
+    const inner = card.querySelector('.work-inner');
+    if (!inner || card.dataset.tilt) return;
+    card.dataset.tilt = '1';
+    let raf = null;
+    card.addEventListener('pointermove', e => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - .5;
+        const py = (e.clientY - r.top) / r.height - .5;
+        inner.style.transition = 'transform .12s ease-out, box-shadow .5s ease, border-color .45s ease';
+        inner.style.transform = `rotateX(${-py * 11}deg) rotateY(${px * 13}deg) translateZ(26px)`;
+        raf = null;
+      });
+    });
+    card.addEventListener('pointerleave', () => {
+      inner.style.transition = '';
+      inner.style.transform = '';
+    });
+  });
+}
+
+/* Foto hero melayang berlapis: ikut scroll & gerak kursor */
+function bindHeroDepth() {
+  const items = [...document.querySelectorAll('.depth')];
+  if (!items.length || noMotion) return;
+  let mx = 0, my = 0, sy = 0, raf = null;
+
+  const paint = () => {
+    items.forEach(el => {
+      const d = parseFloat(el.dataset.depth) || 1;
+      el.style.transform =
+        `translate3d(${mx * 13 * d}px, ${my * 9 * d - sy * 26 * d}px, ${d * 32}px) rotateX(${-my * 3.4 * d}deg) rotateY(${mx * 4.2 * d}deg)`;
+    });
+    raf = null;
+  };
+  const queue = () => { if (!raf) raf = requestAnimationFrame(paint); };
+
+  if (finePointer) {
+    document.getElementById('hero').addEventListener('pointermove', e => {
+      const r = e.currentTarget.getBoundingClientRect();
+      mx = (e.clientX - r.left) / r.width - .5;
+      my = (e.clientY - r.top) / r.height - .5;
+      queue();
+    });
+    document.getElementById('hero').addEventListener('pointerleave', () => { mx = my = 0; queue(); });
+  }
+  window.addEventListener('scroll', () => {
+    const wrap = document.querySelector('.depth-wrap');
+    if (!wrap) return;
+    const r = wrap.getBoundingClientRect();
+    sy = Math.max(-1, Math.min(1, (window.innerHeight / 2 - (r.top + r.height / 2)) / window.innerHeight));
+    queue();
+  }, { passive: true });
+}
+
+/* ---------- ANGKA STATISTIK ---------- */
+function runCounters() {
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = +el.dataset.count, dur = 1400, t0 = performance.now();
+    const step = now => {
+      const p = Math.min((now - t0) / dur, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+/* ---------- RENDER AWAL ---------- */
+document.getElementById('year').textContent = new Date().getFullYear();
+setLang('id');
+
+/* ---------- URUTAN INTRO ---------- */
+const intro = document.getElementById('intro');
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function startHero() {
+  document.body.classList.remove('locked');
+  document.getElementById('hero').classList.add('go');
+  setTimeout(runCounters, 700);
+  bindHeroDepth();
+  bindTilt('.tilt-wrap-i', 7, 6);
+  railPaint();
+}
+
+function endIntro(fast) {
+  if (!intro || intro.dataset.done) return;
+  intro.dataset.done = '1';
+  intro.classList.add('split');
+  setTimeout(startHero, fast ? 120 : 420);
+  setTimeout(() => intro.classList.add('done'), 1300);
+}
+
+if (reduce) {
+  intro.classList.add('done');
+  startHero();
+} else {
+  setTimeout(() => endIntro(false), 1750);
+  intro.addEventListener('click', () => endIntro(true));
+  document.addEventListener('keydown', e => {
+    if (['Escape', 'Enter', ' '].includes(e.key)) endIntro(true);
+  }, { once: true });
+  // jaring pengaman kalau ada yang menghambat
+  setTimeout(() => { if (!intro.dataset.done) endIntro(true); }, 3500);
+}
+</script>
+</body>
+</html>
