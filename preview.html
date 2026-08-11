@@ -1,24 +1,15 @@
 <!DOCTYPE html>
 <!--
   Hanoora Studio — hanoorastudio.com
-  BUILD: 2026-08-11 · v7 "Emerald Glass"  (menggantikan v6)
-  Halaman statis tunggal. Tanpa proses build. Cloudflare Pages terbit tiap push.
+  BUILD: 2026-08-11 · v7 "Emerald Glass"
+  Halaman statis tunggal. Tanpa proses build.
 
   Yang sering diubah:
-    · data/works.js   — daftar portofolio & galeri (pakai admin.html, lokal)
+    · data/works.js   — daftar portofolio & galeri (pakai admin.html)
     · blok KONFIGURASI di bawah — kontak, harga, terjemahan
     · web/video/hero.mp4 — video latar hero (ganti file, nama tetap)
-
-  Catatan penting:
-    · Situs berbahasa Inggris saja. Teks `id:` masih ada di data tapi tidak
-      dirender — LANG dikunci 'en'. Lihat komentar di dekat `LANG = 'en'`.
-    · Scroll halus memakai Lenis dari unpkg. Jangan menambahkan
-      `scroll-behavior: smooth` ke html/body — keduanya akan bertabrakan.
-    · Track carousel porto sengaja `overflow-x:hidden`. Jangan dijadikan
-      `auto`; gesture di situ membuat scroll halaman terasa macet.
-    · Versi lama tersimpan lokal sebagai index-v6-backup.html (tidak di-commit).
 -->
-<html lang="en">   <!-- tanpa class scroll-smooth: Lenis yang mengurus animasi scroll -->
+<html lang="en" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

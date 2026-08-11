@@ -1,2 +1,16 @@
 .DS_Store
 Thumbs.db
+
+# Catatan internal — jangan sampai terbuka di hanoorastudio.com
+HANDOFF.md
+
+# Alat bantu lokal. Tidak menulis apa pun ke server, tapi tidak perlu publik.
+admin.html
+
+# Sisa kerja dan file rusak dari sinkronisasi cloud
+_frames/
+*.docx
+index-v6-backup.html
+_stress*.html
+_mock*
+PUSH.md
