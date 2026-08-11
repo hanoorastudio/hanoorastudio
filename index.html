@@ -20,6 +20,23 @@
 -->
 <html lang="en">   <!-- tanpa class scroll-smooth: Lenis yang mengurus animasi scroll -->
 <head>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1521960562946450');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1521960562946450&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hanoora Studio — Commercial Visuals & Brand Campaigns</title>
@@ -1732,6 +1749,22 @@ function wireLinks(){
     if (a.textContent.includes('@')) a.textContent = EMAIL;
   });
 }
+
+/* Pixel: WhatsApp/email CTAs = Contact; the higher-intent ones (hero call,
+   final CTA, pricing tier) also fire Lead for ad optimization. */
+const LEAD_WA_KEYS = ['hero', 'final'];
+document.addEventListener('click', e => {
+  if (typeof fbq !== 'function') return;
+  const wa = e.target.closest('[data-wa]');
+  if (wa){
+    fbq('track', 'Contact', { content_name: wa.dataset.wa });
+    if (LEAD_WA_KEYS.includes(wa.dataset.wa)) fbq('track', 'Lead', { content_name: wa.dataset.wa });
+    return;
+  }
+  const tier = e.target.closest('[data-tier-cta]');
+  if (tier){ fbq('track', 'Lead', { content_name: 'tier_' + tier.dataset.tierCta }); return; }
+  if (e.target.closest('[data-email]')) fbq('track', 'Contact', { content_name: 'email' });
+});
 
 /* ============================================================
    GERAK MASUK
