@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 392 261" role="img" aria-label="Hanoora Studio">
+  <!-- Mark Hanoora versi putih. Dua cincin identik: radius tengah 112.5,
+       tebal 29, pusat berjarak 132.
+
+       Saling-kunci ditunjukkan lewat beda terang, sama seperti logo aslinya:
+       cincin belakang lebih redup, dan di titik silang bawah cincin itu naik
+       ke depan (karena itu digambar dua kali, gambar kedua dipotong ke
+       lingkaran kecil di (195.5, 221.1)). Tidak ada garis yang diputus. -->
+  <defs>
+    <clipPath id="hnrLinkBottomW"><circle cx="195.5" cy="221.1" r="27"/></clipPath>
+  </defs>
+  <circle cx="261.5" cy="130" r="112.5" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="29"/>
+  <circle cx="129.5" cy="130" r="112.5" fill="none" stroke="#FFFFFF" stroke-width="29"/>
+  <circle cx="261.5" cy="130" r="112.5" fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="29" clip-path="url(#hnrLinkBottomW)"/>
+</svg>

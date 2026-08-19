@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 392 261" role="img" aria-label="Hanoora Studio">
+  <!-- Mark Hanoora, dibangun ulang sebagai vektor dari logo.png.
+       Dua cincin identik: radius tengah 112.5, tebal 29, pusat berjarak 132.
+
+       Keduanya SALING MENGUNCI seperti mata rantai, bukan sekadar bertumpuk:
+       di perpotongan atas cincin gelap ada di depan, di perpotongan bawah
+       cincin sage yang ada di depan. Itu sebabnya cincin sage digambar dua
+       kali — gambar kedua dipotong ke lingkaran kecil di titik silang bawah
+       (195.5, 221) supaya hanya bagian itu saja yang naik ke depan. -->
+  <defs>
+    <clipPath id="hnrLinkBottom"><circle cx="195.5" cy="221.1" r="27"/></clipPath>
+  </defs>
+  <circle cx="261.5" cy="130" r="112.5" fill="none" stroke="#9DBEB6" stroke-width="29"/>
+  <circle cx="129.5" cy="130" r="112.5" fill="none" stroke="#1E5E58" stroke-width="29"/>
+  <circle cx="261.5" cy="130" r="112.5" fill="none" stroke="#9DBEB6" stroke-width="29" clip-path="url(#hnrLinkBottom)"/>
+</svg>
