@@ -218,9 +218,9 @@ tailwind.config = {
      menyala tipis, pantulan hijau di sudut bawah, dan kilau yang lewat. */
   .glass-node{
     position:relative; display:grid; place-items:center;
-    width:8.5rem; height:8.5rem;
+    width:9.5rem; height:9.5rem;
   }
-  @media (min-width:640px){ .glass-node{ width:9.5rem; height:9.5rem; } }
+  @media (min-width:640px){ .glass-node{ width:12rem; height:12rem; } }
 
   /* Pelat kaca. Dipisah dari simpulnya supaya bisa dimunculkan belakangan —
      itu yang membuat mark bisa tampil besar dulu sebelum pelatnya ada. */
@@ -239,9 +239,29 @@ tailwind.config = {
       0 30px 70px -28px rgba(0,0,0,.8),
       0 0 64px -18px rgba(111,217,188,.32);
   }
-  @media (min-width:640px){ .glass-plate{ border-radius:2.5rem; } }
+  @media (min-width:640px){ .glass-plate{ border-radius:3rem; } }
 
   .mark-svg{ width:54%; }
+
+  /* ---------- Layar pembuka ---------- */
+  /* Dibuat lewat JS, bukan ditulis di markup: kalau JS gagal, penutup ini
+     tidak pernah ada dan halaman tetap kelihatan. */
+  #boot{
+    position:fixed; inset:0; z-index:90; background:#060D0C;
+    transition:opacity .75s ease;
+  }
+  #boot::after{
+    content:''; position:absolute; inset:0; z-index:0;
+    background:
+      radial-gradient(58rem 40rem at 50% -12%, rgba(47,140,124,.22), transparent 70%),
+      radial-gradient(46rem 34rem at 92% 22%, rgba(30,94,88,.16), transparent 72%);
+  }
+  #boot.done{ opacity:0; pointer-events:none; }
+  /* Mark pembuka ditempatkan JS tepat di atas posisi simpul yang sebenarnya,
+     dengan skala yang sama persis — jadi saat penutupnya memudar, tidak ada
+     yang berpindah tempat. Perpindahannya tidak terlihat. */
+  #bootMark{ position:fixed; z-index:2; display:grid; place-items:center; }
+  #bootMark svg{ width:54%; }
 
   /* kilau yang menyapu pelan — tanda permukaannya kaca, bukan cat */
   .glass-sheen{
@@ -256,40 +276,52 @@ tailwind.config = {
   #flowSvg .ln{ fill:none; stroke:url(#flowStroke); stroke-width:1.3; stroke-linecap:round; }
   #flowSvg .ln-glow{ fill:none; stroke:#6FD9BC; stroke-width:4.5; stroke-linecap:round;
     opacity:.22; filter:url(#flowBlur); }
-  #flowSvg .ln-cap{ fill:#6FD9BC; opacity:0; transition:opacity .5s ease; }
-  #flowSvg .ln-cap.on{ opacity:.9; }
-  #flowSvg .ln-spark{ fill:#D7F7ED; }
+  #flowSvg .ln-cap{
+    fill:#6FD9BC; opacity:0; transform-box:fill-box; transform-origin:center;
+    transform:scale(.2);
+    transition:opacity .45s ease, transform .55s cubic-bezier(.3,1.5,.5,1);
+  }
+  #flowSvg .ln-cap.on{ opacity:.95; transform:scale(1); }
+  #flowSvg .ln-spark{ fill:#EAFFF8; }
 
   .flow-item{
-    opacity:0; transform:translateY(14px);
-    transition:opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1);
+    opacity:0; transform:translateY(12px);
+    transition:opacity .75s cubic-bezier(.22,1,.36,1), transform .75s cubic-bezier(.22,1,.36,1);
   }
   .flow-item.on{ opacity:1; transform:none; }
 
-  /* Masuknya: mark tampil besar dulu di ruang kosong, lalu mengecil ke
-     dalam pelat kaca yang menyusul memudar masuk. */
+  /* Masuknya dibagi dua tahap supaya bisa disambung dengan layar pembuka:
+     `.on`      — mark tampil, cincinnya menggambar diri (masih besar)
+     `.settled` — mengecil ke ukuran akhir, pelat kacanya terbentuk */
   #flowNode{
-    opacity:0; transform:scale(1.9);
-    transition:opacity .55s ease, transform 1.2s cubic-bezier(.22,1,.36,1);
+    opacity:0; transform:scale(1.75);
+    transition:opacity .5s ease, transform 1.05s cubic-bezier(.25,.9,.3,1);
+    will-change:transform;
   }
-  #flowNode.on{ opacity:1; transform:scale(1); }
+  #flowNode.on{ opacity:1; }
+  #flowNode.settled{ transform:scale(1); }
 
   .glass-plate{
-    opacity:0; transform:scale(.82);
-    transition:opacity .85s ease .45s, transform 1s cubic-bezier(.22,1,.36,1) .45s;
+    opacity:0; transform:scale(.84);
+    transition:opacity .8s ease .2s, transform .95s cubic-bezier(.25,.9,.3,1) .2s;
   }
-  #flowNode.on .glass-plate{ opacity:1; transform:scale(1); }
+  #flowNode.settled .glass-plate{ opacity:1; transform:scale(1); }
 
   /* Cincin mark menggambar dirinya sendiri. 707 = keliling lingkaran
      r 112.5 (2πr), jadi kalau radiusnya diubah, angka ini ikut diubah. */
   .mark-ring{
     stroke-dasharray:707; stroke-dashoffset:707;
-    transition:stroke-dashoffset 1.1s cubic-bezier(.22,1,.36,1) .1s;
+    transition:stroke-dashoffset .95s cubic-bezier(.3,.85,.35,1);
   }
-  .mark-ring--b{ transition-delay:0s; }
+  .mark-ring--b{ transition-delay:.08s; }
+  #bootMark.on .mark-ring{ stroke-dashoffset:0; }
   #flowNode.on .mark-ring{ stroke-dashoffset:0; }
+  /* Dipakai saat cincinnya sudah selesai digambar di layar pembuka —
+     yang asli langsung dipasang jadi, tanpa menggambar ulang. Harus
+     ditulis SETELAH aturan .on di atas supaya menang. */
+  #flowNode.drawn .mark-ring{ transition:none; stroke-dashoffset:0; }
 
-  .node-glow{ opacity:0; transition:opacity 1.4s ease .35s; }
+  .node-glow{ opacity:0; transition:opacity 1.2s ease .2s; }
   .node-glow.on{ opacity:1; }
 
   @media (prefers-reduced-motion: reduce){
@@ -298,8 +330,9 @@ tailwind.config = {
     .glass-plate{ opacity:1; transform:none }
     .mark-ring{ stroke-dashoffset:0 }
     .node-glow{ opacity:1 }
-    #flowSvg .ln-cap{ opacity:.9 }
+    #flowSvg .ln-cap{ opacity:.95; transform:none }
     .glass-sheen{ animation:none; opacity:0 }
+    #boot{ display:none }
   }
 
   /* ---------- Marquee ---------- */
@@ -470,7 +503,7 @@ tailwind.config = {
 <main id="top">
 
 <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
-<section class="pt-32 sm:pt-40 lg:pt-44 pb-16 sm:pb-20">
+<section class="pt-28 sm:pt-32 lg:pt-36 pb-16 sm:pb-20">
   <div class="max-w-shell mx-auto px-5 sm:px-8">
 
     <!-- lencana rating -->
@@ -514,7 +547,7 @@ tailwind.config = {
          yang ditulis tangan — jadi tidak pernah meleset di lebar layar
          mana pun, dan tetap bisa dianimasikan (stroke-dashoffset).
          Lihat blok "DIAGRAM ALUR" di bawah. -->
-    <div id="flow" class="rv rv-d2 mt-16 sm:mt-20 lg:mt-24">
+    <div id="flow" class="rv rv-d2 mt-14 sm:mt-16 lg:mt-20">
       <div id="flowStage" class="relative">
         <svg id="flowSvg" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true"></svg>
 
@@ -522,7 +555,7 @@ tailwind.config = {
 
           <!-- ── KIRI: hasil jadi, bingkai 9:16 ── -->
           <div class="flex justify-center lg:justify-end lg:pr-20 order-3 lg:order-1">
-            <div id="flowOut" class="flow-item relative w-[13.5rem] sm:w-[15rem]">
+            <div id="flowOut" class="flow-item relative w-[14.5rem] sm:w-[17rem]">
               <figure class="relative rounded-[1.35rem] overflow-hidden bg-paper-deep
                              ring-1 ring-white/10 shadow-[0_40px_90px_-38px_rgba(0,0,0,.9)]">
                 <div class="relative aspect-[9/16]">
@@ -582,7 +615,7 @@ tailwind.config = {
 
           <!-- ── KANAN: alat produksi ── -->
           <div class="flex justify-center lg:justify-start lg:pl-20 order-2 lg:order-3">
-            <div id="heroTools" class="w-full max-w-[17rem] space-y-2.5"></div>
+            <div id="heroTools" class="w-full max-w-[18.5rem] space-y-2.5"></div>
           </div>
 
         </div>
@@ -1405,55 +1438,151 @@ window.addEventListener('scroll', () => {
     setTimeout(() => c.remove(), delay + dur + 400);
   }
 
-  function play(){
-    node.classList.add('on');
-    const glow = document.querySelector('.node-glow');
-    if (glow) glow.classList.add('on');
+  /* Garis-garisnya diberangkatkan di sini.
 
-    if (REDUCED){
-      freeze();
-      $$('.flow-item').forEach(e => e.classList.add('on'));
-      return;
-    }
+     Yang diperbaiki dibanding versi sebelumnya: dulu sambungan ke hasil
+     jadi ditaruh paling belakang, jadi baru berangkat setelah keenam
+     sambungan alat selesai — jaraknya terlalu jauh dan kelihatan seperti
+     dua animasi terpisah, bukan satu percabangan. Sekarang sisi kiri
+     berangkat cuma OUT_LAG milidetik setelah sambungan alat pertama:
+     kanan tetap memimpin, tapi keduanya tumbuh bersamaan.
 
-    /* Menunggu mark selesai mengecil ke dalam pelat kaca (±1,5 dtk) baru
-       garisnya berangkat. Sambungan terakhir — yaitu ke hasil jadi —
-       diberi jeda tambahan supaya sisi kanan jelas berangkat lebih dulu. */
-    const BASE = 1500, STEP = 120, DUR = 680;
-    const last = links.length - 1;
+     Kotaknya juga dimunculkan lebih awal — mulai bergerak saat garisnya
+     sudah lewat dua pertiga jalan, jadi terasa didorong oleh garis itu,
+     bukan menunggu garisnya selesai dulu. */
+  function runLines(){
+    const STEP = 95, DUR = 880, OUT_LAG = 300;
+    const outIndex = links.length - 1;   /* build() menaruh hasil jadi paling akhir */
 
     links.forEach(({ d, line, glow, cap, el }, i) => {
-      const delay = BASE + i * STEP + (i === last ? 260 : 0);
+      const delay = (i === outIndex) ? OUT_LAG : i * STEP;
+
       [line, glow].forEach(p => {
         const len = p.getTotalLength();
         p.style.transition = 'none';
         p.style.strokeDasharray  = len;
         p.style.strokeDashoffset = len;
         p.getBoundingClientRect();        /* paksa reflow sebelum transisi */
-        p.style.transition = `stroke-dashoffset ${DUR}ms cubic-bezier(.22,1,.36,1) ${delay}ms`;
+        p.style.transition =
+          `stroke-dashoffset ${DUR}ms cubic-bezier(.33,.7,.28,1) ${delay}ms`;
         p.style.strokeDashoffset = '0';
       });
+
       spark(d, delay, DUR);
-      setTimeout(() => cap.classList.add('on'), delay + DUR - 60);
-      if (el) setTimeout(() => el.classList.add('on'), delay + DUR - 220);
+      setTimeout(() => cap.classList.add('on'), delay + DUR - 90);
+      if (el) setTimeout(() => el.classList.add('on'), delay + DUR * 0.62);
     });
 
-    const tail = BASE + links.length * STEP + 260 + DUR + 260;
+    const tail = Math.max(outIndex * STEP, OUT_LAG) + DUR + 220;
     setTimeout(() => $$('.flow-item:not(.on)').forEach(e => e.classList.add('on')), tail);
   }
 
-  /* Menunggu diagramnya benar-benar masuk layar sebelum diputar,
-     supaya animasinya tidak habis sebelum sempat dilihat. */
-  const start = new IntersectionObserver(list => {
-    list.forEach(en => {
-      if (!en.isIntersecting || played) return;
-      played = true;
-      start.disconnect();
-      build();
-      requestAnimationFrame(play);
-    });
-  }, { threshold: 0.15 });
-  start.observe(stage);
+  /* instant = cincinnya sudah tergambar di layar pembuka, jadi tahap
+     menggambar dilewati dan simpulnya langsung mengecil. */
+  function play(instant){
+    node.classList.add('on');
+
+    if (REDUCED){
+      node.classList.add('settled');
+      const g0 = document.querySelector('.node-glow');
+      if (g0) g0.classList.add('on');
+      freeze();
+      $$('.flow-item').forEach(e => e.classList.add('on'));
+      return;
+    }
+
+    setTimeout(() => {
+      node.classList.add('settled');
+      const g = document.querySelector('.node-glow');
+      if (g) g.classList.add('on');
+      setTimeout(runLines, 620);
+    }, instant ? 0 : 900);
+  }
+
+  /* ── Layar pembuka ──
+     Penutup gelap dengan mark di tengah, ditempatkan tepat di atas posisi
+     simpul yang sebenarnya dan pada skala yang sama. Waktu penutupnya
+     memudar, tidak ada yang berpindah — sambungannya tidak terlihat. */
+  function boot(){
+    const svgEl = node.querySelector('svg');
+    if (!svgEl) return play(false);
+
+    /* Wadah diagram dibuka dulu dari keadaan reveal-nya. Selama masih
+       `.rv` yang belum `.in`, isinya tergeser 22px ke bawah — dan mark
+       pembukanya jadi diletakkan 22px meleset dari posisi akhir simpul.
+       Tidak apa-apa dibuka sekarang: semuanya masih tertutup layar pembuka. */
+    const flowWrap = document.getElementById('flow');
+    if (flowWrap){
+      /* Transisinya dimatikan sesaat. Kalau tidak, `.in` mulai menganimasikan
+         geseran 22px itu dan pengukuran di bawah menangkapnya di tengah jalan
+         — mark pembukanya lalu terpaku di posisi setengah jadi. */
+      flowWrap.style.transition = 'none';
+      flowWrap.classList.add('in');
+      flowWrap.getBoundingClientRect();     /* paksa tata letak diperbarui */
+    }
+
+    const cover = document.createElement('div');
+    cover.id = 'boot';
+    const mark = document.createElement('div');
+    mark.id = 'bootMark';
+    mark.appendChild(svgEl.cloneNode(true));
+    cover.appendChild(mark);
+    document.body.appendChild(cover);
+    if (window.__lenis) window.__lenis.stop();
+
+    /* Ukurannya diambil dari offsetWidth/offsetHeight — ukuran TATA LETAK,
+       bukan getBoundingClientRect. Rect simpul sudah ikut menghitung scale
+       1.75 dari CSS; kalau angka itu dipakai lalu diskalakan lagi, hasilnya
+       keskala dua kali dan mark pembukanya jauh lebih besar dari simpulnya.
+       Titik tengah tidak bergeser oleh transform, jadi posisi kiri-atas
+       versi tanpa skala dihitung balik dari titik tengah itu. */
+    const place = () => {
+      const r = node.getBoundingClientRect();
+      const w = node.offsetWidth, h = node.offsetHeight;
+      mark.style.left   = (r.left + r.width  / 2 - w / 2) + 'px';
+      mark.style.top    = (r.top  + r.height / 2 - h / 2) + 'px';
+      mark.style.width  = w + 'px';
+      mark.style.height = h + 'px';
+      /* skala yang sama dengan keadaan awal #flowNode di CSS */
+      mark.style.transform = 'scale(1.75)';
+    };
+    place();
+    if (flowWrap) flowWrap.style.transition = '';
+
+    /* cincin pada salinan mulai menggambar diri */
+    requestAnimationFrame(() => mark.classList.add('on'));
+
+    setTimeout(() => {
+      node.classList.add('drawn');      /* aslinya langsung dalam keadaan tergambar */
+      cover.classList.add('done');
+      if (window.__lenis) window.__lenis.start();
+      play(true);
+      setTimeout(() => cover.remove(), 900);
+    }, 1150);
+  }
+
+  /* Diagram ini duduk di hero, jadi hampir selalu sudah terlihat saat
+     halaman dibuka — di situ layar pembukanya dipakai. Kalau pengunjung
+     mendarat di tengah halaman (misal lewat tautan #pricing), pembukanya
+     dilewati dan animasinya menunggu diagramnya masuk layar. */
+  const atTop = () => (window.scrollY || 0) < 40 && !location.hash;
+
+  if (!REDUCED && atTop()){
+    played = true;
+    build();
+    requestAnimationFrame(boot);
+  } else {
+    const start = new IntersectionObserver(list => {
+      list.forEach(en => {
+        if (!en.isIntersecting || played) return;
+        played = true;
+        start.disconnect();
+        build();
+        requestAnimationFrame(() => play(false));
+      });
+    }, { threshold: 0.15 });
+    start.observe(stage);
+  }
 
   let rt;
   window.addEventListener('resize', () => {
