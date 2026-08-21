@@ -271,36 +271,58 @@ tailwind.config = {
   @keyframes scrollBlink{ 0%,100%{ opacity:.35 } 50%{ opacity:.85 } }
   @media (prefers-reduced-motion: reduce){ .scroll-hint{ animation:none } }
 
-  /* ---------- Layar pembuka ---------- */
-  /* Dibuat lewat JS, bukan ditulis di markup: kalau JS gagal, penutup ini
-     tidak pernah ada dan halaman tetap kelihatan. */
-  #boot{
-    position:fixed; inset:0; z-index:90; background:#060D0C;
-    display:grid; place-items:center;
-    transition:opacity .8s ease;
+  /* ---------- Scan reveal ----------
+     Dua panel gelap menutupi kiri & kanan video pada page load.
+     Keduanya bergerak ke luar viewport (kiri ke kiri, kanan ke kanan),
+     mengungkap video dari tengah. Garis scan hijau di tepi dalam masing-
+     masing panel = kepala scan yang ikut bergerak. */
+  .scan-cover{
+    position:absolute; top:0; bottom:0; width:50%;
+    background:#05100E;   /* selaras dengan bg hero-stage saat gelap */
+    z-index:4;            /* di atas video & veil, di bawah teks (z-10) */
+    will-change:transform;
+    /* transform-nya tidak dianimasikan langsung — dipicu .scan-run supaya
+       animasi baru mulai saat halaman siap, bukan di tengah paint pertama */
+    transition:transform 1.75s cubic-bezier(.72,0,.16,1);
   }
-  #boot::after{
-    content:''; position:absolute; inset:0; z-index:0;
-    background:
-      radial-gradient(58rem 40rem at 50% -12%, rgba(47,140,124,.22), transparent 70%),
-      radial-gradient(46rem 34rem at 92% 22%, rgba(30,94,88,.16), transparent 72%);
-  }
-  #boot.done{ opacity:0; pointer-events:none; }
-  #bootMark{ position:relative; z-index:2; width:min(34vw, 15rem); }
+  .scan-left { left:0;   transform:translateX(0); }
+  .scan-right{ right:0;  transform:translateX(0); }
 
-  /* Cincin mark menggambar dirinya sendiri. 707 = keliling lingkaran
-     r 112.5 (2piR), jadi kalau radiusnya diubah, angka ini ikut diubah. */
-  .mark-ring{
-    stroke-dasharray:707; stroke-dashoffset:707;
-    transition:stroke-dashoffset 1.05s cubic-bezier(.3,.85,.35,1);
+  /* Garis scan di tepi DALAM tiap panel — kanan panel kiri, kiri panel kanan.
+     Awal keduanya berimpit di tengah viewport, lalu ikut panel keluar. */
+  .scan-cover::after{
+    content:''; position:absolute; top:0; bottom:0; width:2px;
+    background:linear-gradient(180deg, transparent 0%, #6FD9BC 18%, #A6EBD8 50%, #6FD9BC 82%, transparent 100%);
+    box-shadow:0 0 24px 3px rgba(111,217,188,.75),
+               0 0 60px 12px rgba(111,217,188,.35);
+    opacity:0;
+    transition:opacity .35s ease .05s;
   }
-  .mark-ring--b{ transition-delay:.1s; }
-  #boot.draw .mark-ring{ stroke-dashoffset:0; }
+  .scan-left::after { right:-1px; }
+  .scan-right::after{ left:-1px;  }
+
+  #heroStage.scan-arm .scan-cover::after{ opacity:1; }
+  #heroStage.scan-run .scan-left  { transform:translateX(-101%); }
+  #heroStage.scan-run .scan-right { transform:translateX( 101%); }
+  /* Setelah scan selesai, hilangkan garis + panel sepenuhnya (opacity fade). */
+  #heroStage.scan-done .scan-cover     { opacity:0; pointer-events:none; }
+  #heroStage.scan-done .scan-cover::after{ opacity:0; transition:opacity .3s ease; }
+
+  /* Item hero: badge, judul, sub, CTA, scroll-hint.
+     Semua hidden pada page load, ditampilkan berjenjang setelah scan selesai. */
+  .hero-item{ opacity:0; transform:translateY(14px);
+    transition:opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
+  #heroStage.text-in .hero-item        { opacity:1; transform:none; }
+  #heroStage.text-in .hero-d1          { transition-delay:.10s; }
+  #heroStage.text-in .hero-d2          { transition-delay:.20s; }
+  #heroStage.text-in .hero-d3          { transition-delay:.30s; }
+  #heroStage.text-in .hero-d4          { transition-delay:.45s; }
 
   @media (prefers-reduced-motion: reduce){
-    .mark-ring{ stroke-dashoffset:0 }
-    #boot{ display:none }
+    .scan-cover{ display:none }
+    .hero-item{ opacity:1; transform:none }
   }
+
 
   /* ---------- Marquee ---------- */
   .mq-wrap{ overflow:hidden;
@@ -490,26 +512,42 @@ tailwind.config = {
 <main id="top">
 
 <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
-<!-- Video skydive full-bleed jadi kanvas hero. Alurnya:
-       0 → 3 dtk   : intro sekali, kamera turun dari top-down ke close.
-       3 → 5 dtk   : loop indefinitely — subjek sudah stabil di depan.
-     Setelah loop, klip fall-to-white (Clip B) belum ada; nanti dipicu saat
-     scroll melewati hero. Untuk sekarang, bagian di bawah hero muncul
-     seperti biasa.
+<!-- Video skydive full-bleed jadi kanvas hero.
 
-     Teks hero (badge, judul, sub, CTA) duduk DI ATAS video dengan overlay
-     gelap tipis supaya tetap terbaca. Statistik dipindah ke bawah blok video
-     karena kontras teks-di-atas-video sudah cukup padat di hero. -->
-<section class="hero-stage relative">
+     Dua klip terpisah:
+       hero-skydive-intro.mp4 (3 dtk) — kamera turun dari top-down ke
+         close-up depan. Diputar sekali di awal.
+       hero-skydive-loop.mp4  (4 dtk) — forward + reverse dari segmen
+         3-5 detik. Karena ujung frame = awal frame (satu dari reverse),
+         `loop` attribute HTML memutar tanpa jump.
+     Wrap dari `ended` ke frame tengah (pendekatan sebelumnya) diketahui
+     patah karena 3s dan 5s tidak identik. Ping-pong file memindahkan
+     masalah itu ke ffmpeg, sekali saja, permanen.
+
+     SCAN REVEAL: dua panel gelap menutupi kiri & kanan video pada page
+     load. Keduanya bergerak ke luar viewport — kiri ke kiri, kanan ke
+     kanan — mengungkap video dari tengah. Garis scan hijau di tepi dalam
+     tiap panel ikut bergerak, jadi bagian "kepala scan"-nya sendiri.
+
+     Teks hero (badge, judul, sub, CTA) baru MUNCUL setelah scan selesai. -->
+<section id="heroStage" class="hero-stage relative">
+
+  <!-- intro dulu, dipertukarkan ke loop oleh JS saat 'ended' -->
   <video id="heroVid" class="hero-vid" playsinline muted autoplay preload="auto"
          poster="web/video/hero-skydive-poster.jpg" aria-hidden="true"></video>
   <div class="hero-veil"></div>
 
-  <div class="relative z-10 max-w-shell mx-auto px-5 sm:px-8
+  <!-- scan reveal: dua panel dan dua garis scan.
+       Panel dan garis diletakkan di sini (bukan di dalam kotak konten) supaya
+       menutupi seluruh viewport hero, termasuk area padding atas/bawah. -->
+  <div class="scan-cover scan-left"  aria-hidden="true"></div>
+  <div class="scan-cover scan-right" aria-hidden="true"></div>
+
+  <div id="heroInner" class="relative z-10 max-w-shell mx-auto px-5 sm:px-8
               min-h-[calc(100svh-4.5rem)] flex flex-col justify-center py-24 sm:py-28">
 
     <!-- lencana rating -->
-    <div class="rv flex justify-center">
+    <div class="hero-item flex justify-center">
       <div class="inline-flex items-center gap-3 rounded-full surface-dark px-4 py-2">
         <span id="heroStars" class="flex gap-0.5 text-brand-300"></span>
         <span class="text-sm text-white/75">
@@ -518,19 +556,19 @@ tailwind.config = {
       </div>
     </div>
 
-    <h1 class="rv rv-d1 display text-center mx-auto max-w-[52rem] mt-7 sm:mt-9
+    <h1 class="hero-item hero-d1 display text-center mx-auto max-w-[52rem] mt-7 sm:mt-9
                text-[2.4rem] leading-[1.05] sm:text-[3.2rem] lg:text-[3.8rem] text-white">
       Human-written, AI-produced,<br class="hidden sm:block">
       <em class="em-plain">hand-finished.</em>
     </h1>
 
-    <p class="rv rv-d2 text-center max-w-[34rem] mx-auto mt-5 text-[15px] sm:text-base
+    <p class="hero-item hero-d2 text-center max-w-[34rem] mx-auto mt-5 text-[15px] sm:text-base
               leading-[1.7] text-white/75">
       A creative department for brands that refuse to look ordinary — commercial
       film, photography and design, on one monthly retainer.
     </p>
 
-    <div class="rv rv-d3 flex flex-wrap justify-center gap-3 mt-7">
+    <div class="hero-item hero-d3 flex flex-wrap justify-center gap-3 mt-7">
       <a id="heroCta" href="#" target="_blank" rel="noopener" class="btn btn-solid">
         Book a discovery call
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -539,7 +577,7 @@ tailwind.config = {
     </div>
 
     <!-- Petunjuk gulir kecil di bawah hero, kedip halus -->
-    <div class="rv rv-d4 flex justify-center mt-16 sm:mt-20">
+    <div class="hero-item hero-d4 flex justify-center mt-16 sm:mt-20">
       <span class="scroll-hint text-[10px] uppercase tracking-[.28em] text-white/60">Scroll</span>
     </div>
   </div>
@@ -1150,26 +1188,40 @@ window.addEventListener('scroll', () => {
    tetap terbaca.
    ============================================================ */
 (function heroVideo(){
-  const v = $('#heroVid');
-  if (!v) return;
+  const v     = $('#heroVid');
+  const stage = $('#heroStage');
+  if (!v || !stage) return;
 
-  const LOOP_START = 3.0;   /* dtk — subjek sudah stabil menghadap depan */
+  /* dua pasang sumber: intro (sekali) + loop (pingpong, HTML `loop`) */
+  const SRC = {
+    intro: {
+      d: 'web/video/hero-skydive-intro.mp4',
+      m: 'web/video/hero-skydive-intro-mobile.mp4',
+    },
+    loop: {
+      d: 'web/video/hero-skydive-loop.mp4',
+      m: 'web/video/hero-skydive-loop-mobile.mp4',
+    },
+  };
+  const pickSrc = kind =>
+    window.matchMedia('(max-width: 640px)').matches ? SRC[kind].m : SRC[kind].d;
 
-  const isMobile = window.matchMedia('(max-width: 640px)').matches;
-  v.src = isMobile
-    ? 'web/video/hero-skydive-mobile.mp4'
-    : 'web/video/hero-skydive-desktop.mp4';
+  /* Mulai dengan intro. Setelah selesai, swap ke loop dengan atribut `loop`. */
+  v.src = pickSrc('intro');
+  v.loop = false;
 
-  /* Beberapa peramban memicu `ended` sekali saja lalu pause video di
-     posisi akhir. Kita paksa play ulang dari LOOP_START. */
+  let swapped = false;
   v.addEventListener('ended', () => {
-    try { v.currentTime = LOOP_START; } catch(_){}
+    if (swapped) return;
+    swapped = true;
+    v.loop = true;
+    v.src  = pickSrc('loop');
+    /* Kalau autoplay tetap dihormati peramban (video sudah bermain sebelumnya),
+       play() setelah src baru mestinya berjalan tanpa masalah. */
     v.play().catch(()=>{});
   });
 
-  /* Kalau autoplay tertolak, jangan biarkan poster terlihat kaku selamanya.
-     Tampilkan tombol kecil "play" — belum diminta user, jadi cukup satu
-     kali coba play pada interaksi pertama halaman apa pun. */
+  /* Autoplay ditolak? — coba lagi begitu ada interaksi apa pun. */
   const kick = () => {
     v.play().catch(()=>{});
     window.removeEventListener('pointerdown', kick);
@@ -1180,68 +1232,53 @@ window.addEventListener('scroll', () => {
     window.addEventListener('touchstart',  kick, { once:true, passive:true });
   });
 
-  /* Ganti sumber saat lebar layar melewati batas mobile/desktop. */
-  let cur = v.src;
+  /* Ganti resolusi saat lebar layar melewati batas mobile/desktop. */
+  let curBucket = window.matchMedia('(max-width: 640px)').matches ? 'm' : 'd';
   window.addEventListener('resize', () => {
-    const want = window.matchMedia('(max-width: 640px)').matches
-      ? 'web/video/hero-skydive-mobile.mp4'
-      : 'web/video/hero-skydive-desktop.mp4';
-    if (!cur.endsWith(want)){
-      cur = want;
-      const t = v.currentTime;   /* pertahankan waktu supaya loop tidak me-reset */
-      v.src = want;
-      v.addEventListener('loadedmetadata', () => {
-        try { v.currentTime = Math.min(t, LOOP_START); } catch(_){}
-        v.play().catch(()=>{});
-      }, { once:true });
-    }
+    const b = window.matchMedia('(max-width: 640px)').matches ? 'm' : 'd';
+    if (b === curBucket) return;
+    curBucket = b;
+    v.src = pickSrc(swapped ? 'loop' : 'intro');
+    v.play().catch(()=>{});
   });
 })();
 
 /* ============================================================
-   LAYAR PEMBUKA
+   HERO — scan reveal + text-in
    ------------------------------------------------------------
-   Penutup gelap dengan mark di tengah yang menggambar dirinya
-   sendiri, lalu memudar. Sengaja dibuat lewat JS: kalau JS gagal
-   dimuat, penutupnya tidak pernah ada dan halaman tetap terbaca.
+   Tiga tahap, dengan tundaan supaya paint pertama sudah stabil
+   sebelum transisi dimulai:
 
-   Dilewati kalau pengunjung mendarat di tengah halaman (misal
-   lewat tautan #pricing) atau meminta gerak dikurangi — di dua
-   keadaan itu penutup layar penuh cuma menghalangi.
+     1. .scan-arm      — nyalakan garis scan (opacity 0 → 1)
+     2. .scan-run      — panel kiri/kanan bergerak keluar (1.75 dtk)
+     3. .scan-done     — hilangkan panel & garis
+     4. .text-in       — reveal item hero berjenjang
+
+   Dijalankan sekali per kunjungan; kalau pengguna sudah mendarat di
+   tengah halaman atau meminta gerak dikurangi, dilewati (item hero
+   ditampilkan langsung).
    ============================================================ */
-(function boot(){
+(function heroScan(){
+  const stage = $('#heroStage');
+  if (!stage) return;
   const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const atTop   = (window.scrollY || 0) < 40 && !location.hash;
-  if (REDUCED || !atTop) return;
 
-  const cover = document.createElement('div');
-  cover.id = 'boot';
-  cover.setAttribute('aria-hidden', 'true');
-  cover.innerHTML = `
-    <svg id="bootMark" viewBox="0 0 392 261" role="img" aria-label="Hanoora Studio">
-      <defs>
-        <clipPath id="hnrBootLink"><circle cx="195.5" cy="221.1" r="27"/></clipPath>
-      </defs>
-      <circle class="mark-ring mark-ring--b" cx="261.5" cy="130" r="112.5"
-              fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="29"
-              transform="rotate(-90 261.5 130)"/>
-      <circle class="mark-ring" cx="129.5" cy="130" r="112.5"
-              fill="none" stroke="#FFFFFF" stroke-width="29"
-              transform="rotate(-90 129.5 130)"/>
-      <circle class="mark-ring mark-ring--b" cx="261.5" cy="130" r="112.5"
-              fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="29"
-              transform="rotate(-90 261.5 130)" clip-path="url(#hnrBootLink)"/>
-    </svg>`;
-  document.body.appendChild(cover);
-  if (window.__lenis) window.__lenis.stop();
+  if (REDUCED || !atTop){
+    stage.classList.add('text-in');
+    stage.querySelectorAll('.scan-cover').forEach(el => el.remove());
+    return;
+  }
 
-  requestAnimationFrame(() => cover.classList.add('draw'));
-
-  setTimeout(() => {
-    cover.classList.add('done');
-    if (window.__lenis) window.__lenis.start();
-    setTimeout(() => cover.remove(), 900);
-  }, 1350);
+  /* Beri paint dulu, baru minta transisi. requestAnimationFrame double-nya
+     memastikan browser sudah render frame awal — kalau dipicu terlalu awal,
+     panel dianggap sudah pada state akhir sejak awal dan animasinya lompat. */
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    stage.classList.add('scan-arm');            /* garis scan menyala */
+    setTimeout(() => stage.classList.add('scan-run'),   180);   /* panel bergerak */
+    setTimeout(() => stage.classList.add('text-in'),   1350);   /* teks masuk mulai */
+    setTimeout(() => stage.classList.add('scan-done'), 2000);   /* garis & panel fade */
+  }));
 })();
 
 /* ============================================================
