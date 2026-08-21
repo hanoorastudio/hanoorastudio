@@ -1,35 +1,17 @@
 <!DOCTYPE html>
-<!--
-  Hanoora Studio — hanoorastudio.com
-  BUILD: 2026-08-19 · v8 "Paper Emerald"  (menggantikan v7 "Emerald Glass")
-  Halaman statis tunggal. Tanpa proses build. Cloudflare Pages terbit tiap push ke main.
-
-  Yang sering diubah:
-    · data/works.js   — daftar portofolio & galeri (pakai admin.html, lokal)
-    · blok KONFIGURASI di bawah — kontak, harga, seluruh teks halaman
-    · AI_TOOLS di blok KONFIGURASI — daftar alat di diagram hero
-
-  Catatan penting:
-    · Situs berbahasa Inggris saja. data/works.js masih menyimpan teks {en,id};
-      halaman ini hanya membaca .en lewat helper tr(). Format works.js JANGAN
-      diubah supaya admin.html tetap bisa dipakai.
-    · Scroll halus memakai Lenis dari unpkg. Jangan menambahkan
-      `scroll-behavior:smooth` ke html/body — keduanya akan bertabrakan.
-    · Palet diambil dari logo: #1E5E58 (teal tua) dan #9DBEB6 (sage).
-      Base halaman sengaja terang (#FBFAF7) — ini pembeda utama dari v7.
-    · Versi v7 tersimpan di riwayat git pada commit 4ea0e7e.
--->
+<!-- Hanoora Studio — v9 "Dark Flow" · 2026-08-19
+     Halaman statis tunggal, tanpa build. Catatan lengkap ada di README.md.
+     Sengaja pendek: charset di bawah wajib masuk 1024 byte pertama. -->
 <html lang="en">
 <head>
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "y25itfq5zc");
-</script>
-<!-- End Microsoft Clarity -->
+<!-- Charset dan viewport WAJIB berada paling atas.
+     Spesifikasi HTML menuntut deklarasi charset muncul dalam 1024 byte
+     pertama dokumen. Dua skrip pelacak di bawah panjang; kalau charset
+     ditaruh setelahnya, posisinya lewat batas dan peramban terpaksa
+     menebak sendiri pengodean halaman. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -47,8 +29,21 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1521960562946450&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Microsoft Clarity — rekaman sesi & peta panas.
+     Ditaruh di <head>, bukan di dalam bagian hero: Clarity merekam
+     seluruh halaman, jadi harus sudah jalan sebelum apa pun digambar.
+     Kalau dipasang di tengah body, guliran dan klik sebelum titik itu
+     tidak ikut terekam. ID proyek: y25itfq5zc -->
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "y25itfq5zc");
+</script>
+<!-- End Microsoft Clarity -->
+
 <title>Hanoora Studio — Commercial Film, Photography & Design</title>
 <meta name="description" content="Hanoora Studio is an AI creative agency producing cinematic commercial film, photography, design and social content. Human-written scripts, AI production, human finishing — on a monthly retainer with design included.">
 <link rel="canonical" href="https://hanoorastudio.com/">
@@ -83,12 +78,14 @@ tailwind.config = {
           600:'#2A7A70', 500:'#37958A', 400:'#4FBBA2', 300:'#6FD9BC',
           200:'#A6EBD8', 100:'#D7F7ED',
         },
-        /* Nama 'paper' dipertahankan supaya markup tidak perlu diubah masal —
-           isinya sekarang permukaan gelap, dari yang paling dalam ke paling atas. */
-        paper: { DEFAULT:'#060D0C', warm:'#0A1413', deep:'#111E1C' },
-        /* 'ink' = teks. Di tema gelap artinya terang. */
-        ink:   { DEFAULT:'#E8F0ED', soft:'#A5BAB4', mute:'#748984' },
-        brass: { DEFAULT:'#C7A64F', light:'#E3CE92' },
+        /* 'paper' = permukaan halaman, dari yang paling atas ke yang paling
+           dalam. Putih bersih, karena hero berakhir di putih — halaman harus
+           menyambungnya tanpa terlihat batasnya. */
+        paper: { DEFAULT:'#FFFFFF', warm:'#F5F8F7', deep:'#E7EEEB' },
+        /* 'ink' = teks. Hitam kehijauan, bukan hitam murni, supaya sewarna
+           keluarga dengan hijau brand. */
+        ink:   { DEFAULT:'#0B1F1B', soft:'#46605A', mute:'#7C8F8A' },
+        brass: { DEFAULT:'#9A7B2E', light:'#C7A64F' },
       },
       letterSpacing: { kicker:'0.22em' },
       maxWidth: { shell:'1320px', prose2:'46rem' },
@@ -98,39 +95,42 @@ tailwind.config = {
 </script>
 <style>
   :root{
-    --line:  rgba(255,255,255,.11);
-    --line2: rgba(255,255,255,.06);
+    --line:  rgba(11,31,27,.14);
+    --line2: rgba(11,31,27,.08);
     --brand: #1E5E58;
-    --mint:  #6FD9BC;
-    --surface:  rgba(255,255,255,.035);
-    --surface2: rgba(255,255,255,.055);
+    /* Di latar putih, aksen harus TURUN ke tangga yang lebih gelap.
+       Mint #6FD9BC yang dipakai di tema gelap tidak terbaca di sini. */
+    --accent: #1E5E58;
+    --surface:  rgba(255,255,255,.72);
+    --surface2: rgba(255,255,255,.92);
   }
-  html{ background:#060D0C; }
+  html{ background:#FFFFFF; }
   body{
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
-    background:#060D0C; color:#E8F0ED;
+    background:#FFFFFF; color:#0B1F1B;
   }
-  ::selection{ background:#6FD9BC; color:#05100E; }
+  ::selection{ background:#1E5E58; color:#FFFFFF; }
   img,video{ max-width:100%; }
 
-  /* Dua cahaya besar yang sangat redup di belakang seluruh halaman.
-     Ini yang membuat latar gelap tidak terbaca sebagai hitam rata. */
+  /* Semburat hijau yang sangat tipis di belakang halaman. Di latar putih
+     takarannya jauh lebih kecil daripada di tema gelap — lewat sedikit saja
+     sudah terbaca sebagai noda, bukan cahaya. */
   body::after{
     content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
     background:
-      radial-gradient(58rem 40rem at 50% -12%, rgba(47,140,124,.22), transparent 70%),
-      radial-gradient(46rem 34rem at 92% 22%, rgba(30,94,88,.16), transparent 72%);
+      radial-gradient(58rem 40rem at 50% -10%, rgba(30,94,88,.07), transparent 70%),
+      radial-gradient(46rem 34rem at 94% 20%, rgba(30,94,88,.05), transparent 72%);
   }
-  /* Butiran halus supaya gradasinya tidak membentuk pita warna. */
+  /* Butiran halus supaya bidang putihnya tidak terasa mati. */
   body::before{
-    content:''; position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.55;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+    content:''; position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
   }
   main, header, footer{ position:relative; z-index:2; }
 
   ::-webkit-scrollbar{ width:11px; }
-  ::-webkit-scrollbar-track{ background:#060D0C; }
-  ::-webkit-scrollbar-thumb{ background:#1E3A35; border-radius:99px; border:3px solid #060D0C; }
+  ::-webkit-scrollbar-track{ background:#F5F8F7; }
+  ::-webkit-scrollbar-thumb{ background:#C4D8D2; border-radius:99px; border:3px solid #F5F8F7; }
   ::-webkit-scrollbar-thumb:hover{ background:#2A7A70; }
 
   /* ---------- Tipografi ---------- */
@@ -143,18 +143,18 @@ tailwind.config = {
   .display em{
     font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-style:italic;
     letter-spacing:-.01em;
-    background:linear-gradient(100deg,#A6EBD8 0%,#6FD9BC 42%,#4FBBA2 100%);
+    background:linear-gradient(100deg,#2A7A70 0%,#1E5E58 45%,#123B37 100%);
     -webkit-background-clip:text; background-clip:text;
     -webkit-text-fill-color:transparent; color:transparent;
   }
-  /* Di atas blok hijau, gradasi mint kurang kontras — di sana em dibuat putih. */
+  /* Di dalam blok hijau pekat, gradasi gelap itu hilang — di sana em dibuat putih. */
   .display em.em-plain{ background:none; -webkit-text-fill-color:#fff; color:#fff; }
   .kicker{
     font-size:10.5px; font-weight:600; text-transform:uppercase;
-    letter-spacing:.22em; color:#748984;
+    letter-spacing:.22em; color:#7C8F8A;
   }
-  .kicker .num{ color:#6FD9BC; margin-right:.65rem; }
-  .lede{ font-size:1.0625rem; line-height:1.72; color:#A5BAB4; }
+  .kicker .num{ color:#1E5E58; margin-right:.65rem; }
+  .lede{ font-size:1.0625rem; line-height:1.72; color:#46605A; }
   @media (min-width:640px){ .lede{ font-size:1.125rem; } }
 
   /* ---------- Garis pembatas ---------- */
@@ -162,16 +162,17 @@ tailwind.config = {
   .rule-soft{ height:1px; background:var(--line2); }
 
   /* ---------- Permukaan kaca ---------- */
-  /* Dipakai di semua kartu, chip, dan panel. Satu definisi supaya
-     seluruh halaman punya tingkat "kaca" yang sama. */
+  /* Di latar putih, "kaca" tidak lagi berarti lapisan terang di atas gelap.
+     Yang membentuknya sekarang: putih pekat, semburat hijau di sudut, garis
+     tepi tipis, dan bayangan lembut yang mengangkatnya dari halaman. */
   .surface{
     background:
-      radial-gradient(130% 150% at 6% 0%, rgba(111,217,188,.09), transparent 58%),
+      radial-gradient(130% 150% at 6% 0%, rgba(30,94,88,.06), transparent 58%),
       var(--surface);
     border:1px solid var(--line2);
-    backdrop-filter:blur(16px) saturate(1.35);
-    -webkit-backdrop-filter:blur(16px) saturate(1.35);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
+    backdrop-filter:blur(16px) saturate(1.2);
+    -webkit-backdrop-filter:blur(16px) saturate(1.2);
+    box-shadow:0 1px 2px rgba(11,31,27,.04), 0 12px 32px -22px rgba(11,31,27,.28);
   }
 
   /* ---------- Tombol ---------- */
@@ -182,36 +183,37 @@ tailwind.config = {
     white-space:nowrap;
   }
   .btn-solid{
-    background:linear-gradient(180deg,#6FD9BC 0%,#3FAF95 100%);
-    color:#04120F; font-weight:600;
-    box-shadow:0 1px 0 rgba(255,255,255,.35) inset, 0 10px 30px -12px rgba(111,217,188,.5);
+    background:linear-gradient(180deg,#26706A 0%,#17504A 100%);
+    color:#FFFFFF; font-weight:600;
+    box-shadow:0 1px 0 rgba(255,255,255,.18) inset, 0 12px 28px -14px rgba(30,94,88,.6);
   }
-  .btn-solid:hover{ transform:translateY(-2px); box-shadow:0 1px 0 rgba(255,255,255,.45) inset, 0 18px 44px -14px rgba(111,217,188,.6); }
-  .btn-ghost{ border:1px solid var(--line); color:#E8F0ED; background:rgba(255,255,255,.02); }
-  .btn-ghost:hover{ border-color:rgba(111,217,188,.5); color:#A6EBD8; background:rgba(111,217,188,.06); }
-  .btn-light{ background:#E8F0ED; color:#05100E; font-weight:600; }
-  .btn-light:hover{ transform:translateY(-2px); box-shadow:0 16px 38px -16px rgba(0,0,0,.7); }
-  .btn-outline-light{ border:1px solid rgba(232,240,237,.28); color:#E8F0ED; }
-  .btn-outline-light:hover{ border-color:#E8F0ED; background:rgba(232,240,237,.08); }
+  .btn-solid:hover{ transform:translateY(-2px); box-shadow:0 1px 0 rgba(255,255,255,.24) inset, 0 20px 44px -16px rgba(30,94,88,.7); }
+  .btn-ghost{ border:1px solid var(--line); color:#0B1F1B; background:rgba(255,255,255,.6); }
+  .btn-ghost:hover{ border-color:rgba(30,94,88,.45); color:#1E5E58; background:rgba(30,94,88,.05); }
+  /* Dipakai DI ATAS blok hijau pekat — di situ tombol terangnya yang menonjol. */
+  .btn-light{ background:#FFFFFF; color:#0B1F1B; font-weight:600; }
+  .btn-light:hover{ transform:translateY(-2px); box-shadow:0 16px 38px -16px rgba(0,0,0,.45); }
+  .btn-outline-light{ border:1px solid rgba(255,255,255,.32); color:#FFFFFF; }
+  .btn-outline-light:hover{ border-color:#FFFFFF; background:rgba(255,255,255,.12); }
 
   /* ---------- Kartu ---------- */
   .card{
     background:
-      radial-gradient(130% 150% at 6% 0%, rgba(111,217,188,.09), transparent 58%),
+      radial-gradient(130% 150% at 6% 0%, rgba(30,94,88,.055), transparent 58%),
       var(--surface);
     border:1px solid var(--line2); border-radius:1.25rem;
-    backdrop-filter:blur(16px) saturate(1.35);
-    -webkit-backdrop-filter:blur(16px) saturate(1.35);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.09);
+    backdrop-filter:blur(16px) saturate(1.2);
+    -webkit-backdrop-filter:blur(16px) saturate(1.2);
+    box-shadow:0 1px 2px rgba(11,31,27,.04), 0 14px 36px -26px rgba(11,31,27,.3);
     transition:border-color .45s ease, transform .45s cubic-bezier(.22,1,.36,1),
                box-shadow .45s ease, background .45s ease;
   }
   .card:hover{
-    border-color:rgba(111,217,188,.3); transform:translateY(-5px);
+    border-color:rgba(30,94,88,.28); transform:translateY(-5px);
     background:
-      radial-gradient(130% 150% at 6% 0%, rgba(111,217,188,.15), transparent 58%),
+      radial-gradient(130% 150% at 6% 0%, rgba(30,94,88,.1), transparent 58%),
       var(--surface2);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.14), 0 24px 60px -34px rgba(111,217,188,.35);
+    box-shadow:0 2px 4px rgba(11,31,27,.05), 0 28px 60px -32px rgba(30,94,88,.35);
   }
 
   /* ---------- Reveal saat scroll ---------- */
@@ -220,44 +222,62 @@ tailwind.config = {
   .rv-d1{ transition-delay:.09s } .rv-d2{ transition-delay:.18s }
   .rv-d3{ transition-delay:.27s } .rv-d4{ transition-delay:.36s }
 
-  /* ---------- Diagram alur: simpul kaca ---------- */
-  /* Panelnya sengaja gelap dan sangat tembus pandang: isinya hampir
-     seluruhnya cahaya pinjaman dari latar, bukan warna sendiri. Yang
-     membuatnya terbaca sebagai kaca cuma tiga hal — tepi atas yang
-     menyala tipis, pantulan hijau di sudut bawah, dan kilau yang lewat. */
-  .glass-node{
-    position:relative; display:grid; place-items:center;
-    width:9.5rem; height:9.5rem;
+  /* ---------- Hero panggung skydive ---------- */
+  /* Video full-bleed dengan overlay gelap di atasnya supaya teks terbaca.
+     Tinggi memakai svh (small viewport height) — di iOS Safari, vh yang
+     lama ikut lebih tinggi dari layar sebenarnya saat bar navigasi
+     tersembunyi, membuat teks hero ke-crop. svh selalu ukuran layar. */
+  .hero-stage{
+    min-height:100svh; overflow:hidden; background:#0B1F1B;
   }
-  @media (min-width:640px){ .glass-node{ width:12rem; height:12rem; } }
-
-  /* Pelat kaca. Dipisah dari simpulnya supaya bisa dimunculkan belakangan —
-     itu yang membuat mark bisa tampil besar dulu sebelum pelatnya ada. */
-  .glass-plate{
-    position:absolute; inset:0; border-radius:2.2rem; overflow:hidden;
+  .hero-vid{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center;
+    z-index:0;
+  }
+  /* Overlay: gelap di atas untuk nav, mid-tone di tengah, gelap di bawah
+     supaya jenjang halaman berikutnya menyatu. Tidak menutup video sama
+     sekali di area tengah — subjek harus tetap kelihatan jelas. */
+  /* Overlay dua lapis:
+     1) linear atas→bawah untuk nav & serah terima ke section berikut,
+     2) radial gelap di tengah supaya headline dan sub tetap terbaca meski
+        siluet subjek berada persis di area teks. Radial dijaga tipis
+        supaya subjek tidak jadi hilang. */
+  .hero-veil{
+    position:absolute; inset:0; z-index:1; pointer-events:none;
     background:
-      radial-gradient(125% 105% at 20% 8%, rgba(255,255,255,.17) 0%, rgba(255,255,255,.05) 40%, rgba(255,255,255,0) 66%),
-      radial-gradient(135% 135% at 86% 94%, rgba(111,217,188,.24) 0%, rgba(47,140,124,.08) 50%, rgba(255,255,255,0) 78%),
-      linear-gradient(158deg, rgba(255,255,255,.075) 0%, rgba(255,255,255,.02) 46%, rgba(111,217,188,.06) 100%);
-    backdrop-filter:blur(20px) saturate(1.7);
-    -webkit-backdrop-filter:blur(20px) saturate(1.7);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.38),
-      inset 0 -18px 32px -20px rgba(111,217,188,.4),
-      0 0 0 1px rgba(255,255,255,.10),
-      0 30px 70px -28px rgba(0,0,0,.8),
-      0 0 64px -18px rgba(111,217,188,.32);
+      radial-gradient(60% 45% at 50% 45%, rgba(11,31,27,.55) 0%, transparent 78%),
+      linear-gradient(180deg,
+        rgba(11,31,27,.78) 0%,
+        rgba(11,31,27,.30) 22%,
+        rgba(11,31,27,.30) 60%,
+        rgba(255,255,255,.55) 92%,
+        rgba(255,255,255,.98) 100%);
   }
-  @media (min-width:640px){ .glass-plate{ border-radius:3rem; } }
-
-  .mark-svg{ width:54%; }
+  /* Headline juga dibayangi tipis — jaring pengaman kalau siluet kebetulan
+     berpapasan dengan huruf di frame tertentu. */
+  .hero-stage h1{ text-shadow:0 2px 24px rgba(0,0,0,.35); }
+  .hero-stage p { text-shadow:0 1px 12px rgba(0,0,0,.4); }
+  /* Panel kaca versi gelap — dipakai badge rating di hero video. */
+  .surface-dark{
+    background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.16);
+    backdrop-filter:blur(14px) saturate(1.2);
+    -webkit-backdrop-filter:blur(14px) saturate(1.2);
+  }
+  .scroll-hint{
+    animation:scrollBlink 2.4s ease-in-out infinite;
+  }
+  @keyframes scrollBlink{ 0%,100%{ opacity:.35 } 50%{ opacity:.85 } }
+  @media (prefers-reduced-motion: reduce){ .scroll-hint{ animation:none } }
 
   /* ---------- Layar pembuka ---------- */
   /* Dibuat lewat JS, bukan ditulis di markup: kalau JS gagal, penutup ini
      tidak pernah ada dan halaman tetap kelihatan. */
   #boot{
     position:fixed; inset:0; z-index:90; background:#060D0C;
-    transition:opacity .75s ease;
+    display:grid; place-items:center;
+    transition:opacity .8s ease;
   }
   #boot::after{
     content:''; position:absolute; inset:0; z-index:0;
@@ -266,81 +286,19 @@ tailwind.config = {
       radial-gradient(46rem 34rem at 92% 22%, rgba(30,94,88,.16), transparent 72%);
   }
   #boot.done{ opacity:0; pointer-events:none; }
-  /* Mark pembuka ditempatkan JS tepat di atas posisi simpul yang sebenarnya,
-     dengan skala yang sama persis — jadi saat penutupnya memudar, tidak ada
-     yang berpindah tempat. Perpindahannya tidak terlihat. */
-  #bootMark{ position:fixed; z-index:2; display:grid; place-items:center; }
-  #bootMark svg{ width:54%; }
-
-  /* kilau yang menyapu pelan — tanda permukaannya kaca, bukan cat */
-  .glass-sheen{
-    position:absolute; inset:-45%; pointer-events:none;
-    background:linear-gradient(105deg, transparent 38%, rgba(255,255,255,.24) 47%, transparent 57%);
-    transform:translateX(-72%); animation:sheen 6s ease-in-out 2.6s infinite;
-  }
-  @keyframes sheen{ 0%{ transform:translateX(-72%) } 24%,100%{ transform:translateX(72%) } }
-
-  /* ---------- Diagram alur: garis & kemunculan ---------- */
-  #flowSvg{ overflow:visible; }
-  #flowSvg .ln{ fill:none; stroke:url(#flowStroke); stroke-width:1.3; stroke-linecap:round; }
-  #flowSvg .ln-glow{ fill:none; stroke:#6FD9BC; stroke-width:4.5; stroke-linecap:round;
-    opacity:.22; filter:url(#flowBlur); }
-  #flowSvg .ln-cap{
-    fill:#6FD9BC; opacity:0; transform-box:fill-box; transform-origin:center;
-    transform:scale(.2);
-    transition:opacity .45s ease, transform .55s cubic-bezier(.3,1.5,.5,1);
-  }
-  #flowSvg .ln-cap.on{ opacity:.95; transform:scale(1); }
-  #flowSvg .ln-spark{ fill:#EAFFF8; }
-
-  .flow-item{
-    opacity:0; transform:translateY(12px);
-    transition:opacity .75s cubic-bezier(.22,1,.36,1), transform .75s cubic-bezier(.22,1,.36,1);
-  }
-  .flow-item.on{ opacity:1; transform:none; }
-
-  /* Masuknya dibagi dua tahap supaya bisa disambung dengan layar pembuka:
-     `.on`      — mark tampil, cincinnya menggambar diri (masih besar)
-     `.settled` — mengecil ke ukuran akhir, pelat kacanya terbentuk */
-  #flowNode{
-    opacity:0; transform:scale(1.75);
-    transition:opacity .5s ease, transform 1.05s cubic-bezier(.25,.9,.3,1);
-    will-change:transform;
-  }
-  #flowNode.on{ opacity:1; }
-  #flowNode.settled{ transform:scale(1); }
-
-  .glass-plate{
-    opacity:0; transform:scale(.84);
-    transition:opacity .8s ease .2s, transform .95s cubic-bezier(.25,.9,.3,1) .2s;
-  }
-  #flowNode.settled .glass-plate{ opacity:1; transform:scale(1); }
+  #bootMark{ position:relative; z-index:2; width:min(34vw, 15rem); }
 
   /* Cincin mark menggambar dirinya sendiri. 707 = keliling lingkaran
-     r 112.5 (2πr), jadi kalau radiusnya diubah, angka ini ikut diubah. */
+     r 112.5 (2piR), jadi kalau radiusnya diubah, angka ini ikut diubah. */
   .mark-ring{
     stroke-dasharray:707; stroke-dashoffset:707;
-    transition:stroke-dashoffset .95s cubic-bezier(.3,.85,.35,1);
+    transition:stroke-dashoffset 1.05s cubic-bezier(.3,.85,.35,1);
   }
-  .mark-ring--b{ transition-delay:.08s; }
-  #bootMark.on .mark-ring{ stroke-dashoffset:0; }
-  #flowNode.on .mark-ring{ stroke-dashoffset:0; }
-  /* Dipakai saat cincinnya sudah selesai digambar di layar pembuka —
-     yang asli langsung dipasang jadi, tanpa menggambar ulang. Harus
-     ditulis SETELAH aturan .on di atas supaya menang. */
-  #flowNode.drawn .mark-ring{ transition:none; stroke-dashoffset:0; }
-
-  .node-glow{ opacity:0; transition:opacity 1.2s ease .2s; }
-  .node-glow.on{ opacity:1; }
+  .mark-ring--b{ transition-delay:.1s; }
+  #boot.draw .mark-ring{ stroke-dashoffset:0; }
 
   @media (prefers-reduced-motion: reduce){
-    .flow-item{ opacity:1; transform:none }
-    #flowNode{ opacity:1; transform:none }
-    .glass-plate{ opacity:1; transform:none }
     .mark-ring{ stroke-dashoffset:0 }
-    .node-glow{ opacity:1 }
-    #flowSvg .ln-cap{ opacity:.95; transform:none }
-    .glass-sheen{ animation:none; opacity:0 }
     #boot{ display:none }
   }
 
@@ -354,13 +312,13 @@ tailwind.config = {
   /* ---------- Filter chip ---------- */
   .chip{
     padding:.55rem 1.15rem; border-radius:999px; font-size:.875rem; font-weight:500;
-    border:1px solid var(--line); color:#A5BAB4; background:rgba(255,255,255,.025);
+    border:1px solid var(--line); color:#46605A; background:rgba(255,255,255,.6);
     transition:all .3s ease; cursor:pointer;
   }
-  .chip:hover{ border-color:rgba(111,217,188,.45); color:#A6EBD8; }
+  .chip:hover{ border-color:rgba(30,94,88,.4); color:#1E5E58; }
   .chip.active{
-    background:linear-gradient(180deg,#6FD9BC,#3FAF95); border-color:transparent; color:#04120F;
-    font-weight:600; box-shadow:0 8px 24px -12px rgba(111,217,188,.6);
+    background:linear-gradient(180deg,#26706A,#17504A); border-color:transparent; color:#FFFFFF;
+    font-weight:600; box-shadow:0 10px 24px -12px rgba(30,94,88,.5);
   }
 
   /* ---------- Carousel karya ---------- */
@@ -377,10 +335,10 @@ tailwind.config = {
   @media (min-width:640px){ .rail-track > *{ width:16.5rem; } }
   .rail-btn{
     width:2.6rem; height:2.6rem; border-radius:999px; display:grid; place-items:center;
-    border:1px solid var(--line); color:#A5BAB4; background:rgba(255,255,255,.03);
+    border:1px solid var(--line); color:#46605A; background:rgba(255,255,255,.7);
     transition:all .3s ease;
   }
-  .rail-btn:hover:not(:disabled){ color:#A6EBD8; border-color:rgba(111,217,188,.45); background:rgba(111,217,188,.07); }
+  .rail-btn:hover:not(:disabled){ color:#1E5E58; border-color:rgba(30,94,88,.4); background:rgba(30,94,88,.06); }
   .rail-btn:disabled{ opacity:.3; cursor:default; }
 
   /* ---------- Baris foto yang hanyut mengikuti scroll ---------- */
@@ -402,7 +360,7 @@ tailwind.config = {
   }
 
   /* ---------- Kartu karya ---------- */
-  .work-card{ position:relative; overflow:hidden; border-radius:1.1rem; background:#111E1C;
+  .work-card{ position:relative; overflow:hidden; border-radius:1.1rem; background:#E7EEEB;
     cursor:pointer; display:block; box-shadow:0 0 0 1px var(--line2); }
   .work-card .media{ position:relative; aspect-ratio:9/16; overflow:hidden; }
   .work-card img, .work-card video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
@@ -412,12 +370,12 @@ tailwind.config = {
     background:linear-gradient(to top, rgba(11,35,32,.82) 0%, rgba(11,35,32,.28) 42%, transparent 72%); }
   .work-card .play{
     position:absolute; top:1rem; right:1rem; width:2.5rem; height:2.5rem; border-radius:999px;
-    display:grid; place-items:center; background:rgba(232,240,237,.92); color:#05100E;
+    display:grid; place-items:center; background:rgba(255,255,255,.94); color:#0B1F1B;
     transition:transform .35s cubic-bezier(.22,1,.36,1); }
   .work-card:hover .play{ transform:scale(1.12); }
 
   /* ---------- Galeri stills ---------- */
-  .still{ position:relative; overflow:hidden; border-radius:.9rem; background:#111E1C; cursor:zoom-in;
+  .still{ position:relative; overflow:hidden; border-radius:.9rem; background:#E7EEEB; cursor:zoom-in;
     box-shadow:0 0 0 1px var(--line2); }
   .still img{ width:100%; height:100%; object-fit:cover; transition:transform .8s cubic-bezier(.22,1,.36,1); }
   .still:hover img{ transform:scale(1.045); }
@@ -436,23 +394,38 @@ tailwind.config = {
 
   /* ---------- Toggle harga ---------- */
   .cycle{ position:relative; display:inline-flex; padding:.3rem; border-radius:999px;
-    background:rgba(255,255,255,.04); border:1px solid var(--line2); }
+    background:#EFF4F2; border:1px solid var(--line2); }
   .cycle .knob{ position:absolute; top:.3rem; bottom:.3rem; left:.3rem; border-radius:999px;
-    background:linear-gradient(180deg,#6FD9BC,#3FAF95);
+    background:linear-gradient(180deg,#26706A,#17504A);
     transition:transform .42s cubic-bezier(.22,1,.36,1), width .42s cubic-bezier(.22,1,.36,1); }
   .cycle button{ position:relative; z-index:2; padding:.5rem 1.25rem; border-radius:999px;
-    font-size:.875rem; font-weight:500; color:#A5BAB4; transition:color .3s ease; }
-  .cycle button.on{ color:#04120F; font-weight:600; }
+    font-size:.875rem; font-weight:500; color:#46605A; transition:color .3s ease; }
+  .cycle button.on{ color:#FFFFFF; font-weight:600; }
 
   /* ---------- Nav ---------- */
   #topbar{ transition:background .45s ease, border-color .45s ease, backdrop-filter .45s ease, padding .45s ease; }
-  #topbar.stuck{ background:rgba(6,13,12,.72); backdrop-filter:blur(16px) saturate(1.3);
+  #topbar.stuck{ background:rgba(255,255,255,.78); backdrop-filter:blur(16px) saturate(1.3);
     -webkit-backdrop-filter:blur(16px) saturate(1.3);
     border-bottom:1px solid var(--line2); }
-  .navlink{ position:relative; font-size:.9375rem; color:#A5BAB4; transition:color .3s ease; }
+
+  /* Nav teks: putih saat di atas hero gelap, gelap saat sudah di atas putih. */
+  .navlink{ position:relative; font-size:.9375rem; color:rgba(255,255,255,.85); transition:color .3s ease; }
   .navlink::after{ content:''; position:absolute; left:0; right:100%; bottom:-4px; height:1px;
-    background:#6FD9BC; transition:right .38s cubic-bezier(.22,1,.36,1); }
-  .navlink:hover{ color:#E8F0ED; } .navlink:hover::after{ right:0; }
+    background:#6FD9BC; transition:right .38s cubic-bezier(.22,1,.36,1), background-color .3s ease; }
+  .navlink:hover{ color:#FFFFFF; } .navlink:hover::after{ right:0; }
+  #topbar.stuck .navlink{ color:#46605A; }
+  #topbar.stuck .navlink::after{ background:#1E5E58; }
+  #topbar.stuck .navlink:hover{ color:#0B1F1B; }
+
+  /* Toggle logo: dua <img> ditumpuk, yang aktif dipilih via .stuck. */
+  .nav-logo{ display:block; transition:opacity .35s ease; }
+  .nav-logo-dark{ position:absolute; inset:0; opacity:0; }
+  #topbar.stuck .nav-logo-white{ opacity:0; }
+  #topbar.stuck .nav-logo-dark{ opacity:1; }
+
+  /* Burger menu di mobile juga ikut aturan gelap/putih. */
+  #burger{ color:#FFFFFF; border-color:rgba(255,255,255,.28); }
+  #topbar.stuck #burger{ color:#0B1F1B; border-color:var(--line); }
 
   /* ---------- Lightbox ---------- */
   #lb{ transition:opacity .45s ease, visibility .45s ease; }
@@ -470,8 +443,13 @@ tailwind.config = {
 <!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
 <header id="topbar" class="fixed inset-x-0 top-0 z-50 py-4">
   <div class="max-w-shell mx-auto px-5 sm:px-8 flex items-center justify-between gap-6">
-    <a href="#top" class="shrink-0" aria-label="Hanoora Studio — home">
-      <img src="web/logo/logo-white.png" alt="Hanoora Studio" class="h-8 sm:h-9 w-auto">
+    <!-- Dua logo bertumpuk. Yang aktif dipilih CSS berdasarkan .stuck pada
+         #topbar — logo putih dipakai saat bar tembus pandang di atas hero
+         gelap, logo gelap dipakai saat bar sudah menempel di atas latar
+         putih. Tidak ada JS untuk swap image; toggle murni CSS. -->
+    <a href="#top" class="shrink-0 relative" aria-label="Hanoora Studio — home">
+      <img class="nav-logo nav-logo-white h-8 sm:h-9 w-auto" src="web/logo/logo-white.png" alt="Hanoora Studio">
+      <img class="nav-logo nav-logo-dark  h-8 sm:h-9 w-auto" src="web/logo/logo.png" alt="" aria-hidden="true">
     </a>
 
     <nav class="hidden lg:flex items-center gap-9">
@@ -512,30 +490,42 @@ tailwind.config = {
 <main id="top">
 
 <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
-<section class="pt-28 sm:pt-32 lg:pt-36 pb-16 sm:pb-20">
-  <div class="max-w-shell mx-auto px-5 sm:px-8">
+<!-- Video skydive full-bleed jadi kanvas hero. Alurnya:
+       0 → 3 dtk   : intro sekali, kamera turun dari top-down ke close.
+       3 → 5 dtk   : loop indefinitely — subjek sudah stabil di depan.
+     Setelah loop, klip fall-to-white (Clip B) belum ada; nanti dipicu saat
+     scroll melewati hero. Untuk sekarang, bagian di bawah hero muncul
+     seperti biasa.
+
+     Teks hero (badge, judul, sub, CTA) duduk DI ATAS video dengan overlay
+     gelap tipis supaya tetap terbaca. Statistik dipindah ke bawah blok video
+     karena kontras teks-di-atas-video sudah cukup padat di hero. -->
+<section class="hero-stage relative">
+  <video id="heroVid" class="hero-vid" playsinline muted autoplay preload="auto"
+         poster="web/video/hero-skydive-poster.jpg" aria-hidden="true"></video>
+  <div class="hero-veil"></div>
+
+  <div class="relative z-10 max-w-shell mx-auto px-5 sm:px-8
+              min-h-[calc(100svh-4.5rem)] flex flex-col justify-center py-24 sm:py-28">
 
     <!-- lencana rating -->
     <div class="rv flex justify-center">
-      <div class="inline-flex items-center gap-3 rounded-full surface px-4 py-2">
+      <div class="inline-flex items-center gap-3 rounded-full surface-dark px-4 py-2">
         <span id="heroStars" class="flex gap-0.5 text-brand-300"></span>
-        <span class="text-sm text-ink-soft">
-          <b class="font-semibold text-ink">5.0</b> from 40+ brand partners
+        <span class="text-sm text-white/75">
+          <b class="font-semibold text-white">5.0</b> from 40+ brand partners
         </span>
       </div>
     </div>
 
-    <!-- Judul sengaja tidak besar. Yang jadi pusat hero ini diagramnya;
-         judul di sini tugasnya menamai apa yang digambarkan diagram itu,
-         bukan berteriak. Tiga kata di bawah = tiga bagian diagram. -->
-    <h1 class="rv rv-d1 display text-center mx-auto max-w-[46rem] mt-7 sm:mt-8
-               text-[2rem] leading-[1.12] sm:text-[2.6rem] lg:text-[2.9rem]">
+    <h1 class="rv rv-d1 display text-center mx-auto max-w-[52rem] mt-7 sm:mt-9
+               text-[2.4rem] leading-[1.05] sm:text-[3.2rem] lg:text-[3.8rem] text-white">
       Human-written, AI-produced,<br class="hidden sm:block">
-      <em>hand-finished.</em>
+      <em class="em-plain">hand-finished.</em>
     </h1>
 
     <p class="rv rv-d2 text-center max-w-[34rem] mx-auto mt-5 text-[15px] sm:text-base
-              leading-[1.7] text-ink-soft">
+              leading-[1.7] text-white/75">
       A creative department for brands that refuse to look ordinary — commercial
       film, photography and design, on one monthly retainer.
     </p>
@@ -545,99 +535,21 @@ tailwind.config = {
         Book a discovery call
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
-      <a href="#work" class="btn btn-ghost">See the work</a>
+      <a href="#work" class="btn btn-outline-light">See the work</a>
     </div>
 
-    <!-- ═══ DIAGRAM ALUR KERJA ═══
-         Kiri: hasil jadi (9:16). Tengah: Hanoora. Kanan: alat produksi.
-
-         Garis penghubungnya SVG yang digambar ulang oleh JS dari posisi
-         elemen yang sebenarnya (getBoundingClientRect), bukan koordinat
-         yang ditulis tangan — jadi tidak pernah meleset di lebar layar
-         mana pun, dan tetap bisa dianimasikan (stroke-dashoffset).
-         Lihat blok "DIAGRAM ALUR" di bawah. -->
-    <div id="flow" class="rv rv-d2 mt-14 sm:mt-16 lg:mt-20">
-      <div id="flowStage" class="relative">
-        <svg id="flowSvg" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true"></svg>
-
-        <div class="grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-y-6 lg:gap-y-0">
-
-          <!-- ── KIRI: hasil jadi, bingkai 9:16 ── -->
-          <div class="flex justify-center lg:justify-end lg:pr-20 order-3 lg:order-1">
-            <div id="flowOut" class="flow-item relative w-[14.5rem] sm:w-[17rem]">
-              <figure class="relative rounded-[1.35rem] overflow-hidden bg-paper-deep
-                             ring-1 ring-white/10 shadow-[0_40px_90px_-38px_rgba(0,0,0,.9)]">
-                <div class="relative aspect-[9/16]">
-                  <img id="flowOutImg" src="web/video/ugc-kahf.jpg" alt="Finished vertical film"
-                       class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700">
-                  <img id="flowOutImgNext" src="" alt="" aria-hidden="true"
-                       class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700">
-                </div>
-                <figcaption class="absolute inset-x-0 bottom-0 flex items-center gap-2 px-3.5 py-3
-                                   bg-gradient-to-t from-brand-950/90 to-transparent">
-                  <span class="w-1.5 h-1.5 rounded-full bg-brand-300"></span>
-                  <span class="text-[11px] tracking-wide text-ink/90">Finished, 9:16, ready to post</span>
-                </figcaption>
-              </figure>
-              <div id="heroPlatforms"></div>
-            </div>
-          </div>
-
-          <!-- ── TENGAH: Hanoora, liquid glass ── -->
-          <div class="flex flex-col items-center lg:px-2 order-1 lg:order-2">
-            <div class="relative">
-              <!-- Cahaya di BELAKANG panel. Tanpa ini kacanya tidak punya apa pun
-                   untuk diteruskan — latarnya gelap rata — dan panelnya cuma
-                   terbaca sebagai kotak abu. Dengan ini, warnanya menembus. -->
-              <span class="node-glow absolute inset-[-45%] rounded-full bg-brand-500/30 blur-[52px] pointer-events-none"></span>
-            <div id="flowNode" class="glass-node">
-              <!-- Pelat kacanya dipisah dari simpulnya supaya bisa dimunculkan
-                   sendiri: saat animasi masuk, mark tampil besar dulu tanpa
-                   pelat, lalu mengecil sambil pelatnya memudar masuk. -->
-              <span class="glass-plate"><span class="glass-sheen"></span></span>
-
-              <!-- Mark disisipkan langsung (bukan <img>) supaya cincinnya bisa
-                   digambar sendiri saat masuk.
-
-                   Saling-kuncinya ditunjukkan lewat beda terang, PERSIS seperti
-                   logo aslinya — cincin belakang lebih redup, tidak ada garis
-                   yang diputus. Versi berputus sempat dicoba dan bentuknya jadi
-                   menyimpang dari logo, jadi ditinggalkan. -->
-              <svg class="mark-svg relative" viewBox="0 0 392 261" role="img" aria-label="Hanoora Studio">
-                <defs>
-                  <clipPath id="hnrLinkNode"><circle cx="195.5" cy="221.1" r="27"/></clipPath>
-                </defs>
-                <circle class="mark-ring mark-ring--b" cx="261.5" cy="130" r="112.5"
-                        fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="29"
-                        transform="rotate(-90 261.5 130)"/>
-                <circle class="mark-ring" cx="129.5" cy="130" r="112.5"
-                        fill="none" stroke="#FFFFFF" stroke-width="29"
-                        transform="rotate(-90 129.5 130)"/>
-                <circle class="mark-ring mark-ring--b" cx="261.5" cy="130" r="112.5"
-                        fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="29"
-                        transform="rotate(-90 261.5 130)" clip-path="url(#hnrLinkNode)"/>
-              </svg>
-            </div>
-            </div>
-            <p id="flowNodeLabel" class="flow-item kicker mt-5">Directed by us</p>
-          </div>
-
-          <!-- ── KANAN: alat produksi ── -->
-          <div class="flex justify-center lg:justify-start lg:pl-20 order-2 lg:order-3">
-            <div id="heroTools" class="w-full max-w-[18.5rem] space-y-2.5"></div>
-          </div>
-
-        </div>
-      </div>
-
-      <p class="flow-item text-center text-sm text-ink-mute mt-12 sm:mt-14 max-w-xl mx-auto leading-relaxed">
-        The models change every few months. The writing, the direction and the final
-        cut do not — those stay with us.
-      </p>
+    <!-- Petunjuk gulir kecil di bawah hero, kedip halus -->
+    <div class="rv rv-d4 flex justify-center mt-16 sm:mt-20">
+      <span class="scroll-hint text-[10px] uppercase tracking-[.28em] text-white/60">Scroll</span>
     </div>
+  </div>
+</section>
 
-    <!-- statistik -->
-    <div class="rv mt-14 sm:mt-16 grid grid-cols-2 lg:grid-cols-4 border-t border-[var(--line)]">
+<!-- Statistik: dipindah keluar dari hero video. Angka besar butuh latar
+     tenang, kalau ditumpuk di atas video terasa penuh. -->
+<section class="border-b border-[var(--line)]">
+  <div class="max-w-shell mx-auto px-5 sm:px-8">
+    <div class="rv grid grid-cols-2 lg:grid-cols-4">
       <div class="py-7 lg:py-9 lg:pr-8 border-b lg:border-b-0 lg:border-r border-[var(--line)]">
         <div class="display text-4xl sm:text-5xl tabular-nums" data-count="120" data-suffix="+">0</div>
         <p class="kicker mt-3">Projects delivered</p>
@@ -651,7 +563,7 @@ tailwind.config = {
         <p class="kicker mt-3">Countries served</p>
       </div>
       <div class="py-7 lg:py-9 lg:pl-8">
-        <div class="display text-4xl sm:text-5xl tabular-nums text-brand-300">5.0</div>
+        <div class="display text-4xl sm:text-5xl tabular-nums text-brand-700">5.0</div>
         <p class="kicker mt-3">Average client rating</p>
       </div>
     </div>
@@ -763,18 +675,18 @@ tailwind.config = {
 </section>
 
 <!-- ═══════════════════════════════ PROCESS ═══════════════════════════════ -->
-<section id="process" class="relative py-20 sm:py-28 lg:py-32 scroll-mt-20 bg-brand-950/70 border-y border-[var(--line2)] overflow-hidden">
+<section id="process" class="relative py-20 sm:py-28 lg:py-32 scroll-mt-20 bg-brand-950 border-y border-[var(--line2)] overflow-hidden">
   <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[46rem] h-[28rem] rounded-full bg-brand-600/[.09] blur-3xl pointer-events-none"></div>
   <div class="max-w-shell mx-auto px-5 sm:px-8">
     <div class="grid lg:grid-cols-12 gap-y-6 gap-x-12 items-end">
       <div class="lg:col-span-7">
         <p class="rv kicker !text-brand-300"><span class="num !text-brand-300">04</span>How we work</p>
-        <h2 class="rv rv-d1 display text-[1.9rem] sm:text-[2.4rem] lg:text-[2.7rem] mt-5 text-ink">
+        <h2 class="rv rv-d1 display text-[1.9rem] sm:text-[2.4rem] lg:text-[2.7rem] mt-5 text-white">
           Four steps,<br><em>no surprises.</em>
         </h2>
       </div>
       <div class="lg:col-span-5">
-        <p class="rv rv-d2 lede !text-ink/65">
+        <p class="rv rv-d2 lede !text-white/65">
           The same rhythm every month. You always know what is being written, what is
           being built, and what lands next.
         </p>
@@ -870,11 +782,11 @@ tailwind.config = {
       <div class="absolute -bottom-32 -left-20 w-[22rem] h-[22rem] rounded-full bg-brand-900/60 blur-3xl pointer-events-none"></div>
 
       <div class="relative max-w-2xl">
-        <p class="rv kicker !text-ink/55">Next step</p>
-        <h2 class="rv rv-d1 display text-[2.1rem] sm:text-[3rem] leading-[1.06] mt-5 text-ink">
+        <p class="rv kicker !text-white/55">Next step</p>
+        <h2 class="rv rv-d1 display text-[2.1rem] sm:text-[3rem] leading-[1.06] mt-5 text-white">
           You have the product.<br>Let us make people <em class="em-plain">look at it.</em>
         </h2>
-        <p class="rv rv-d2 lede !text-ink/75 mt-6">
+        <p class="rv rv-d2 lede !text-white/75 mt-6">
           Tell us what you sell and where you need it seen. You will have a concept and
           a quote within two working days — at no cost and with no obligation.
         </p>
@@ -896,7 +808,7 @@ tailwind.config = {
   <div class="max-w-shell mx-auto px-5 sm:px-8 py-16 sm:py-20">
     <div class="grid lg:grid-cols-12 gap-y-12 gap-x-12">
       <div class="rv lg:col-span-5">
-        <img src="web/logo/logo-white.png" alt="Hanoora Studio" class="h-8 w-auto">
+        <img src="web/logo/logo.png" alt="Hanoora Studio" class="h-8 w-auto">
         <p class="text-sm text-ink-soft mt-6 max-w-sm leading-relaxed">
           An AI creative agency producing commercial film, photography, design and
           social content. Human-written scripts, AI production, human finishing.
@@ -937,15 +849,15 @@ tailwind.config = {
 
 <!-- ═══════════════════════════════ FLOATING WA ═══════════════════════════════ -->
 <a id="floatWa" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"
-   class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-brand-700 text-ink grid place-items-center
+   class="fixed bottom-5 right-5 z-40 w-14 h-14 rounded-full bg-brand-700 text-white grid place-items-center
           shadow-[0_14px_34px_-12px_rgba(30,94,88,.7)] hover:bg-brand-900 hover:scale-105 transition">
   <svg width="25" height="25" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.95 1.16-.17.2-.35.22-.65.08-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.53.08-.8.38-.28.3-1.05 1.02-1.05 2.5s1.07 2.9 1.22 3.1c.15.2 2.1 3.2 5.09 4.49.71.3 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35M12.05 21.5h-.02a9.4 9.4 0 0 1-4.79-1.31l-.34-.2-3.56.93.95-3.47-.22-.36a9.38 9.38 0 0 1-1.44-5.01c0-5.18 4.22-9.4 9.42-9.4a9.35 9.35 0 0 1 6.65 2.76 9.32 9.32 0 0 1 2.76 6.65c0 5.18-4.23 9.4-9.41 9.4M20.5 3.49A11.78 11.78 0 0 0 12.05 0C5.5 0 .18 5.32.17 11.86c0 2.09.55 4.13 1.59 5.93L.07 24l6.36-1.67a11.86 11.86 0 0 0 5.62 1.43h.01c6.54 0 11.87-5.32 11.87-11.86 0-3.17-1.23-6.15-3.47-8.39"/></svg>
 </a>
 
 <!-- ═══════════════════════════════ LIGHTBOX ═══════════════════════════════ -->
-<div id="lb" class="off fixed inset-0 z-[60] bg-paper/94 backdrop-blur-xl grid place-items-center p-4 sm:p-8" onclick="closeLb(event)">
+<div id="lb" class="off fixed inset-0 z-[60] bg-brand-950/95 backdrop-blur-xl grid place-items-center p-4 sm:p-8" onclick="closeLb(event)">
   <button onclick="closeLb()" aria-label="Close"
-          class="absolute top-4 right-4 sm:top-6 sm:right-6 w-11 h-11 rounded-full border border-white/25 text-ink grid place-items-center hover:bg-white/10 transition">
+          class="absolute top-4 right-4 sm:top-6 sm:right-6 w-11 h-11 rounded-full border border-white/25 text-white grid place-items-center hover:bg-white/10 transition">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
   </button>
   <div class="w-full max-w-5xl" onclick="event.stopPropagation()">
@@ -953,8 +865,8 @@ tailwind.config = {
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-5">
       <div>
         <p id="lb-brand" class="kicker !text-brand-300"></p>
-        <h3 id="lb-title" class="display text-2xl sm:text-3xl text-ink mt-2"></h3>
-        <p id="lb-desc" class="text-sm text-ink/60 mt-2 max-w-xl leading-relaxed"></p>
+        <h3 id="lb-title" class="display text-2xl sm:text-3xl text-white mt-2"></h3>
+        <p id="lb-desc" class="text-sm text-white/60 mt-2 max-w-xl leading-relaxed"></p>
       </div>
       <a id="lb-cta" href="#" target="_blank" rel="noopener" class="btn btn-light shrink-0">Commission something like this</a>
     </div>
@@ -971,41 +883,6 @@ const IG_URL       = 'https://www.instagram.com/hanoora.studio/';
 const TIKTOK_URL   = 'https://www.tiktok.com/@hanoora.studio';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/hanoora-studio/';
 const EMAIL        = 'hello@hanoorastudio.com';
-
-/* Diagram di hero. Sisi kiri (foto bahan) diatur langsung di HTML;
-   dua daftar di bawah ini yang mengisi lencana platform dan kolom alat.
-   Kalau ada alat baru dipakai, tambahkan di sini — urutannya = urutan tampil. */
-const HERO_PLATFORMS = [
-  /* pos = kelas posisi Tailwind. Jauhkan dari sisi bawah kartu — di situ
-     ada baris keterangan, kalau ditimpa lencana jadi tidak terbaca. */
-  { k:'instagram', label:'Instagram', pos:'-top-5 -right-5' },
-  { k:'tiktok',    label:'TikTok',    pos:'top-1/4 -left-5' },
-  { k:'youtube',   label:'YouTube',   pos:'bottom-1/4 -left-5' },
-];
-/* Alat produksi di kolom kanan diagram.
-   `logo` menunjuk ke berkas di web/logo/tools/ — boleh SVG atau PNG transparan.
-   Kalau `logo` dikosongkan atau berkasnya belum ada, kotaknya otomatis jatuh
-   ke titik hijau kecil, jadi halaman tidak pernah menampilkan gambar rusak. */
-const AI_TOOLS = [
-  { name:'Seedance 2.0', logo:'web/logo/tools/seedance.svg' },
-  { name:'Veo 3',        logo:'web/logo/tools/veo.svg' },
-  { name:'Gemini Omni',  logo:'web/logo/tools/gemini.svg' },
-  { name:'Kling',        logo:'web/logo/tools/kling.svg' },
-  { name:'Midjourney',   logo:'web/logo/tools/midjourney.svg' },
-];
-
-/* Bingkai hasil jadi di sisi kiri diagram. Harus 9:16.
-   Poster karya di web/video/ semuanya sudah 600x1066, jadi tinggal dipanggil.
-   Gambarnya berganti pelan-pelan; satu isi saja juga boleh. */
-const FLOW_OUTPUTS = [
-  'web/video/ugc-kahf.jpg',
-  'web/video/vitalis.jpg',
-  'web/video/keshvara.jpg',
-  'web/video/takara.jpg',
-];
-
-/* Teks kecil di bawah simpul tengah. Kosongkan ('') kalau tidak mau ada teks. */
-const FLOW_NODE_LABEL = 'Directed by us';
 
 /* Nama brand yang berjalan di marquee "Trusted by". */
 const BRANDS = ['Garmin','Vitalis','Corkcicle','Ortuseight','Takara','FFAR','Keshvara','Slavina'];
@@ -1244,376 +1121,127 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ============================================================
-   RENDER — showreel
+   HERO — bintang rating
    ============================================================ */
-(function hero(){
-  /* bintang rating */
+(function heroStars(){
+  const el = $('#heroStars');
+  if (!el) return;
   const star = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8Z"/></svg>';
-  $('#heroStars').innerHTML = star.repeat(5);
-
-  /* lencana platform yang mengambang di sekitar foto bahan */
-  $('#heroPlatforms').innerHTML = HERO_PLATFORMS.map(p => `
-    <span class="absolute ${p.pos} w-11 h-11 rounded-2xl surface
-                 grid place-items-center text-ink-soft
-                 shadow-[0_12px_26px_-14px_rgba(14,42,39,.6)]" title="${esc(p.label)}">
-      ${icon(p.k, 'w-[18px] h-[18px]')}
-    </span>`).join('');
-
-  /* kolom alat produksi.
-     Tiap baris punya dua penanda: titik hijau dan gambar logo. Titiknya
-     disembunyikan selama logonya ada. Kalau berkas logo belum diunggah,
-     penukarannya diurus di bawah — bukan lewat onerror inline, karena
-     markup logonya mengandung tanda kutip dan bakal merusak atribut. */
-  $('#heroTools').innerHTML = AI_TOOLS.map(t => `
-    <div class="tool flow-item flex items-center gap-3 rounded-xl surface px-4 py-3
-                shadow-[0_10px_24px_-18px_rgba(14,42,39,.5)]">
-      <span class="tool-dot w-1.5 h-1.5 rounded-full bg-brand-600 shrink-0${t.logo ? ' hidden' : ''}"></span>
-      ${t.logo ? `<img class="tool-logo w-[18px] h-[18px] object-contain shrink-0"
-                       src="${esc(t.logo)}" alt="" aria-hidden="true">` : ''}
-      <span class="text-sm font-medium">${esc(t.name)}</span>
-    </div>`).join('') + `
-    <div class="tool flow-item flex items-center gap-3 rounded-xl border border-dashed border-[var(--line)] px-4 py-3">
-      <span class="text-brand-600 shrink-0">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-      </span>
-      <span class="text-sm text-ink-mute">Whatever ships next</span>
-    </div>`;
-
-  /* Logo yang berkasnya belum ada diganti titik hijau. Pengecekan `complete`
-     dipakai karena gambar dari innerHTML bisa sudah gagal duluan sebelum
-     pendengarnya sempat dipasang — kalau hanya mengandalkan event 'error',
-     kasus itu lolos dan yang tampil ikon rusak. */
-  $$('#heroTools .tool-logo').forEach(img => {
-    const fallback = () => {
-      const dot = img.parentElement && img.parentElement.querySelector('.tool-dot');
-      if (dot) dot.classList.remove('hidden');
-      img.remove();
-    };
-    img.addEventListener('error', fallback);
-    if (img.complete && img.naturalWidth === 0) fallback();
-  });
-
-  /* label opsional di bawah simpul */
-  const lab = $('#flowNodeLabel');
-  if (lab){
-    if (FLOW_NODE_LABEL) lab.textContent = FLOW_NODE_LABEL;
-    else lab.remove();
-  }
+  el.innerHTML = star.repeat(5);
 })();
 
 /* ============================================================
-   DIAGRAM ALUR — garis penghubung + animasi masuk
+   HERO — video skydive
    ------------------------------------------------------------
-   Garisnya digambar dari posisi elemen yang sebenarnya, bukan
-   koordinat tetap. Konsekuensinya: setiap kali lebar layar
-   berubah, jalurnya dihitung ulang. Itu yang membuatnya tidak
-   pernah meleset.
+   Alur: intro 0-5 dtk sekali penuh (kamera turun dari top-down
+   ke close-up depan), lalu loop tak berujung dari LOOP_START
+   sampai akhir.
 
-   Urutan animasinya: simpul tengah muncul lebih dulu di atas
-   latar kosong, lalu tiap garis merambat keluar, dan tiap kotak
-   baru muncul setelah garisnya sampai.
+   Kenapa BUKAN atribut `loop` bawaan HTML: `loop` mengulang dari
+   awal, yang berarti kamera akan naik lagi ke top-down setiap 5
+   detik — persis yang tidak diinginkan. Solusinya: mendengarkan
+   `ended`, seek ke LOOP_START, play lagi. Beberapa peramban tidak
+   memicu `ended` saat `loop` on, jadi `loop` sengaja dimatikan.
+
+   iOS Safari menuntut autoplay memenuhi tiga syarat: muted,
+   playsinline, dan sumber terpasang lewat properti `src`. Ketiganya
+   sudah dipatuhi. Kalau autoplay tetap gagal (kebijakan hemat baterai
+   atau data saver aktif), video akan diam di frame poster, halaman
+   tetap terbaca.
    ============================================================ */
-(function flow(){
-  const stage = $('#flowStage'), svg = $('#flowSvg'), node = $('#flowNode');
-  if (!stage || !svg || !node) return;
+(function heroVideo(){
+  const v = $('#heroVid');
+  if (!v) return;
 
-  const NS = 'http://www.w3.org/2000/svg';
-  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let played = false;
-  let links = [];   /* [{ path, el }] — el = kotak yang dibuka garis itu */
+  const LOOP_START = 3.0;   /* dtk — subjek sudah stabil menghadap depan */
 
-  /* Sengaja memakai offsetLeft/offsetTop, bukan getBoundingClientRect.
-     Saat animasi belum jalan, kotak-kotaknya masih digeser transform
-     (translateY / scale) — getBoundingClientRect ikut menghitung geseran
-     itu dan garisnya jadi meleset beberapa piksel. offset* membaca posisi
-     hasil layout saja, jadi kebal terhadap transform. */
-  const box = el => {
-    let x = 0, y = 0, n = el;
-    while (n && n !== stage){ x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
-    return {
-      l:x, t:y, r:x + el.offsetWidth, b:y + el.offsetHeight,
-      cx:x + el.offsetWidth / 2, cy:y + el.offsetHeight / 2,
-    };
-  };
+  const isMobile = window.matchMedia('(max-width: 640px)').matches;
+  v.src = isMobile
+    ? 'web/video/hero-skydive-mobile.mp4'
+    : 'web/video/hero-skydive-desktop.mp4';
 
-  function build(){
-    svg.innerHTML = '';
-    links = [];
-
-    const sw = stage.offsetWidth, sh = stage.offsetHeight;
-    if (!sw) return;
-    svg.setAttribute('viewBox', `0 0 ${sw} ${sh}`);
-    svg.setAttribute('preserveAspectRatio', 'none');
-
-    /* Gradasi + blur untuk garis. Ditulis ulang tiap build karena isi
-       <svg> dikosongkan di atas. Gradasi dipakai pada garis tipisnya:
-       paling terang di tengah, meredup di kedua ujung — jadi arah
-       alirannya tetap terbaca setelah garisnya selesai digambar. */
-    svg.insertAdjacentHTML('afterbegin',
-      '<defs>' +
-        '<linearGradient id="flowStroke" x1="0" y1="0" x2="1" y2="0">' +
-          '<stop offset="0"   stop-color="#6FD9BC" stop-opacity=".12"/>' +
-          '<stop offset=".5"  stop-color="#6FD9BC" stop-opacity=".6"/>' +
-          '<stop offset="1"   stop-color="#6FD9BC" stop-opacity=".12"/>' +
-        '</linearGradient>' +
-        '<filter id="flowBlur" x="-40%" y="-200%" width="180%" height="500%">' +
-          '<feGaussianBlur stdDeviation="3"/>' +
-        '</filter>' +
-      '</defs>');
-
-    const N     = box(node);
-    const out   = $('#flowOut');
-    const tools = $$('#heroTools .tool');
-    const wide  = window.matchMedia('(min-width: 1024px)').matches;
-
-    /* Tiap sambungan digambar tiga kali di atas satu jalur yang sama:
-       lapisan glow yang tebal dan diburamkan, garis tipis di atasnya, lalu
-       titik di ujung tujuan. Titik percikan yang berlari sepanjang jalur
-       ditambahkan belakangan, di play(), supaya waktunya bisa diatur. */
-    const add = (d, el) => {
-      const glow = document.createElementNS(NS, 'path');
-      glow.setAttribute('d', d); glow.setAttribute('class', 'ln-glow');
-      const line = document.createElementNS(NS, 'path');
-      line.setAttribute('d', d); line.setAttribute('class', 'ln');
-      const cap  = document.createElementNS(NS, 'circle');
-      cap.setAttribute('r', '2.6'); cap.setAttribute('class', 'ln-cap');
-      svg.appendChild(glow); svg.appendChild(line); svg.appendChild(cap);
-      const end = line.getPointAtLength(line.getTotalLength());
-      cap.setAttribute('cx', end.x); cap.setAttribute('cy', end.y);
-      links.push({ d, line, glow, cap, el });
-    };
-
-    if (wide){
-      /* melebar: alat di kanan dulu, hasil jadi di kiri menyusul */
-      tools.forEach(el => {
-        const R  = box(el);
-        const dx = (R.l - N.r) * 0.55;
-        add(`M${N.r},${N.cy} C${N.r + dx},${N.cy} ${R.l - dx},${R.cy} ${R.l},${R.cy}`, el);
-      });
-      if (out){
-        const L = box(out);
-        const dx = (N.l - L.r) * 0.55;
-        add(`M${N.l},${N.cy} C${N.l - dx},${N.cy} ${L.r + dx},${L.cy} ${L.r},${L.cy}`, out);
-      }
-    } else {
-      /* menumpuk: satu tulang punggung turun — simpul → alat → hasil jadi */
-      let prev = { cx:N.cx, b:N.b };
-      tools.forEach(el => {
-        const R = box(el);
-        add(`M${prev.cx},${prev.b} C${prev.cx},${prev.b + 14} ${R.cx},${R.t - 14} ${R.cx},${R.t}`, el);
-        prev = { cx:R.cx, b:R.b };
-      });
-      if (out){
-        const L = box(out);
-        add(`M${prev.cx},${prev.b} C${prev.cx},${prev.b + 18} ${L.cx},${L.t - 18} ${L.cx},${L.t}`, out);
-      }
-    }
-  }
-
-  function freeze(){
-    /* dipakai saat menggambar ulang setelah animasinya selesai */
-    links.forEach(({ line, glow, cap }) => {
-      [line, glow].forEach(p => {
-        p.style.transition = 'none';
-        p.style.strokeDasharray = 'none';
-        p.style.strokeDashoffset = '0';
-      });
-      cap.classList.add('on');
-    });
-  }
-
-  /* Titik terang yang berlari dari simpul ke tujuan, tepat mendahului
-     garisnya. Ini yang membuat garisnya terasa ditarik, bukan sekadar
-     muncul. Elemennya dibuang sendiri setelah selesai. */
-  function spark(d, delay, dur){
-    const c = document.createElementNS(NS, 'circle');
-    c.setAttribute('r', '3.2');
-    c.setAttribute('class', 'ln-spark');
-    c.setAttribute('opacity', '0');
-    const m = document.createElementNS(NS, 'animateMotion');
-    m.setAttribute('path', d);
-    m.setAttribute('dur', dur + 'ms');
-    m.setAttribute('begin', delay + 'ms');
-    m.setAttribute('fill', 'freeze');
-    const fade = document.createElementNS(NS, 'animate');
-    fade.setAttribute('attributeName', 'opacity');
-    fade.setAttribute('values', '0;.95;.95;0');
-    fade.setAttribute('keyTimes', '0;.12;.7;1');
-    fade.setAttribute('dur', dur + 'ms');
-    fade.setAttribute('begin', delay + 'ms');
-    fade.setAttribute('fill', 'freeze');
-    c.appendChild(m); c.appendChild(fade);
-    svg.appendChild(c);
-    setTimeout(() => c.remove(), delay + dur + 400);
-  }
-
-  /* Garis-garisnya diberangkatkan di sini.
-
-     Yang diperbaiki dibanding versi sebelumnya: dulu sambungan ke hasil
-     jadi ditaruh paling belakang, jadi baru berangkat setelah keenam
-     sambungan alat selesai — jaraknya terlalu jauh dan kelihatan seperti
-     dua animasi terpisah, bukan satu percabangan. Sekarang sisi kiri
-     berangkat cuma OUT_LAG milidetik setelah sambungan alat pertama:
-     kanan tetap memimpin, tapi keduanya tumbuh bersamaan.
-
-     Kotaknya juga dimunculkan lebih awal — mulai bergerak saat garisnya
-     sudah lewat dua pertiga jalan, jadi terasa didorong oleh garis itu,
-     bukan menunggu garisnya selesai dulu. */
-  function runLines(){
-    const STEP = 95, DUR = 880, OUT_LAG = 300;
-    const outIndex = links.length - 1;   /* build() menaruh hasil jadi paling akhir */
-
-    links.forEach(({ d, line, glow, cap, el }, i) => {
-      const delay = (i === outIndex) ? OUT_LAG : i * STEP;
-
-      [line, glow].forEach(p => {
-        const len = p.getTotalLength();
-        p.style.transition = 'none';
-        p.style.strokeDasharray  = len;
-        p.style.strokeDashoffset = len;
-        p.getBoundingClientRect();        /* paksa reflow sebelum transisi */
-        p.style.transition =
-          `stroke-dashoffset ${DUR}ms cubic-bezier(.33,.7,.28,1) ${delay}ms`;
-        p.style.strokeDashoffset = '0';
-      });
-
-      spark(d, delay, DUR);
-      setTimeout(() => cap.classList.add('on'), delay + DUR - 90);
-      if (el) setTimeout(() => el.classList.add('on'), delay + DUR * 0.62);
-    });
-
-    const tail = Math.max(outIndex * STEP, OUT_LAG) + DUR + 220;
-    setTimeout(() => $$('.flow-item:not(.on)').forEach(e => e.classList.add('on')), tail);
-  }
-
-  /* instant = cincinnya sudah tergambar di layar pembuka, jadi tahap
-     menggambar dilewati dan simpulnya langsung mengecil. */
-  function play(instant){
-    node.classList.add('on');
-
-    if (REDUCED){
-      node.classList.add('settled');
-      const g0 = document.querySelector('.node-glow');
-      if (g0) g0.classList.add('on');
-      freeze();
-      $$('.flow-item').forEach(e => e.classList.add('on'));
-      return;
-    }
-
-    setTimeout(() => {
-      node.classList.add('settled');
-      const g = document.querySelector('.node-glow');
-      if (g) g.classList.add('on');
-      setTimeout(runLines, 620);
-    }, instant ? 0 : 900);
-  }
-
-  /* ── Layar pembuka ──
-     Penutup gelap dengan mark di tengah, ditempatkan tepat di atas posisi
-     simpul yang sebenarnya dan pada skala yang sama. Waktu penutupnya
-     memudar, tidak ada yang berpindah — sambungannya tidak terlihat. */
-  function boot(){
-    const svgEl = node.querySelector('svg');
-    if (!svgEl) return play(false);
-
-    /* Wadah diagram dibuka dulu dari keadaan reveal-nya. Selama masih
-       `.rv` yang belum `.in`, isinya tergeser 22px ke bawah — dan mark
-       pembukanya jadi diletakkan 22px meleset dari posisi akhir simpul.
-       Tidak apa-apa dibuka sekarang: semuanya masih tertutup layar pembuka. */
-    const flowWrap = document.getElementById('flow');
-    if (flowWrap){
-      /* Transisinya dimatikan sesaat. Kalau tidak, `.in` mulai menganimasikan
-         geseran 22px itu dan pengukuran di bawah menangkapnya di tengah jalan
-         — mark pembukanya lalu terpaku di posisi setengah jadi. */
-      flowWrap.style.transition = 'none';
-      flowWrap.classList.add('in');
-      flowWrap.getBoundingClientRect();     /* paksa tata letak diperbarui */
-    }
-
-    const cover = document.createElement('div');
-    cover.id = 'boot';
-    const mark = document.createElement('div');
-    mark.id = 'bootMark';
-    mark.appendChild(svgEl.cloneNode(true));
-    cover.appendChild(mark);
-    document.body.appendChild(cover);
-    if (window.__lenis) window.__lenis.stop();
-
-    /* Ukurannya diambil dari offsetWidth/offsetHeight — ukuran TATA LETAK,
-       bukan getBoundingClientRect. Rect simpul sudah ikut menghitung scale
-       1.75 dari CSS; kalau angka itu dipakai lalu diskalakan lagi, hasilnya
-       keskala dua kali dan mark pembukanya jauh lebih besar dari simpulnya.
-       Titik tengah tidak bergeser oleh transform, jadi posisi kiri-atas
-       versi tanpa skala dihitung balik dari titik tengah itu. */
-    const place = () => {
-      const r = node.getBoundingClientRect();
-      const w = node.offsetWidth, h = node.offsetHeight;
-      mark.style.left   = (r.left + r.width  / 2 - w / 2) + 'px';
-      mark.style.top    = (r.top  + r.height / 2 - h / 2) + 'px';
-      mark.style.width  = w + 'px';
-      mark.style.height = h + 'px';
-      /* skala yang sama dengan keadaan awal #flowNode di CSS */
-      mark.style.transform = 'scale(1.75)';
-    };
-    place();
-    if (flowWrap) flowWrap.style.transition = '';
-
-    /* cincin pada salinan mulai menggambar diri */
-    requestAnimationFrame(() => mark.classList.add('on'));
-
-    setTimeout(() => {
-      node.classList.add('drawn');      /* aslinya langsung dalam keadaan tergambar */
-      cover.classList.add('done');
-      if (window.__lenis) window.__lenis.start();
-      play(true);
-      setTimeout(() => cover.remove(), 900);
-    }, 1150);
-  }
-
-  /* Diagram ini duduk di hero, jadi hampir selalu sudah terlihat saat
-     halaman dibuka — di situ layar pembukanya dipakai. Kalau pengunjung
-     mendarat di tengah halaman (misal lewat tautan #pricing), pembukanya
-     dilewati dan animasinya menunggu diagramnya masuk layar. */
-  const atTop = () => (window.scrollY || 0) < 40 && !location.hash;
-
-  if (!REDUCED && atTop()){
-    played = true;
-    build();
-    requestAnimationFrame(boot);
-  } else {
-    const start = new IntersectionObserver(list => {
-      list.forEach(en => {
-        if (!en.isIntersecting || played) return;
-        played = true;
-        start.disconnect();
-        build();
-        requestAnimationFrame(() => play(false));
-      });
-    }, { threshold: 0.15 });
-    start.observe(stage);
-  }
-
-  let rt;
-  window.addEventListener('resize', () => {
-    clearTimeout(rt);
-    rt = setTimeout(() => { if (!played) return; build(); freeze(); }, 160);
+  /* Beberapa peramban memicu `ended` sekali saja lalu pause video di
+     posisi akhir. Kita paksa play ulang dari LOOP_START. */
+  v.addEventListener('ended', () => {
+    try { v.currentTime = LOOP_START; } catch(_){}
+    v.play().catch(()=>{});
   });
 
-  /* Bingkai hasil jadi berganti pelan-pelan, saling silang. */
-  (function cycle(){
-    const a = $('#flowOutImg'), b = $('#flowOutImgNext');
-    if (!a || !b || FLOW_OUTPUTS.length < 2 || REDUCED) return;
-    FLOW_OUTPUTS.forEach(src => { const i = new Image(); i.src = src; });
-    let i = 0, front = a, back = b;
-    setInterval(() => {
-      if (document.hidden) return;
-      i = (i + 1) % FLOW_OUTPUTS.length;
-      back.src = FLOW_OUTPUTS[i];
-      back.style.opacity = '1';
-      front.style.opacity = '0';
-      [front, back] = [back, front];
-    }, 4200);
-  })();
+  /* Kalau autoplay tertolak, jangan biarkan poster terlihat kaku selamanya.
+     Tampilkan tombol kecil "play" — belum diminta user, jadi cukup satu
+     kali coba play pada interaksi pertama halaman apa pun. */
+  const kick = () => {
+    v.play().catch(()=>{});
+    window.removeEventListener('pointerdown', kick);
+    window.removeEventListener('touchstart', kick);
+  };
+  v.play().catch(() => {
+    window.addEventListener('pointerdown', kick, { once:true, passive:true });
+    window.addEventListener('touchstart',  kick, { once:true, passive:true });
+  });
+
+  /* Ganti sumber saat lebar layar melewati batas mobile/desktop. */
+  let cur = v.src;
+  window.addEventListener('resize', () => {
+    const want = window.matchMedia('(max-width: 640px)').matches
+      ? 'web/video/hero-skydive-mobile.mp4'
+      : 'web/video/hero-skydive-desktop.mp4';
+    if (!cur.endsWith(want)){
+      cur = want;
+      const t = v.currentTime;   /* pertahankan waktu supaya loop tidak me-reset */
+      v.src = want;
+      v.addEventListener('loadedmetadata', () => {
+        try { v.currentTime = Math.min(t, LOOP_START); } catch(_){}
+        v.play().catch(()=>{});
+      }, { once:true });
+    }
+  });
+})();
+
+/* ============================================================
+   LAYAR PEMBUKA
+   ------------------------------------------------------------
+   Penutup gelap dengan mark di tengah yang menggambar dirinya
+   sendiri, lalu memudar. Sengaja dibuat lewat JS: kalau JS gagal
+   dimuat, penutupnya tidak pernah ada dan halaman tetap terbaca.
+
+   Dilewati kalau pengunjung mendarat di tengah halaman (misal
+   lewat tautan #pricing) atau meminta gerak dikurangi — di dua
+   keadaan itu penutup layar penuh cuma menghalangi.
+   ============================================================ */
+(function boot(){
+  const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const atTop   = (window.scrollY || 0) < 40 && !location.hash;
+  if (REDUCED || !atTop) return;
+
+  const cover = document.createElement('div');
+  cover.id = 'boot';
+  cover.setAttribute('aria-hidden', 'true');
+  cover.innerHTML = `
+    <svg id="bootMark" viewBox="0 0 392 261" role="img" aria-label="Hanoora Studio">
+      <defs>
+        <clipPath id="hnrBootLink"><circle cx="195.5" cy="221.1" r="27"/></clipPath>
+      </defs>
+      <circle class="mark-ring mark-ring--b" cx="261.5" cy="130" r="112.5"
+              fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="29"
+              transform="rotate(-90 261.5 130)"/>
+      <circle class="mark-ring" cx="129.5" cy="130" r="112.5"
+              fill="none" stroke="#FFFFFF" stroke-width="29"
+              transform="rotate(-90 129.5 130)"/>
+      <circle class="mark-ring mark-ring--b" cx="261.5" cy="130" r="112.5"
+              fill="none" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="29"
+              transform="rotate(-90 261.5 130)" clip-path="url(#hnrBootLink)"/>
+    </svg>`;
+  document.body.appendChild(cover);
+  if (window.__lenis) window.__lenis.stop();
+
+  requestAnimationFrame(() => cover.classList.add('draw'));
+
+  setTimeout(() => {
+    cover.classList.add('done');
+    if (window.__lenis) window.__lenis.start();
+    setTimeout(() => cover.remove(), 900);
+  }, 1350);
 })();
 
 /* ============================================================
@@ -1623,7 +1251,7 @@ window.addEventListener('scroll', () => {
   const run = BRANDS.map(n =>
     '<span class="flex items-center gap-8 px-8 shrink-0">' +
       '<span class="display text-xl sm:text-2xl text-ink-soft/70">'+esc(n)+'</span>' +
-      '<span class="w-1 h-1 rounded-full bg-brand-300"></span>' +
+      '<span class="w-1 h-1 rounded-full bg-brand-600/50"></span>' +
     '</span>').join('');
   $('#mq').innerHTML = run + run;
 })();
@@ -1656,8 +1284,8 @@ window.addEventListener('scroll', () => {
   $('#process-list').innerHTML = PROCESS.map((p, i) => `
     <div class="rv rv-d${i} grid sm:grid-cols-12 gap-y-3 gap-x-8 py-8 sm:py-10 border-b border-white/12">
       <div class="sm:col-span-2 display text-3xl sm:text-4xl text-brand-300">${esc(p.n)}</div>
-      <h3 class="sm:col-span-4 display text-2xl sm:text-[2rem] text-ink">${esc(p.t)}</h3>
-      <p class="sm:col-span-6 text-[15px] text-ink/60 leading-relaxed self-center">${esc(p.d)}</p>
+      <h3 class="sm:col-span-4 display text-2xl sm:text-[2rem] text-white">${esc(p.t)}</h3>
+      <p class="sm:col-span-6 text-[15px] text-white/60 leading-relaxed self-center">${esc(p.d)}</p>
     </div>`).join('');
 })();
 
@@ -1736,10 +1364,10 @@ function drawWorks(){
       <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 pointer-events-none">
         <div class="flex items-center gap-2.5">
           <span class="w-1.5 h-1.5 rounded-full" style="background:${esc(w.accent || '#9DBEB6')}"></span>
-          <span class="text-[10.5px] uppercase tracking-[.2em] font-semibold text-ink/75">${esc(tr(w.tag))}</span>
+          <span class="text-[10.5px] uppercase tracking-[.2em] font-semibold text-white/75">${esc(tr(w.tag))}</span>
         </div>
-        <h3 class="display text-[1.5rem] sm:text-[1.7rem] text-ink mt-2 leading-[1.12]">${esc(tr(w.title))}</h3>
-        <p class="text-xs text-ink/55 mt-1.5">${esc(w.brand)} — ${esc(w.year || '')}</p>
+        <h3 class="display text-[1.5rem] sm:text-[1.7rem] text-white mt-2 leading-[1.12]">${esc(tr(w.title))}</h3>
+        <p class="text-xs text-white/55 mt-1.5">${esc(w.brand)} — ${esc(w.year || '')}</p>
       </div>
     </article>`).join('');
 
@@ -1913,25 +1541,25 @@ function tierCard(t, i){
   const dark = t.featured;
   return `
   <article class="rv rv-d${i} relative rounded-[1.5rem] p-7 sm:p-9 flex flex-col
-                  ${dark ? 'bg-brand-700 text-ink shadow-[0_36px_80px_-44px_rgba(30,94,88,.8)]'
+                  ${dark ? 'bg-brand-700 text-white shadow-[0_36px_80px_-44px_rgba(30,94,88,.55)]'
                          : 'surface'}">
     ${dark ? '<span class="absolute top-7 right-7 rounded-full bg-white/15 px-3 py-1 text-[10.5px] uppercase tracking-[.18em] font-semibold">Most chosen</span>' : ''}
-    <h3 class="display text-[1.6rem] ${dark ? 'text-ink' : ''}">${esc(t.name)}</h3>
-    <p class="text-sm leading-relaxed mt-2.5 ${dark ? 'text-ink/70' : 'text-ink-soft'}">${esc(t.line)}</p>
+    <h3 class="display text-[1.6rem] ${dark ? 'text-white' : ''}">${esc(t.name)}</h3>
+    <p class="text-sm leading-relaxed mt-2.5 ${dark ? 'text-white/70' : 'text-ink-soft'}">${esc(t.line)}</p>
 
     <div class="mt-7 pb-7 border-b ${dark ? 'border-white/15' : 'border-[var(--line2)]'}">
       <div class="flex items-end gap-2 flex-wrap">
-        <span class="display text-[2.4rem] sm:text-[2.8rem] leading-none ${dark ? 'text-ink' : ''}">${esc(p.usd)}</span>
-        ${t.custom ? '' : `<span class="text-sm mb-1 ${dark ? 'text-ink/55' : 'text-ink-mute'}">/ month</span>`}
+        <span class="display text-[2.4rem] sm:text-[2.8rem] leading-none ${dark ? 'text-white' : ''}">${esc(p.usd)}</span>
+        ${t.custom ? '' : `<span class="text-sm mb-1 ${dark ? 'text-white/55' : 'text-ink-mute'}">/ month</span>`}
       </div>
-      <p class="text-xs mt-2.5 ${dark ? 'text-ink/55' : 'text-ink-mute'}">
+      <p class="text-xs mt-2.5 ${dark ? 'text-white/55' : 'text-ink-mute'}">
         ${t.custom ? 'Scoped around the brief' : esc(p.idr) + (CYCLE === 'yearly' ? ' — billed annually' : ' per month')}
       </p>
     </div>
 
     <ul class="mt-7 space-y-3 flex-1">
       ${t.items.map(x => `
-        <li class="flex items-start gap-2.5 text-sm ${dark ? 'text-ink/80' : 'text-ink-soft'}">
+        <li class="flex items-start gap-2.5 text-sm ${dark ? 'text-white/80' : 'text-ink-soft'}">
           <span class="mt-[3px] shrink-0 ${dark ? 'text-brand-200' : 'text-brand-600'}">${icon('check','w-3.5 h-3.5')}</span>
           <span>${esc(x)}</span>
         </li>`).join('')}
