@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<!--
+  Hanoora Studio — Dashboard / CMS  (untuk situs live hanoorastudio.com)
+  Satu halaman: traffic + porto (poster+video, upload R2) + kontak + harga (USD+IDR).
+  Data lewat /api/* (Cloudflare Pages Functions). Login password.
+  URL: https://hanoorastudio.com/dashboard.html
+-->
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Dashboard — Hanoora Studio</title>
+<link rel="icon" href="web/logo/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#fbfbfa;--bg2:#f1efea;--ink:#1a1a1a;--soft:rgba(26,26,26,.55);--faint:rgba(26,26,26,.4);--line:rgba(26,26,26,.13);--teal:#2a7a70;--mint:#37a291;--dark:#161817;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .mono{font-family:'IBM Plex Mono',monospace}
+  .fld{width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;padding:.6rem .8rem;font-size:14px;color:var(--ink);font-family:inherit;transition:border-color .2s}
+  .fld:focus{outline:none;border-color:var(--teal)}
+  textarea.fld{resize:vertical}
+  .lb{display:block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);margin-bottom:.35rem}
+  .btn{border:none;border-radius:999px;font-weight:600;font-family:inherit;cursor:pointer;transition:transform .2s,background .2s,border-color .2s,filter .2s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-dark{background:var(--ink);color:#fff}
+  .btn-teal{background:var(--teal);color:#fff}
+  .btn-teal:hover{filter:brightness(1.08)}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--teal);background:rgba(42,122,112,.06)}
+  .btn-danger{background:transparent;border:1px solid rgba(190,60,60,.4);color:#b23}
+  .btn-danger:hover{background:rgba(190,60,60,.08)}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px}
+  .bar{background:var(--teal);border-radius:4px 4px 0 0;min-height:2px}
+  .navlink{color:var(--soft);font-weight:500;font-size:14px;padding:.4rem .8rem;border-radius:999px;text-decoration:none}
+  .navlink:hover{color:var(--ink);background:var(--bg2)}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:.3s;z-index:90}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+  details>summary{list-style:none;cursor:pointer}
+  details>summary::-webkit-details-marker{display:none}
+  .chev{transition:transform .25s}
+  details[open] .chev{transform:rotate(180deg)}
+  a{color:inherit}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login" style="min-height:100vh;display:grid;place-items:center;padding:20px">
+  <div class="card" style="padding:32px;width:100%;max-width:380px">
+    <img src="web/logo/logo.png" alt="Hanoora" style="height:26px;margin-bottom:22px">
+    <h1 style="font-size:22px;margin:0 0 4px">Dashboard</h1>
+    <p style="color:var(--soft);font-size:14px;margin:0 0 22px">Masuk untuk mengelola situs.</p>
+    <form id="loginForm">
+      <label class="lb">Password</label>
+      <input id="pw" type="password" class="fld" autocomplete="current-password" required>
+      <button class="btn btn-dark" style="width:100%;padding:12px;margin-top:18px;font-size:14px">Masuk</button>
+      <p id="loginErr" style="display:none;color:#b23;font-size:13px;margin-top:12px"></p>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <header style="position:sticky;top:0;z-index:40;background:rgba(251,251,250,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)">
+    <div style="max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <img src="web/logo/logo.png" alt="Hanoora" style="height:24px">
+      <nav style="display:flex;gap:2px" class="hidesk">
+        <a href="#traffic" class="navlink">Traffic</a>
+        <a href="#porto" class="navlink">Portofolio</a>
+        <a href="#kontak" class="navlink">Kontak</a>
+        <a href="#harga" class="navlink">Harga</a>
+      </nav>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span id="dirty" class="mono" style="display:none;font-size:11px;color:var(--teal);font-weight:600;text-transform:uppercase;letter-spacing:.1em">belum disimpan</span>
+        <a href="/" target="_blank" class="btn btn-ghost" style="padding:8px 14px;font-size:13px;text-decoration:none">Lihat situs</a>
+        <button onclick="downloadBackup()" class="btn btn-ghost" style="padding:8px 14px;font-size:13px">Backup</button>
+        <button onclick="save()" id="saveBtn" class="btn btn-teal" style="padding:8px 18px;font-size:13px">Simpan</button>
+        <button onclick="logout()" class="btn btn-ghost" style="padding:8px 14px;font-size:13px">Keluar</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1180px;margin:0 auto;padding:32px 20px;display:flex;flex-direction:column;gap:48px">
+
+    <section id="traffic" style="scroll-margin-top:80px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <h2 style="font-size:19px;margin:0">Traffic</h2>
+        <div style="display:flex;gap:6px">
+          <button onclick="loadAnalytics(7)"  data-range="7"  class="rbtn btn btn-ghost" style="padding:6px 12px;font-size:13px">7 hari</button>
+          <button onclick="loadAnalytics(30)" data-range="30" class="rbtn btn btn-ghost" style="padding:6px 12px;font-size:13px">30 hari</button>
+        </div>
+      </div>
+      <div id="anWrap" class="card" style="padding:24px"><p style="color:var(--soft);font-size:14px;margin:0">Memuat…</p></div>
+    </section>
+
+    <section id="porto" style="scroll-margin-top:80px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <h2 style="font-size:19px;margin:0">Portofolio <span id="wCount" style="color:var(--faint);font-weight:400"></span></h2>
+        <button onclick="addWork()" class="btn btn-dark" style="padding:8px 16px;font-size:13px">+ Tambah karya</button>
+      </div>
+      <div id="works" style="display:flex;flex-direction:column;gap:10px"></div>
+    </section>
+
+    <section id="kontak" style="scroll-margin-top:80px">
+      <h2 style="font-size:19px;margin:0 0 16px">Kontak &amp; sosial</h2>
+      <p style="color:var(--soft);font-size:13px;margin:-8px 0 16px">Kosongkan yang belum ada — tombolnya otomatis tidak aktif sampai diisi.</p>
+      <div class="card" style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:16px" id="contactGrid"></div>
+    </section>
+
+    <section id="harga" style="scroll-margin-top:80px">
+      <h2 style="font-size:19px;margin:0 0 16px">Harga (retainer)</h2>
+      <div id="tiers" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px"></div>
+    </section>
+    <div style="height:20px"></div>
+  </main>
+</div>
+
+<div id="toast" class="toast card" style="padding:12px 20px;font-size:13.5px;font-weight:600"></div>
+
+<script>
+/* ============================================================
+   DEFAULT (dipakai saat KV kosong) — cerminan situs live
+   ============================================================ */
+const DEFAULT_CONTACT = { email:'hello@hanoorastudio.com', whatsapp:'', instagram:'', tiktok:'', linkedin:'', behance:'', youtube:'' };
+const DEFAULT_TIERS = [
+  { name:'Essential', desc:'A dependable monthly drumbeat of work for a brand still finding its volume.', hot:false, custom:false,
+    usdM:'$2,950', usdY:'$2,655', idrM:'Rp 52.500.000 / month', idrY:'Rp 47.250.000 / month',
+    items:['Two active requests at a time','12–18 finished assets a month','48-hour average turnaround','Script written by a person','Film, stills & design — all included','A performance review every month'] },
+  { name:'Signature', desc:'A full creative department, always on, always mid-project.', hot:true, custom:false,
+    usdM:'$4,850', usdY:'$4,365', idrM:'Rp 86.000.000 / month', idrY:'Rp 77.400.000 / month',
+    items:['Three active requests at a time','25–35 finished assets a month','24–48 hour turnaround','One cinematic brand film every month','Brand identity, packaging & art direction','A strategy sprint every quarter'] },
+  { name:'Bespoke', desc:'The only tier with live production — plus bespoke volume, security and SLA.', hot:false, custom:true,
+    usdM:'Let’s talk', usdY:'Let’s talk', idrM:'Scoped around the brief', idrY:'Scoped around the brief',
+    items:['Unlimited active requests','A same-day priority lane','Live-action shoot days on request','A custom AI presenter, locked identity','A dedicated writer & editor pod','Contracts & SLAs written around you'] },
+];
+const DEFAULT_WORKS = [{"cat": "commercial", "catLabel": "Cinematic Film", "title": "Sports watch campaign", "meta": "Garmin — 2025", "poster": "https://hanoorastudio.com/web/video/garmin.jpg", "video": "https://hanoorastudio.com/web/video/garmin.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Red Majesty fragrance launch", "meta": "Vitalis — 2025", "poster": "https://hanoorastudio.com/web/video/vitalis.jpg", "video": "https://hanoorastudio.com/web/video/vitalis.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Drinkware for an active life", "meta": "Corkcicle — 2025", "poster": "https://hanoorastudio.com/web/video/corkcicle.jpg", "video": "https://hanoorastudio.com/web/video/corkcicle.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Performance footwear campaign", "meta": "Ortuseight — 2025", "poster": "https://hanoorastudio.com/web/video/ortuseight.jpg", "video": "https://hanoorastudio.com/web/video/ortuseight.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Professional haircare series", "meta": "Takara — 2025", "poster": "https://hanoorastudio.com/web/video/takara.jpg", "video": "https://hanoorastudio.com/web/video/takara.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Men's body care, dark aesthetic", "meta": "FFAR — 2025", "poster": "https://hanoorastudio.com/web/video/ffar.jpg", "video": "https://hanoorastudio.com/web/video/ffar.mp4"}, {"cat": "social", "catLabel": "Social Film", "title": "Seasonal eyewear collection", "meta": "Keshvara — 2025", "poster": "https://hanoorastudio.com/web/video/keshvara.jpg", "video": "https://hanoorastudio.com/web/video/keshvara.mp4"}, {"cat": "social", "catLabel": "Social Film", "title": "First Kiss series", "meta": "Slavina — 2025", "poster": "https://hanoorastudio.com/web/video/slavina-firstkiss.jpg", "video": "https://hanoorastudio.com/web/video/slavina-firstkiss.mp4"}, {"cat": "ugc", "catLabel": "UGC / Creator", "title": "Talking-head conversion video", "meta": "Men's Fragrance — 2026", "poster": "https://hanoorastudio.com/web/video/ugc-kahf.jpg", "video": "https://hanoorastudio.com/web/video/ugc-kahf.mp4"}, {"cat": "ai", "catLabel": "AI Talent", "title": "A presenter that never sleeps", "meta": "AI Influencer — 2026", "poster": "https://hanoorastudio.com/web/video/ai-influencer.jpg", "video": "https://hanoorastudio.com/web/video/ai-influencer.mp4"}, {"cat": "branding", "catLabel": "Brand Film", "title": "Cinematic founder storytelling", "meta": "Personal Branding — 2026", "poster": "https://hanoorastudio.com/web/video/personal-branding.jpg", "video": "https://hanoorastudio.com/web/video/personal-branding.mp4"}, {"cat": "branding", "catLabel": "Identity", "title": "Full visual system build", "meta": "Keshvara — 2025", "poster": "https://hanoorastudio.com/web/img/foto-06.jpg", "video": ""}];
+const CAT_OPTS = ['commercial','social','ugc','ai','branding'];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let STATE=null, dirty=false;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+let toastT; function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);}
+function setDirty(v){dirty=v;$('dirty').style.display=v?'inline':'none';}
+
+async function boot(){
+  const me=await fetch('/api/me').then(r=>r.json()).catch(()=>({ok:false}));
+  if(me.ok) showApp(); else $('login').style.display='grid';
+}
+$('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const r=await fetch('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({password:$('pw').value})}).then(r=>r.json()).catch(()=>({ok:false,error:'Gagal terhubung.'}));
+  if(r.ok) location.reload(); else {const e2=$('loginErr');e2.textContent=r.error||'Password salah.';e2.style.display='block';}
+});
+async function logout(){await fetch('/api/logout',{method:'POST'});location.reload();}
+
+async function showApp(){
+  $('login').style.display='none'; $('app').style.display='block';
+  const c=await fetch('/api/content',{cache:'no-store'}).then(r=>r.json()).catch(()=>({}));
+  STATE=normalize(c);
+  renderContact(); renderTiers(); renderWorks(); loadAnalytics(7); setDirty(false);
+}
+function normalize(c){
+  c=c||{};
+  const contact=Object.assign({},DEFAULT_CONTACT,c.contact||{});
+  let tiers=(c.prices&&Array.isArray(c.prices.tiers)&&c.prices.tiers.length)?c.prices.tiers:DEFAULT_TIERS;
+  tiers=tiers.map(t=>({name:t.name||'',desc:t.desc||'',hot:!!t.hot,custom:!!t.custom,usdM:t.usdM||'',usdY:t.usdY||'',idrM:t.idrM||'',idrY:t.idrY||'',items:Array.isArray(t.items)?t.items.slice():[]}));
+  let works=(Array.isArray(c.works)&&c.works.length)?c.works:DEFAULT_WORKS;
+  works=works.map(w=>({cat:w.cat||'commercial',catLabel:w.catLabel||'',title:w.title||'',meta:w.meta||'',poster:w.poster||'',video:w.video||''}));
+  return {contact,prices:{tiers},works};
+}
+
+/* CONTACT */
+const CONTACT_FIELDS=[['email','Email'],['whatsapp','WhatsApp (nomor, mis. 62857…)'],['instagram','Instagram URL'],['tiktok','TikTok URL'],['linkedin','LinkedIn URL'],['behance','Behance URL'],['youtube','YouTube URL']];
+function renderContact(){
+  $('contactGrid').innerHTML=CONTACT_FIELDS.map(([k,l])=>'<div><label class="lb">'+esc(l)+'</label><input class="fld" data-contact="'+k+'" value="'+esc(STATE.contact[k]||'')+'"></div>').join('');
+  $('contactGrid').querySelectorAll('[data-contact]').forEach(i=>i.addEventListener('input',e=>{STATE.contact[e.target.dataset.contact]=e.target.value;setDirty(true);}));
+}
+
+/* PRICING */
+function renderTiers(){
+  $('tiers').innerHTML=STATE.prices.tiers.map((t,i)=>
+    '<div class="card" style="padding:20px" data-tier="'+i+'">'+
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><input class="fld" style="font-weight:600" data-tf="name" value="'+esc(t.name)+'">'+
+      '<label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--soft);white-space:nowrap"><input type="checkbox" data-tf="hot" '+(t.hot?'checked':'')+'>populer</label></div>'+
+      '<label class="lb">Tagline</label><textarea class="fld" rows="2" data-tf="desc" style="margin-bottom:12px">'+esc(t.desc)+'</textarea>'+
+      '<label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--soft);margin-bottom:12px"><input type="checkbox" data-tf="custom" '+(t.custom?'checked':'')+'>harga custom (mis. “Let’s talk”)</label>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
+        '<div><label class="lb">USD / bln</label><input class="fld" data-tf="usdM" value="'+esc(t.usdM)+'"></div>'+
+        '<div><label class="lb">USD / thn</label><input class="fld" data-tf="usdY" value="'+esc(t.usdY)+'"></div>'+
+        '<div><label class="lb">IDR / bln</label><input class="fld" data-tf="idrM" value="'+esc(t.idrM)+'"></div>'+
+        '<div><label class="lb">IDR / thn</label><input class="fld" data-tf="idrY" value="'+esc(t.idrY)+'"></div>'+
+      '</div>'+
+      '<label class="lb">Isi paket (satu per baris)</label><textarea class="fld" rows="7" data-tf="items">'+esc(t.items.join('\n'))+'</textarea>'+
+    '</div>').join('');
+  $('tiers').querySelectorAll('[data-tier]').forEach(card=>{const i=+card.dataset.tier;
+    card.querySelectorAll('[data-tf]').forEach(inp=>inp.addEventListener('input',()=>{const f=inp.dataset.tf,t=STATE.prices.tiers[i];
+      if(f==='hot'||f==='custom')t[f]=inp.checked; else if(f==='items')t.items=inp.value.split('\n').map(s=>s.trim()).filter(Boolean); else t[f]=inp.value; setDirty(true);}));});
+}
+
+/* PORTFOLIO */
+function renderWorks(){
+  $('wCount').textContent='('+STATE.works.length+')';
+  $('works').innerHTML=STATE.works.map((w,i)=>workRow(w,i)).join('');
+  $('works').querySelectorAll('[data-work]').forEach(row=>{const i=+row.dataset.work;
+    row.querySelectorAll('[data-wf]').forEach(inp=>inp.addEventListener('input',()=>{STATE.works[i][inp.dataset.wf]=inp.value;setDirty(true);
+      if(inp.dataset.wf==='title')row.querySelector('.wtitle').textContent=inp.value||'(tanpa judul)';}));});
+}
+function workRow(w,i){
+  return '<details class="card" data-work="'+i+'">'+
+    '<summary style="display:flex;align-items:center;gap:12px;padding:12px">'+
+      '<div style="width:46px;height:56px;border-radius:8px;overflow:hidden;background:var(--bg2);flex:0 0 auto;border:1px solid var(--line)">'+(w.poster?'<img src="'+esc(w.poster)+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">':'')+'</div>'+
+      '<div style="flex:1;min-width:0"><span class="wtitle" style="display:block;font-weight:600;font-size:15px">'+esc(w.title||'(tanpa judul)')+'</span>'+
+        '<span class="mono" style="display:block;font-size:11px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(w.cat)+(w.video?' · video ✓':' · poster')+'</span></div>'+
+      '<div style="display:flex;gap:4px;flex:0 0 auto" onclick="event.preventDefault();event.stopPropagation()">'+
+        '<button onclick="moveWork('+i+',-1)" class="btn btn-ghost" style="width:32px;height:32px">↑</button>'+
+        '<button onclick="moveWork('+i+',1)" class="btn btn-ghost" style="width:32px;height:32px">↓</button>'+
+        '<button onclick="delWork('+i+')" class="btn btn-danger" style="width:32px;height:32px">✕</button>'+
+      '</div>'+
+      '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'+
+    '</summary>'+
+    '<div style="padding:4px 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+      '<div style="grid-column:1/-1"><label class="lb">Judul</label><input class="fld" data-wf="title" value="'+esc(w.title)+'"></div>'+
+      '<div><label class="lb">Kategori</label><select class="fld" data-wf="cat">'+CAT_OPTS.map(o=>'<option '+(w.cat===o?'selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
+      '<div><label class="lb">Label kategori (mis. Cinematic Film)</label><input class="fld" data-wf="catLabel" value="'+esc(w.catLabel)+'"></div>'+
+      '<div style="grid-column:1/-1"><label class="lb">Meta (mis. Garmin — 2025)</label><input class="fld" data-wf="meta" value="'+esc(w.meta)+'"></div>'+
+      '<div><label class="lb">Video</label><div style="display:flex;gap:6px"><input class="fld" data-wf="video" value="'+esc(w.video)+'" placeholder="/media/video/…"><button onclick="pickUpload('+i+',\'video\')" class="btn btn-ghost" style="padding:0 12px;font-size:12px;white-space:nowrap">Upload</button></div></div>'+
+      '<div><label class="lb">Poster</label><div style="display:flex;gap:6px"><input class="fld" data-wf="poster" value="'+esc(w.poster)+'" placeholder="/media/img/…"><button onclick="pickUpload('+i+',\'poster\')" class="btn btn-ghost" style="padding:0 12px;font-size:12px;white-space:nowrap">Upload</button></div></div>'+
+    '</div>'+
+  '</details>';
+}
+function addWork(){STATE.works.unshift({cat:'commercial',catLabel:'',title:'',meta:'',poster:'',video:''});setDirty(true);renderWorks();}
+function delWork(i){if(!confirm('Hapus karya ini?'))return;STATE.works.splice(i,1);setDirty(true);renderWorks();}
+function moveWork(i,d){const j=i+d;if(j<0||j>=STATE.works.length)return;const a=STATE.works;[a[i],a[j]]=[a[j],a[i]];setDirty(true);renderWorks();}
+
+function pickUpload(i,which){
+  const inp=document.createElement('input');inp.type='file';inp.accept=which==='video'?'video/*':'image/*';
+  inp.onchange=async()=>{const f=inp.files[0];if(!f)return;toast('Mengunggah '+f.name+'…');
+    const fd=new FormData();fd.append('file',f);fd.append('folder',which==='video'?'video':'img');
+    const base=(STATE.works[i].title||STATE.works[i].meta||'file').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    const ext=(f.name.match(/\.[a-z0-9]+$/i)||[''])[0].toLowerCase();
+    fd.append('name',base+ext);
+    const r=await fetch('/api/upload',{method:'POST',body:fd}).then(r=>r.json()).catch(()=>({ok:false,error:'Gagal.'}));
+    if(r.ok){STATE.works[i][which==='video'?'video':'poster']=r.url;setDirty(true);renderWorks();toast('Terunggah ✓');}else toast(r.error||'Gagal mengunggah');
+  };
+  inp.click();
+}
+
+/* ANALYTICS */
+async function loadAnalytics(range){
+  document.querySelectorAll('.rbtn').forEach(b=>{const on=+b.dataset.range===range;b.classList.toggle('btn-dark',on);b.classList.toggle('btn-ghost',!on);});
+  $('anWrap').innerHTML='<p style="color:var(--soft);font-size:14px;margin:0">Memuat…</p>';
+  const a=await fetch('/api/analytics?range='+range).then(r=>r.json()).catch(()=>({ok:false}));
+  if(!a.ok){$('anWrap').innerHTML='<p style="color:#b23;font-size:14px;margin:0">Gagal memuat analytics.</p>';return;}
+  if(a.enabled===false){$('anWrap').innerHTML='<div style="font-size:14px;color:var(--soft)"><p style="font-weight:600;color:var(--ink);margin:0 0 4px">Analytics belum aktif.</p><p style="margin:0">Atur <span class="mono">CF_API_TOKEN</span> + <span class="mono">CF_ZONE_TAG</span> di setup untuk melihat traffic di sini (opsional). Sementara itu tetap bisa dilihat di dashboard Cloudflare.</p></div>';return;}
+  if(a.error){$('anWrap').innerHTML='<p style="color:#b23;font-size:14px;margin:0">Cloudflare: '+esc(a.error)+'</p>';return;}
+  const max=Math.max(1,...a.series.map(s=>s.pageViews));
+  const bars=a.series.map(s=>'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="width:100%;display:flex;align-items:flex-end;height:120px"><div class="bar" style="width:100%;height:'+Math.round(s.pageViews/max*120)+'px" title="'+s.date+': '+s.pageViews+'"></div></div><span class="mono" style="font-size:9px;color:var(--faint)">'+s.date.slice(5)+'</span></div>').join('');
+  const co=a.countries.length?a.countries.map(c=>'<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--line)"><span>'+esc(c.name||'—')+'</span><span class="mono" style="color:var(--soft)">'+c.requests+'</span></div>').join(''):'<p style="color:var(--faint);font-size:13px">Belum ada data.</p>';
+  const tile=(v,l)=>'<div class="card" style="padding:16px"><div style="font-size:26px;font-weight:700">'+v.toLocaleString()+'</div><div class="mono" style="font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);margin-top:4px">'+l+'</div></div>';
+  $('anWrap').innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px">'+tile(a.totals.pageViews,'Pageviews')+tile(a.totals.uniques,'Pengunjung unik')+tile(a.totals.requests,'Requests')+'</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 260px;gap:24px"><div><div style="display:flex;align-items:flex-end;gap:4px">'+bars+'</div></div><div><div class="lb" style="margin-bottom:8px">Negara teratas</div>'+co+'</div></div>';
+}
+
+/* SAVE / BACKUP */
+async function save(){
+  $('saveBtn').textContent='Menyimpan…';
+  const r=await fetch('/api/save',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(STATE)}).then(r=>r.json()).catch(()=>({ok:false,error:'Gagal terhubung.'}));
+  $('saveBtn').textContent='Simpan';
+  if(r.ok){setDirty(false);toast('Tersimpan & tayang ✓');}else toast(r.error||'Gagal menyimpan');
+}
+function downloadBackup(){window.open('/api/backup','_blank');}
+addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+
+/* responsive nav hide */
+const mq=matchMedia('(max-width:760px)');function mqf(){document.querySelectorAll('.hidesk').forEach(n=>n.style.display=mq.matches?'none':'flex');}mq.addEventListener('change',mqf);mqf();
+const gridMq=matchMedia('(max-width:760px)');function gf(){$('tiers')&&($('tiers').style.gridTemplateColumns=gridMq.matches?'1fr':'1fr 1fr 1fr');const cg=$('contactGrid');cg&&(cg.style.gridTemplateColumns=gridMq.matches?'1fr':'1fr 1fr');}gridMq.addEventListener('change',gf);setTimeout(gf,50);
+
+boot();
+</script>
+</body>
+</html>
