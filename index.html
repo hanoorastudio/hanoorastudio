@@ -435,6 +435,12 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
 .foot-huge{font-weight:700;letter-spacing:-.06em;font-size:clamp(60px,20vw,300px);line-height:.8;color:rgba(255,255,255,.11);text-align:center;padding:40px 0 0;user-select:none}
 @media(max-width:860px){.foot-top{grid-template-columns:1fr 1fr;gap:40px 30px}.foot-brand{grid-column:1/-1}}
 </style>
+<style>
+.work img{transition:transform .8s cubic-bezier(.2,.7,.2,1),opacity .45s ease}
+.work video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease}
+.work.playing video{opacity:1}
+.work.playing img{opacity:0}
+</style>
 </head>
 <body>
 
@@ -559,17 +565,17 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
 
   <div class="work-rail">
   <div class="work-carousel" id="workGrid">
-    <div class="work rv" data-c="commercial"><img src="https://hanoorastudio.com/web/video/garmin.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Sports watch campaign</div><div class="m">Garmin — 2025</div></div></div>
-    <div class="work rv d1" data-c="commercial branding"><img src="https://hanoorastudio.com/web/video/vitalis.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Red Majesty fragrance launch</div><div class="m">Vitalis — 2025</div></div></div>
-    <div class="work rv d2" data-c="commercial"><img src="https://hanoorastudio.com/web/video/corkcicle.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Drinkware for an active life</div><div class="m">Corkcicle — 2025</div></div></div>
-    <div class="work rv" data-c="commercial"><img src="https://hanoorastudio.com/web/video/ortuseight.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Performance footwear campaign</div><div class="m">Ortuseight — 2025</div></div></div>
-    <div class="work rv d1" data-c="commercial"><img src="https://hanoorastudio.com/web/video/takara.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Professional haircare series</div><div class="m">Takara — 2025</div></div></div>
-    <div class="work rv d2" data-c="commercial"><img src="https://hanoorastudio.com/web/video/ffar.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Men's body care, dark aesthetic</div><div class="m">FFAR — 2025</div></div></div>
-    <div class="work rv" data-c="social"><img src="https://hanoorastudio.com/web/video/keshvara.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Social Film</div><div class="t">Seasonal eyewear collection</div><div class="m">Keshvara — 2025</div></div></div>
-    <div class="work rv d1" data-c="social"><img src="https://hanoorastudio.com/web/video/slavina-firstkiss.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Social Film</div><div class="t">First Kiss series</div><div class="m">Slavina — 2025</div></div></div>
-    <div class="work rv d2" data-c="ugc"><img src="https://hanoorastudio.com/web/video/ugc-kahf.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">UGC / Creator</div><div class="t">Talking-head conversion video</div><div class="m">Men's Fragrance — 2026</div></div></div>
-    <div class="work rv" data-c="ai"><img src="https://hanoorastudio.com/web/video/ai-influencer.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">AI Talent</div><div class="t">A presenter that never sleeps</div><div class="m">AI Influencer — 2026</div></div></div>
-    <div class="work rv d1" data-c="branding"><img src="https://hanoorastudio.com/web/video/personal-branding.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Brand Film</div><div class="t">Cinematic founder storytelling</div><div class="m">Personal Branding — 2026</div></div></div>
+    <div class="work rv" data-c="commercial"><img src="https://hanoorastudio.com/web/video/garmin.jpg" alt=""><video src="https://hanoorastudio.com/web/video/garmin.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Sports watch campaign</div><div class="m">Garmin — 2025</div></div></div>
+    <div class="work rv d1" data-c="commercial branding"><img src="https://hanoorastudio.com/web/video/vitalis.jpg" alt=""><video src="https://hanoorastudio.com/web/video/vitalis.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Red Majesty fragrance launch</div><div class="m">Vitalis — 2025</div></div></div>
+    <div class="work rv d2" data-c="commercial"><img src="https://hanoorastudio.com/web/video/corkcicle.jpg" alt=""><video src="https://hanoorastudio.com/web/video/corkcicle.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Drinkware for an active life</div><div class="m">Corkcicle — 2025</div></div></div>
+    <div class="work rv" data-c="commercial"><img src="https://hanoorastudio.com/web/video/ortuseight.jpg" alt=""><video src="https://hanoorastudio.com/web/video/ortuseight.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Performance footwear campaign</div><div class="m">Ortuseight — 2025</div></div></div>
+    <div class="work rv d1" data-c="commercial"><img src="https://hanoorastudio.com/web/video/takara.jpg" alt=""><video src="https://hanoorastudio.com/web/video/takara.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Professional haircare series</div><div class="m">Takara — 2025</div></div></div>
+    <div class="work rv d2" data-c="commercial"><img src="https://hanoorastudio.com/web/video/ffar.jpg" alt=""><video src="https://hanoorastudio.com/web/video/ffar.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Men&#x27;s body care, dark aesthetic</div><div class="m">FFAR — 2025</div></div></div>
+    <div class="work rv" data-c="social"><img src="https://hanoorastudio.com/web/video/keshvara.jpg" alt=""><video src="https://hanoorastudio.com/web/video/keshvara.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Social Film</div><div class="t">Seasonal eyewear collection</div><div class="m">Keshvara — 2025</div></div></div>
+    <div class="work rv d1" data-c="social"><img src="https://hanoorastudio.com/web/video/slavina-firstkiss.jpg" alt=""><video src="https://hanoorastudio.com/web/video/slavina-firstkiss.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Social Film</div><div class="t">First Kiss series</div><div class="m">Slavina — 2025</div></div></div>
+    <div class="work rv d2" data-c="ugc"><img src="https://hanoorastudio.com/web/video/ugc-kahf.jpg" alt=""><video src="https://hanoorastudio.com/web/video/ugc-kahf.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">UGC / Creator</div><div class="t">Talking-head conversion video</div><div class="m">Men&#x27;s Fragrance — 2026</div></div></div>
+    <div class="work rv" data-c="ai"><img src="https://hanoorastudio.com/web/video/ai-influencer.jpg" alt=""><video src="https://hanoorastudio.com/web/video/ai-influencer.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">AI Talent</div><div class="t">A presenter that never sleeps</div><div class="m">AI Influencer — 2026</div></div></div>
+    <div class="work rv d1" data-c="branding"><img src="https://hanoorastudio.com/web/video/personal-branding.jpg" alt=""><video src="https://hanoorastudio.com/web/video/personal-branding.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Brand Film</div><div class="t">Cinematic founder storytelling</div><div class="m">Personal Branding — 2026</div></div></div>
     <div class="work rv d2" data-c="branding"><img src="https://hanoorastudio.com/web/img/foto-06.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Identity</div><div class="t">Full visual system build</div><div class="m">Keshvara — 2025</div></div></div>
   </div>
   <div class="work-nav"><button id="wPrev" aria-label="Previous">←</button><button id="wNext" aria-label="Next">→</button></div>
@@ -963,6 +969,85 @@ document.querySelectorAll('#capDeck .cpanel').forEach(p=>{
   const pv=document.getElementById('ePrev'), nx=document.getElementById('eNext');
   pv&&pv.addEventListener('click',()=>wc.scrollBy({left:-step(),behavior:'smooth'}));
   nx&&nx.addEventListener('click',()=>wc.scrollBy({left:step(),behavior:'smooth'}));
+})();
+</script>
+<script>
+/* ============================================================
+   Hanoora — video porto + CMS overlay
+   - Kartu porto main video saat hover (desktop) / tap (HP).
+   - Konten (porto/harga/kontak) diambil dari dashboard (KV) via /api/content.
+     Hanya menimpa bila ada data; kalau KV kosong, isi bawaan tetap tampil.
+   ============================================================ */
+(function(){
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
+
+  function bindWork(){
+    document.querySelectorAll('#workGrid .work').forEach(function(w){
+      var v=w.querySelector('video'); if(!v||v.dataset.b) return; v.dataset.b='1';
+      w.addEventListener('mouseenter',function(){ w.classList.add('playing'); v.play().catch(function(){}); });
+      w.addEventListener('mouseleave',function(){ w.classList.remove('playing'); v.pause(); try{v.currentTime=0;}catch(e){} });
+      w.addEventListener('click',function(){
+        if(w.classList.contains('playing')){ w.classList.remove('playing'); v.pause(); }
+        else { w.classList.add('playing'); v.play().catch(function(){}); }
+      });
+    });
+  }
+  bindWork();
+
+  function workCard(w){
+    var cat=(w.cat||w.data_c||'commercial');
+    var vid=w.video ? '<video src="'+esc(w.video)+'" muted loop playsinline preload="metadata"></video>' : '';
+    return '<div class="work" data-c="'+esc(cat)+'"><img src="'+esc(w.poster||'')+'" alt="">'+vid+
+      '<div class="play">▶</div>'+
+      '<div class="ov"><div class="cat">'+esc(w.catLabel||'')+'</div>'+
+      '<div class="t">'+esc(w.title||'')+'</div>'+
+      '<div class="m">'+esc(w.meta||'')+'</div></div></div>';
+  }
+  function renderWorks(works){
+    var grid=document.getElementById('workGrid'); if(!grid) return;
+    grid.innerHTML=works.map(workCard).join('');
+    var tab=document.querySelector('#workTabs button.on'); var f=tab?tab.dataset.f:'all';
+    grid.querySelectorAll('.work').forEach(function(w){ var show=f==='all'||(w.dataset.c||'').indexOf(f)>=0; w.style.display=show?'':'none'; });
+    bindWork();
+  }
+
+  function renderPrices(tiers){
+    var plans=document.querySelectorAll('#pricing .price-grid .plan');
+    tiers.forEach(function(t,i){
+      var pl=plans[i]; if(!pl) return;
+      var pn=pl.querySelector('.pname'); if(pn) pn.innerHTML=esc(t.name||'')+(t.hot?' <span class="tagpill">Most chosen</span>':'');
+      var pd=pl.querySelector('.pdesc'); if(pd) pd.textContent=t.desc||'';
+      var amt=pl.querySelector('.amt'), idr=pl.querySelector('.idr');
+      if(amt){
+        if(t.custom){ amt.removeAttribute('data-m'); amt.removeAttribute('data-y'); amt.textContent=t.usdM||''; }
+        else { amt.setAttribute('data-m',t.usdM||''); amt.setAttribute('data-y',t.usdY||''); amt.innerHTML=esc(t.usdM||'')+' <small>/ month</small>'; }
+      }
+      if(idr){
+        if(t.custom){ idr.removeAttribute('data-m'); idr.removeAttribute('data-y'); idr.textContent=t.idrM||''; }
+        else { idr.setAttribute('data-m',t.idrM||''); idr.setAttribute('data-y',t.idrY||''); idr.textContent=t.idrM||''; }
+      }
+      var ul=pl.querySelector('ul'); if(ul&&Array.isArray(t.items)) ul.innerHTML=t.items.map(function(x){return '<li>'+esc(x)+'</li>';}).join('');
+    });
+  }
+
+  function wireContact(ct){
+    if(ct.email){ document.querySelectorAll('a[href^="mailto:"]').forEach(function(a){ a.href='mailto:'+ct.email; }); }
+    var map={instagram:ct.instagram,behance:ct.behance,linkedin:ct.linkedin,youtube:ct.youtube,tiktok:ct.tiktok};
+    document.querySelectorAll('footer .foot-col').forEach(function(col){
+      var h=col.querySelector('h4'); if(!h||h.textContent.trim().toLowerCase()!=='follow') return;
+      col.querySelectorAll('a').forEach(function(a){
+        var k=a.textContent.trim().toLowerCase();
+        if(map[k]){ a.href=map[k]; a.target='_blank'; a.rel='noopener'; }
+      });
+    });
+  }
+
+  fetch('/api/content',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(c){
+    if(!c) return;
+    if(Array.isArray(c.works)&&c.works.length) renderWorks(c.works);
+    if(c.prices&&Array.isArray(c.prices.tiers)&&c.prices.tiers.length) renderPrices(c.prices.tiers);
+    if(c.contact) wireContact(c.contact);
+  }).catch(function(){});
 })();
 </script>
 </body>
