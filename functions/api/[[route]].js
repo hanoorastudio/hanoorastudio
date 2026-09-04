@@ -210,6 +210,8 @@ async function saveContent(request, env) {
   let data; try { data = await request.json(); } catch (e) { return json({ ok: false, error: 'JSON tidak valid.' }, 400); }
   if (!data || typeof data !== 'object' || Array.isArray(data)) return json({ ok: false, error: 'Format salah.' }, 400);
   data.works = Array.isArray(data.works) ? data.works : [];
+  data.landscape = Array.isArray(data.landscape) ? data.landscape : [];
+  data.stills = Array.isArray(data.stills) ? data.stills : [];
   data.contact = (data.contact && typeof data.contact === 'object') ? data.contact : {};
   data.prices = (data.prices && typeof data.prices === 'object') ? data.prices : {};
   data.updatedAt = new Date().toISOString(); data.updatedBy = s.u;
