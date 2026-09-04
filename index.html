@@ -1039,7 +1039,7 @@ document.querySelectorAll('#capDeck .cpanel').forEach(p=>{
   if(moreBtn){ moreBtn.addEventListener('click',function(){
     var on=moreBtn.getAttribute('data-open')!=='1'; moreBtn.setAttribute('data-open',on?'1':'0');
     document.querySelectorAll('.more-sec').forEach(function(s){ s.classList.toggle('on',on); if(on)s.querySelectorAll('.rv').forEach(function(e){e.classList.add('in');}); });
-    moreBtn.innerHTML=on?'Tampilkan lebih sedikit <span>\u2191</span>':'Lihat selengkapnya <span>\u2193</span>';
+    moreBtn.innerHTML=on?'View less <span>\u2191</span>':'Lihat selengkapnya <span>\u2193</span>';
   }); }
 })();
 
