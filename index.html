@@ -222,7 +222,7 @@ header.nav{position:fixed;top:9px;left:9px;right:9px;z-index:100;transition:back
 .work-nav{display:flex;gap:10px;margin-top:24px}
 .work-nav button{width:48px;height:48px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:17px;cursor:pointer;transition:.25s}
 .work-nav button:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
-.work{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/5;background:#111;cursor:pointer}
+.work{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:9/16;background:#111;cursor:pointer}
 .work img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1);filter:saturate(1.02)}
 .work:hover img{transform:scale(1.06)}
 .work .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 38%,rgba(0,0,0,.72));display:flex;flex-direction:column;justify-content:flex-end;padding:20px}
@@ -441,6 +441,24 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
 .work.playing video{opacity:1}
 .work.playing img{opacity:0}
 </style>
+<style id="porto-v2">
+/* Porto v2 — 9:16 drag, sound-on-play, 16:9 & 3:4 stills */
+.work-carousel{cursor:grab;-webkit-user-select:none;user-select:none}
+.work-carousel.dragging{cursor:grabbing;scroll-snap-type:none}
+.work-carousel.dragging .work{pointer-events:none}
+.work img,.work video{-webkit-user-drag:none}
+.work .play{opacity:.92;transform:none;font-size:13px}
+.work:hover .play{opacity:1;background:var(--mint,#37a291);border-color:var(--mint,#37a291);transform:scale(1.06)}
+.work.playing .play{background:var(--mint,#37a291);border-color:var(--mint,#37a291)}
+.land-sec .work-carousel .work{flex:0 0 clamp(320px,44vw,540px);aspect-ratio:16/9}
+.stills-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.stills-grid .sfoto{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:3/4;background:#111}
+.stills-grid .sfoto img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.stills-grid .sfoto:hover img{transform:scale(1.05)}
+.stills-grid .sfoto .ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(0,0,0,.6));display:flex;align-items:flex-end;padding:16px}
+.stills-grid .sfoto .t{color:#fff;font-size:15px;font-weight:600;letter-spacing:-.01em}
+@media(max-width:820px){.stills-grid{grid-template-columns:repeat(2,1fr)}.land-sec .work-carousel .work{flex:0 0 86vw}}
+</style>
 </head>
 <body>
 
@@ -551,7 +569,7 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
   <div class="wrap">
   <div class="work-head">
     <div class="eyebrow rv">02 — Selected Work</div>
-    <p class="rt rv d1">Hover to preview, click to watch in full. Every piece was written, directed and finished by the same small team.</p>
+    <p class="rt rv d1">Drag to browse, click to play with sound. Every piece was written, directed and finished by the same small team.</p>
   </div>
 
   <div class="work-tabs rv" id="workTabs">
@@ -576,9 +594,42 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
     <div class="work rv d2" data-c="ugc"><img src="https://hanoorastudio.com/web/video/ugc-kahf.jpg" alt=""><video src="https://hanoorastudio.com/web/video/ugc-kahf.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">UGC / Creator</div><div class="t">Talking-head conversion video</div><div class="m">Men&#x27;s Fragrance — 2026</div></div></div>
     <div class="work rv" data-c="ai"><img src="https://hanoorastudio.com/web/video/ai-influencer.jpg" alt=""><video src="https://hanoorastudio.com/web/video/ai-influencer.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">AI Talent</div><div class="t">A presenter that never sleeps</div><div class="m">AI Influencer — 2026</div></div></div>
     <div class="work rv d1" data-c="branding"><img src="https://hanoorastudio.com/web/video/personal-branding.jpg" alt=""><video src="https://hanoorastudio.com/web/video/personal-branding.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Brand Film</div><div class="t">Cinematic founder storytelling</div><div class="m">Personal Branding — 2026</div></div></div>
-    <div class="work rv d2" data-c="branding"><img src="https://hanoorastudio.com/web/img/foto-06.jpg" alt=""><div class="play">▶</div><div class="ov"><div class="cat">Identity</div><div class="t">Full visual system build</div><div class="m">Keshvara — 2025</div></div></div>
   </div>
   <div class="work-nav"><button id="wPrev" aria-label="Previous">←</button><button id="wNext" aria-label="Next">→</button></div>
+  </div>
+  </div>
+</section>
+
+<!-- LANDSCAPE 16:9 -->
+<section class="sec land-sec" id="landscape">
+  <div class="wrap">
+  <div class="work-head">
+    <div><div class="eyebrow rv">Showreel</div>
+    <p class="rt rv d1">Selected films in widescreen. Drag to browse, click to play with sound.</p></div>
+  </div>
+  <div class="work-rail">
+  <div class="work-carousel" id="landscapeGrid">
+    <div class="work rv" data-c="commercial"><img src="https://hanoorastudio.com/web/video/garmin.jpg" alt=""><video src="https://hanoorastudio.com/web/video/garmin.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Sports watch campaign</div><div class="m">Garmin — 2025</div></div></div>
+    <div class="work rv" data-c="commercial"><img src="https://hanoorastudio.com/web/video/vitalis.jpg" alt=""><video src="https://hanoorastudio.com/web/video/vitalis.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Red Majesty fragrance launch</div><div class="m">Vitalis — 2025</div></div></div>
+    <div class="work rv" data-c="commercial"><img src="https://hanoorastudio.com/web/video/corkcicle.jpg" alt=""><video src="https://hanoorastudio.com/web/video/corkcicle.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Cinematic Film</div><div class="t">Drinkware for an active life</div><div class="m">Corkcicle — 2025</div></div></div>
+  </div>
+  <div class="work-nav"><button id="lPrev" aria-label="Previous">←</button><button id="lNext" aria-label="Next">→</button></div>
+  </div>
+  </div>
+</section>
+
+<!-- STILLS 3:4 -->
+<section class="sec stills-sec" id="stills">
+  <div class="wrap">
+  <div class="work-head">
+    <div><div class="eyebrow rv">Stills</div>
+    <p class="rt rv d1">Frames and photography from recent productions.</p></div>
+  </div>
+  <div class="stills-grid" id="stillsGrid">
+    <div class="sfoto rv"><img src="https://hanoorastudio.com/web/img/foto-06.jpg" alt=""><div class="ov"><div class="t">Full visual system build</div></div></div>
+    <div class="sfoto rv"><img src="https://hanoorastudio.com/web/img/foto-01.jpg" alt=""><div class="ov"><div class="t">On-set direction</div></div></div>
+    <div class="sfoto rv"><img src="https://hanoorastudio.com/web/img/foto-02.jpg" alt=""><div class="ov"><div class="t">Lighting & mood</div></div></div>
+    <div class="sfoto rv"><img src="https://hanoorastudio.com/web/img/foto-03.jpg" alt=""><div class="ov"><div class="t">Product close-up</div></div></div>
   </div>
   </div>
 </section>
@@ -952,14 +1003,24 @@ document.querySelectorAll('#capDeck .cpanel').forEach(p=>{
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(setup);
 })();
 
-// works carousel arrows
+// carousels: drag-to-scroll + arrow buttons (workGrid & landscapeGrid)
 (function(){
-  const wc=document.getElementById('workGrid');
-  if(!wc)return;
-  const step=()=>Math.min(wc.clientWidth*0.85,700);
-  const prev=document.getElementById('wPrev'), next=document.getElementById('wNext');
-  prev&&prev.addEventListener('click',()=>wc.scrollBy({left:-step(),behavior:'smooth'}));
-  next&&next.addEventListener('click',()=>wc.scrollBy({left:step(),behavior:'smooth'}));
+  function dragScroll(rail){
+    if(!rail)return;
+    let down=false,moved=false,sx=0,sl=0,pid=null;
+    rail.addEventListener('pointerdown',e=>{ if(e.pointerType==='mouse'&&e.button!==0)return; down=true;moved=false;sx=e.clientX;sl=rail.scrollLeft;pid=e.pointerId; });
+    rail.addEventListener('pointermove',e=>{ if(!down)return; const dx=e.clientX-sx; if(!moved&&Math.abs(dx)>5){moved=true;rail.classList.add('dragging');try{rail.setPointerCapture(pid);}catch(_){}} if(moved)rail.scrollLeft=sl-dx; });
+    const end=()=>{ if(!down)return; down=false; rail.classList.remove('dragging'); };
+    rail.addEventListener('pointerup',end); rail.addEventListener('pointercancel',end); rail.addEventListener('pointerleave',end);
+    rail.addEventListener('click',e=>{ if(moved){e.preventDefault();e.stopPropagation();} },true);
+  }
+  function arrows(rail,prev,next){ if(!rail)return; const step=()=>Math.min(rail.clientWidth*0.85,700);
+    prev&&prev.addEventListener('click',()=>rail.scrollBy({left:-step(),behavior:'smooth'}));
+    next&&next.addEventListener('click',()=>rail.scrollBy({left:step(),behavior:'smooth'})); }
+  const wg=document.getElementById('workGrid'), lg=document.getElementById('landscapeGrid');
+  dragScroll(wg); dragScroll(lg);
+  arrows(wg,document.getElementById('wPrev'),document.getElementById('wNext'));
+  arrows(lg,document.getElementById('lPrev'),document.getElementById('lNext'));
 })();
 
 // experiences carousel arrows
@@ -981,15 +1042,14 @@ document.querySelectorAll('#capDeck .cpanel').forEach(p=>{
 (function(){
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});}
 
+  var CURRENT=null;
+  function stopVid(w){ if(!w)return; var v=w.querySelector('video'); w.classList.remove('playing'); if(v){ v.pause(); v.muted=true; } var p=w.querySelector('.play'); if(p)p.textContent='\u25B6'; if(CURRENT===w)CURRENT=null; }
+  function playVid(w){ var v=w.querySelector('video'); if(!v)return; if(CURRENT&&CURRENT!==w)stopVid(CURRENT); CURRENT=w; w.classList.add('playing'); v.muted=false; try{v.volume=1;}catch(e){} var pr=v.play(); if(pr&&pr.catch)pr.catch(function(){ v.muted=true; v.play().catch(function(){}); }); var p=w.querySelector('.play'); if(p)p.textContent='\u275A\u275A'; }
+  function toggleVid(w){ if(w.classList.contains('playing'))stopVid(w); else playVid(w); }
   function bindWork(){
-    document.querySelectorAll('#workGrid .work').forEach(function(w){
-      var v=w.querySelector('video'); if(!v||v.dataset.b) return; v.dataset.b='1';
-      w.addEventListener('mouseenter',function(){ w.classList.add('playing'); v.play().catch(function(){}); });
-      w.addEventListener('mouseleave',function(){ w.classList.remove('playing'); v.pause(); try{v.currentTime=0;}catch(e){} });
-      w.addEventListener('click',function(){
-        if(w.classList.contains('playing')){ w.classList.remove('playing'); v.pause(); }
-        else { w.classList.add('playing'); v.play().catch(function(){}); }
-      });
+    document.querySelectorAll('#workGrid .work, #landscapeGrid .work').forEach(function(w){
+      var v=w.querySelector('video'); if(!v||w.dataset.b) return; w.dataset.b='1';
+      w.addEventListener('click',function(){ if(w.parentElement&&w.parentElement.classList.contains('dragging'))return; toggleVid(w); });
     });
   }
   bindWork();
@@ -1009,6 +1069,19 @@ document.querySelectorAll('#capDeck .cpanel').forEach(p=>{
     var tab=document.querySelector('#workTabs button.on'); var f=tab?tab.dataset.f:'all';
     grid.querySelectorAll('.work').forEach(function(w){ var show=f==='all'||(w.dataset.c||'').indexOf(f)>=0; w.style.display=show?'':'none'; });
     bindWork();
+  }
+  function renderLandscape(items){
+    var g=document.getElementById('landscapeGrid'); if(!g) return;
+    g.innerHTML=items.map(workCard).join('');
+    bindWork();
+  }
+  function stillCard(s){
+    var t=s.title?('<div class="ov"><div class="t">'+esc(s.title)+'</div></div>'):'';
+    return '<div class="sfoto"><img src="'+esc(s.image||s.poster||'')+'" alt="">'+t+'</div>';
+  }
+  function renderStills(items){
+    var g=document.getElementById('stillsGrid'); if(!g) return;
+    g.innerHTML=items.map(stillCard).join('');
   }
 
   function renderPrices(tiers){
@@ -1045,6 +1118,8 @@ document.querySelectorAll('#capDeck .cpanel').forEach(p=>{
   fetch('/api/content',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(c){
     if(!c) return;
     if(Array.isArray(c.works)&&c.works.length) renderWorks(c.works);
+    if(Array.isArray(c.landscape)&&c.landscape.length) renderLandscape(c.landscape);
+    if(Array.isArray(c.stills)&&c.stills.length) renderStills(c.stills);
     if(c.prices&&Array.isArray(c.prices.tiers)&&c.prices.tiers.length) renderPrices(c.prices.tiers);
     if(c.contact) wireContact(c.contact);
   }).catch(function(){});

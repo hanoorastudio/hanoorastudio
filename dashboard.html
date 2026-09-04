@@ -170,9 +170,26 @@
 
         <!-- PORTO -->
         <section class="page" id="page-porto">
-          <div class="phead"><h2>Portofolio <span id="wCount" style="color:var(--faint);font-weight:500"></span></h2>
-            <button onclick="addWork()" class="btn btn-dark" style="padding:10px 16px">+ Tambah karya</button></div>
-          <div id="works" style="display:flex;flex-direction:column;gap:10px"></div>
+          <div class="phead"><h2>Portofolio</h2></div>
+          <div class="subtabs" style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+            <button class="btn subtab btn-dark" data-sub="works" onclick="subPorto('works')">Vertikal 9:16 <span id="wCount" class="mono" style="opacity:.7"></span></button>
+            <button class="btn subtab btn-ghost" data-sub="landscape" onclick="subPorto('landscape')">Landscape 16:9 <span id="lCount" class="mono" style="opacity:.7"></span></button>
+            <button class="btn subtab btn-ghost" data-sub="stills" onclick="subPorto('stills')">Foto 3:4 <span id="sCount" class="mono" style="opacity:.7"></span></button>
+          </div>
+          <div class="subpane" data-sub="works">
+            <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="addItem('works')" class="btn btn-dark" style="padding:9px 15px">+ Tambah video vertikal</button></div>
+            <div id="works" style="display:flex;flex-direction:column;gap:10px"></div>
+          </div>
+          <div class="subpane" data-sub="landscape" style="display:none">
+            <p style="color:var(--soft);font-size:13px;margin:-4px 0 12px">Video format lebar (16:9) untuk showreel di bawah portofolio vertikal.</p>
+            <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="addItem('landscape')" class="btn btn-dark" style="padding:9px 15px">+ Tambah video landscape</button></div>
+            <div id="lands" style="display:flex;flex-direction:column;gap:10px"></div>
+          </div>
+          <div class="subpane" data-sub="stills" style="display:none">
+            <p style="color:var(--soft);font-size:13px;margin:-4px 0 12px">Foto diam (rasio 3:4), tampil di grid paling bawah. Tanpa video.</p>
+            <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button onclick="addItem('stills')" class="btn btn-dark" style="padding:9px 15px">+ Tambah foto</button></div>
+            <div id="stills" style="display:flex;flex-direction:column;gap:10px"></div>
+          </div>
         </section>
 
         <!-- KONTAK -->
@@ -237,8 +254,19 @@ const DEFAULT_TIERS=[
   { name:'Signature', desc:'A full creative department, always on, always mid-project.', hot:true, custom:false, usdM:'$4,850', usdY:'$4,365', idrM:'Rp 86.000.000 / month', idrY:'Rp 77.400.000 / month', items:['Three active requests at a time','25–35 finished assets a month','24–48 hour turnaround','One cinematic brand film every month','Brand identity, packaging & art direction','A strategy sprint every quarter'] },
   { name:'Bespoke', desc:'The only tier with live production — plus bespoke volume, security and SLA.', hot:false, custom:true, usdM:'Let’s talk', usdY:'Let’s talk', idrM:'Scoped around the brief', idrY:'Scoped around the brief', items:['Unlimited active requests','A same-day priority lane','Live-action shoot days on request','A custom AI presenter, locked identity','A dedicated writer & editor pod','Contracts & SLAs written around you'] },
 ];
-const DEFAULT_WORKS=[{"cat": "commercial", "catLabel": "Cinematic Film", "title": "Sports watch campaign", "meta": "Garmin — 2025", "poster": "https://hanoorastudio.com/web/video/garmin.jpg", "video": "https://hanoorastudio.com/web/video/garmin.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Red Majesty fragrance launch", "meta": "Vitalis — 2025", "poster": "https://hanoorastudio.com/web/video/vitalis.jpg", "video": "https://hanoorastudio.com/web/video/vitalis.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Drinkware for an active life", "meta": "Corkcicle — 2025", "poster": "https://hanoorastudio.com/web/video/corkcicle.jpg", "video": "https://hanoorastudio.com/web/video/corkcicle.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Performance footwear campaign", "meta": "Ortuseight — 2025", "poster": "https://hanoorastudio.com/web/video/ortuseight.jpg", "video": "https://hanoorastudio.com/web/video/ortuseight.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Professional haircare series", "meta": "Takara — 2025", "poster": "https://hanoorastudio.com/web/video/takara.jpg", "video": "https://hanoorastudio.com/web/video/takara.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Men's body care, dark aesthetic", "meta": "FFAR — 2025", "poster": "https://hanoorastudio.com/web/video/ffar.jpg", "video": "https://hanoorastudio.com/web/video/ffar.mp4"}, {"cat": "social", "catLabel": "Social Film", "title": "Seasonal eyewear collection", "meta": "Keshvara — 2025", "poster": "https://hanoorastudio.com/web/video/keshvara.jpg", "video": "https://hanoorastudio.com/web/video/keshvara.mp4"}, {"cat": "social", "catLabel": "Social Film", "title": "First Kiss series", "meta": "Slavina — 2025", "poster": "https://hanoorastudio.com/web/video/slavina-firstkiss.jpg", "video": "https://hanoorastudio.com/web/video/slavina-firstkiss.mp4"}, {"cat": "ugc", "catLabel": "UGC / Creator", "title": "Talking-head conversion video", "meta": "Men's Fragrance — 2026", "poster": "https://hanoorastudio.com/web/video/ugc-kahf.jpg", "video": "https://hanoorastudio.com/web/video/ugc-kahf.mp4"}, {"cat": "ai", "catLabel": "AI Talent", "title": "A presenter that never sleeps", "meta": "AI Influencer — 2026", "poster": "https://hanoorastudio.com/web/video/ai-influencer.jpg", "video": "https://hanoorastudio.com/web/video/ai-influencer.mp4"}, {"cat": "branding", "catLabel": "Brand Film", "title": "Cinematic founder storytelling", "meta": "Personal Branding — 2026", "poster": "https://hanoorastudio.com/web/video/personal-branding.jpg", "video": "https://hanoorastudio.com/web/video/personal-branding.mp4"}, {"cat": "branding", "catLabel": "Identity", "title": "Full visual system build", "meta": "Keshvara — 2025", "poster": "https://hanoorastudio.com/web/img/foto-06.jpg", "video": ""}];
+const DEFAULT_WORKS=[{"cat": "commercial", "catLabel": "Cinematic Film", "title": "Sports watch campaign", "meta": "Garmin — 2025", "poster": "https://hanoorastudio.com/web/video/garmin.jpg", "video": "https://hanoorastudio.com/web/video/garmin.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Red Majesty fragrance launch", "meta": "Vitalis — 2025", "poster": "https://hanoorastudio.com/web/video/vitalis.jpg", "video": "https://hanoorastudio.com/web/video/vitalis.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Drinkware for an active life", "meta": "Corkcicle — 2025", "poster": "https://hanoorastudio.com/web/video/corkcicle.jpg", "video": "https://hanoorastudio.com/web/video/corkcicle.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Performance footwear campaign", "meta": "Ortuseight — 2025", "poster": "https://hanoorastudio.com/web/video/ortuseight.jpg", "video": "https://hanoorastudio.com/web/video/ortuseight.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Professional haircare series", "meta": "Takara — 2025", "poster": "https://hanoorastudio.com/web/video/takara.jpg", "video": "https://hanoorastudio.com/web/video/takara.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Men's body care, dark aesthetic", "meta": "FFAR — 2025", "poster": "https://hanoorastudio.com/web/video/ffar.jpg", "video": "https://hanoorastudio.com/web/video/ffar.mp4"}, {"cat": "social", "catLabel": "Social Film", "title": "Seasonal eyewear collection", "meta": "Keshvara — 2025", "poster": "https://hanoorastudio.com/web/video/keshvara.jpg", "video": "https://hanoorastudio.com/web/video/keshvara.mp4"}, {"cat": "social", "catLabel": "Social Film", "title": "First Kiss series", "meta": "Slavina — 2025", "poster": "https://hanoorastudio.com/web/video/slavina-firstkiss.jpg", "video": "https://hanoorastudio.com/web/video/slavina-firstkiss.mp4"}, {"cat": "ugc", "catLabel": "UGC / Creator", "title": "Talking-head conversion video", "meta": "Men's Fragrance — 2026", "poster": "https://hanoorastudio.com/web/video/ugc-kahf.jpg", "video": "https://hanoorastudio.com/web/video/ugc-kahf.mp4"}, {"cat": "ai", "catLabel": "AI Talent", "title": "A presenter that never sleeps", "meta": "AI Influencer — 2026", "poster": "https://hanoorastudio.com/web/video/ai-influencer.jpg", "video": "https://hanoorastudio.com/web/video/ai-influencer.mp4"}, {"cat": "branding", "catLabel": "Brand Film", "title": "Cinematic founder storytelling", "meta": "Personal Branding — 2026", "poster": "https://hanoorastudio.com/web/video/personal-branding.jpg", "video": "https://hanoorastudio.com/web/video/personal-branding.mp4"}];
 const CAT_OPTS=['commercial','social','ugc','ai','branding'];
+const DEFAULT_LAND=[
+  {cat:'commercial',catLabel:'Cinematic Film',title:'Sports watch campaign',meta:'Garmin — 2025',poster:'https://hanoorastudio.com/web/video/garmin.jpg',video:'https://hanoorastudio.com/web/video/garmin.mp4'},
+  {cat:'commercial',catLabel:'Cinematic Film',title:'Red Majesty fragrance launch',meta:'Vitalis — 2025',poster:'https://hanoorastudio.com/web/video/vitalis.jpg',video:'https://hanoorastudio.com/web/video/vitalis.mp4'},
+  {cat:'commercial',catLabel:'Cinematic Film',title:'Drinkware for an active life',meta:'Corkcicle — 2025',poster:'https://hanoorastudio.com/web/video/corkcicle.jpg',video:'https://hanoorastudio.com/web/video/corkcicle.mp4'}
+];
+const DEFAULT_STILLS=[
+  {title:'Full visual system build',image:'https://hanoorastudio.com/web/img/foto-06.jpg'},
+  {title:'On-set direction',image:'https://hanoorastudio.com/web/img/foto-01.jpg'},
+  {title:'Lighting & mood',image:'https://hanoorastudio.com/web/img/foto-02.jpg'},
+  {title:'Product close-up',image:'https://hanoorastudio.com/web/img/foto-03.jpg'}
+];
 
 /* ==================== STATE ==================== */
 let STATE=null, ME=null, dirty=false, USERS=[], LEAVES=[], PWREQS=[], ANALYTICS=null, PAGE='dashboard';
@@ -277,7 +305,7 @@ async function showApp(){
   $('whoName').textContent=ME.name||ME.username; $('whoAv').textContent=(ME.name||ME.username||'A').charAt(0).toUpperCase();
   const c=await fetch('/api/content',{cache:'no-store'}).then(r=>r.json()).catch(()=>({}));
   STATE=normalize(c);
-  renderContact(); renderTiers(); renderWorks(); loadLeaves(); loadAnalytics(7);
+  renderContact(); renderTiers(); renderPorto(); loadLeaves(); loadAnalytics(7);
   if(isAdmin){ loadUsers(); loadPwReqs(); }
   renderDashboard(); setDirty(false); nav('dashboard');
 }
@@ -285,9 +313,11 @@ function normalize(c){ c=c||{};
   const contact=Object.assign({},DEFAULT_CONTACT,c.contact||{});
   let tiers=(c.prices&&Array.isArray(c.prices.tiers)&&c.prices.tiers.length)?c.prices.tiers:DEFAULT_TIERS;
   tiers=tiers.map(t=>({name:t.name||'',desc:t.desc||'',hot:!!t.hot,custom:!!t.custom,usdM:t.usdM||'',usdY:t.usdY||'',idrM:t.idrM||'',idrY:t.idrY||'',items:Array.isArray(t.items)?t.items.slice():[]}));
-  let works=(Array.isArray(c.works)&&c.works.length)?c.works:DEFAULT_WORKS;
-  works=works.map(w=>({cat:w.cat||'commercial',catLabel:w.catLabel||'',title:w.title||'',meta:w.meta||'',poster:w.poster||'',video:w.video||''}));
-  return {contact,prices:{tiers},works};
+  const mapV=w=>({cat:w.cat||'commercial',catLabel:w.catLabel||'',title:w.title||'',meta:w.meta||'',poster:w.poster||'',video:w.video||''});
+  let works=(Array.isArray(c.works)&&c.works.length)?c.works:DEFAULT_WORKS; works=works.map(mapV);
+  let landscape=(Array.isArray(c.landscape)&&c.landscape.length)?c.landscape:DEFAULT_LAND; landscape=landscape.map(mapV);
+  let stills=(Array.isArray(c.stills)&&c.stills.length)?c.stills:DEFAULT_STILLS; stills=stills.map(s=>({title:s.title||'',image:s.image||s.poster||''}));
+  return {contact,prices:{tiers},works,landscape,stills};
 }
 
 /* ==================== DASHBOARD ==================== */
@@ -344,46 +374,81 @@ function renderTiers(){
     card.querySelectorAll('[data-tf]').forEach(inp=>inp.addEventListener('input',()=>{const f=inp.dataset.tf,t=STATE.prices.tiers[i];
       if(f==='hot'||f==='custom')t[f]=inp.checked; else if(f==='items')t.items=inp.value.split('\n').map(s=>s.trim()).filter(Boolean); else t[f]=inp.value; setDirty(true);}));});
 }
-/* ==================== PORTFOLIO ==================== */
-function renderWorks(){
-  $('wCount').textContent='('+STATE.works.length+')';
-  $('works').innerHTML=STATE.works.map((w,i)=>workRow(w,i)).join('');
-  $('works').querySelectorAll('[data-work]').forEach(row=>{const i=+row.dataset.work;
-    row.querySelectorAll('[data-wf]').forEach(inp=>inp.addEventListener('input',()=>{STATE.works[i][inp.dataset.wf]=inp.value;setDirty(true);
-      if(inp.dataset.wf==='title')row.querySelector('.wtitle').textContent=inp.value||'(tanpa judul)';}));});
+/* ==================== PORTOFOLIO (3 sub-bagian) ==================== */
+const PORTO={
+  works:{cont:'works',count:'wCount',kind:'video'},
+  landscape:{cont:'lands',count:'lCount',kind:'video'},
+  stills:{cont:'stills',count:'sCount',kind:'image'}
+};
+let SUB='works';
+function subPorto(k){ SUB=k;
+  document.querySelectorAll('.subtab').forEach(b=>{const on=b.dataset.sub===k;b.classList.toggle('btn-dark',on);b.classList.toggle('btn-ghost',!on);});
+  document.querySelectorAll('.subpane').forEach(p=>p.style.display=p.dataset.sub===k?'':'none');
 }
-function workRow(w,i){
-  return '<details class="card" data-work="'+i+'">'+
+function renderPorto(){ renderList('works'); renderList('landscape'); renderList('stills'); }
+function renderList(key){
+  const cfg=PORTO[key]; if(!Array.isArray(STATE[key]))STATE[key]=[];
+  const arr=STATE[key]; const cnt=$(cfg.count); if(cnt)cnt.textContent='('+arr.length+')';
+  const host=$(cfg.cont); if(!host)return;
+  host.innerHTML=arr.map((it,i)=>cfg.kind==='image'?stillRow(key,it,i):mediaRow(key,it,i)).join('');
+  host.querySelectorAll('[data-item]').forEach(row=>{const i=+row.dataset.item;
+    row.querySelectorAll('[data-f]').forEach(inp=>inp.addEventListener('input',()=>{STATE[key][i][inp.dataset.f]=inp.value;setDirty(true);
+      const tt=row.querySelector('.wtitle'); if(tt&&inp.dataset.f==='title')tt.textContent=inp.value||'(tanpa judul)';}));});
+}
+function mediaRow(key,w,i){
+  return '<details class="card" data-item="'+i+'">'+
     '<summary style="display:flex;align-items:center;gap:12px;padding:12px">'+
       '<div style="width:46px;height:56px;border-radius:8px;overflow:hidden;background:#eef1f4;flex:0 0 auto;border:1px solid var(--line)">'+(w.poster?'<img src="'+esc(w.poster)+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">':'')+'</div>'+
       '<div style="flex:1;min-width:0"><span class="wtitle" style="display:block;font-weight:600;font-size:15px">'+esc(w.title||'(tanpa judul)')+'</span>'+
-        '<span class="mono" style="display:block;font-size:11px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(w.cat)+(w.video?' · video ✓':' · poster')+'</span></div>'+
+        '<span class="mono" style="display:block;font-size:11px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(w.cat||'')+(w.video?' · video ✓':' · poster')+'</span></div>'+
       '<div style="display:flex;gap:4px;flex:0 0 auto" onclick="event.preventDefault();event.stopPropagation()">'+
-        '<button onclick="moveWork('+i+',-1)" class="btn btn-ghost" style="width:32px;height:32px;padding:0">↑</button>'+
-        '<button onclick="moveWork('+i+',1)" class="btn btn-ghost" style="width:32px;height:32px;padding:0">↓</button>'+
-        '<button onclick="delWork('+i+')" class="btn btn-danger" style="width:32px;height:32px;padding:0">✕</button></div>'+
+        '<button onclick="moveItem(\''+key+'\','+i+',-1)" class="btn btn-ghost" style="width:32px;height:32px;padding:0">↑</button>'+
+        '<button onclick="moveItem(\''+key+'\','+i+',1)" class="btn btn-ghost" style="width:32px;height:32px;padding:0">↓</button>'+
+        '<button onclick="delItem(\''+key+'\','+i+')" class="btn btn-danger" style="width:32px;height:32px;padding:0">✕</button></div>'+
       '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'+
     '</summary>'+
     '<div style="padding:4px 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
-      '<div style="grid-column:1/-1"><label class="lb">Judul</label><input class="fld" data-wf="title" value="'+esc(w.title)+'"></div>'+
-      '<div><label class="lb">Kategori</label><select class="fld" data-wf="cat">'+CAT_OPTS.map(o=>'<option '+(w.cat===o?'selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
-      '<div><label class="lb">Label kategori</label><input class="fld" data-wf="catLabel" value="'+esc(w.catLabel)+'"></div>'+
-      '<div style="grid-column:1/-1"><label class="lb">Meta (mis. Garmin — 2025)</label><input class="fld" data-wf="meta" value="'+esc(w.meta)+'"></div>'+
-      '<div><label class="lb">Video</label><div style="display:flex;gap:6px"><input class="fld" data-wf="video" value="'+esc(w.video)+'" placeholder="/media/video/…"><button onclick="pickUpload('+i+',\'video\')" class="btn btn-ghost" style="padding:0 12px;white-space:nowrap">Upload</button></div></div>'+
-      '<div><label class="lb">Poster</label><div style="display:flex;gap:6px"><input class="fld" data-wf="poster" value="'+esc(w.poster)+'" placeholder="/media/img/…"><button onclick="pickUpload('+i+',\'poster\')" class="btn btn-ghost" style="padding:0 12px;white-space:nowrap">Upload</button></div></div>'+
+      '<div style="grid-column:1/-1"><label class="lb">Judul</label><input class="fld" data-f="title" value="'+esc(w.title||'')+'"></div>'+
+      '<div><label class="lb">Kategori</label><select class="fld" data-f="cat">'+CAT_OPTS.map(o=>'<option '+(w.cat===o?'selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
+      '<div><label class="lb">Label kategori</label><input class="fld" data-f="catLabel" value="'+esc(w.catLabel||'')+'"></div>'+
+      '<div style="grid-column:1/-1"><label class="lb">Meta (mis. Garmin — 2025)</label><input class="fld" data-f="meta" value="'+esc(w.meta||'')+'"></div>'+
+      '<div><label class="lb">Video</label><div style="display:flex;gap:6px"><input class="fld" data-f="video" value="'+esc(w.video||'')+'" placeholder="/media/video/…"><button onclick="pickUpload(\''+key+'\','+i+',\'video\')" class="btn btn-ghost" style="padding:0 12px;white-space:nowrap">Upload</button></div></div>'+
+      '<div><label class="lb">Poster</label><div style="display:flex;gap:6px"><input class="fld" data-f="poster" value="'+esc(w.poster||'')+'" placeholder="/media/img/…"><button onclick="pickUpload(\''+key+'\','+i+',\'poster\')" class="btn btn-ghost" style="padding:0 12px;white-space:nowrap">Upload</button></div></div>'+
     '</div></details>';
 }
-function addWork(){STATE.works.unshift({cat:'commercial',catLabel:'',title:'',meta:'',poster:'',video:''});setDirty(true);renderWorks();renderDashboard();}
-function delWork(i){if(!confirm('Hapus karya ini?'))return;STATE.works.splice(i,1);setDirty(true);renderWorks();renderDashboard();}
-function moveWork(i,d){const j=i+d;if(j<0||j>=STATE.works.length)return;const a=STATE.works;[a[i],a[j]]=[a[j],a[i]];setDirty(true);renderWorks();}
-function pickUpload(i,which){
-  const inp=document.createElement('input');inp.type='file';inp.accept=which==='video'?'video/*':'image/*';
-  inp.onchange=async()=>{const f=inp.files[0];if(!f)return;toast('Mengunggah '+f.name+'…');
-    const fd=new FormData();fd.append('file',f);fd.append('folder',which==='video'?'video':'img');
-    const base=(STATE.works[i].title||STATE.works[i].meta||'file').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+function stillRow(key,s,i){
+  return '<details class="card" data-item="'+i+'">'+
+    '<summary style="display:flex;align-items:center;gap:12px;padding:12px">'+
+      '<div style="width:46px;height:56px;border-radius:8px;overflow:hidden;background:#eef1f4;flex:0 0 auto;border:1px solid var(--line)">'+(s.image?'<img src="'+esc(s.image)+'" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'">':'')+'</div>'+
+      '<div style="flex:1;min-width:0"><span class="wtitle" style="display:block;font-weight:600;font-size:15px">'+esc(s.title||'(tanpa judul)')+'</span>'+
+        '<span class="mono" style="display:block;font-size:11px;color:var(--faint)">'+(s.image?'foto ✓':'belum ada foto')+'</span></div>'+
+      '<div style="display:flex;gap:4px;flex:0 0 auto" onclick="event.preventDefault();event.stopPropagation()">'+
+        '<button onclick="moveItem(\''+key+'\','+i+',-1)" class="btn btn-ghost" style="width:32px;height:32px;padding:0">↑</button>'+
+        '<button onclick="moveItem(\''+key+'\','+i+',1)" class="btn btn-ghost" style="width:32px;height:32px;padding:0">↓</button>'+
+        '<button onclick="delItem(\''+key+'\','+i+')" class="btn btn-danger" style="width:32px;height:32px;padding:0">✕</button></div>'+
+      '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'+
+    '</summary>'+
+    '<div style="padding:4px 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
+      '<div style="grid-column:1/-1"><label class="lb">Judul / keterangan</label><input class="fld" data-f="title" value="'+esc(s.title||'')+'"></div>'+
+      '<div style="grid-column:1/-1"><label class="lb">Foto (rasio 3:4)</label><div style="display:flex;gap:6px"><input class="fld" data-f="image" value="'+esc(s.image||'')+'" placeholder="/media/img/…"><button onclick="pickUpload(\''+key+'\','+i+',\'image\')" class="btn btn-ghost" style="padding:0 12px;white-space:nowrap">Upload</button></div></div>'+
+    '</div></details>';
+}
+function addItem(key){ if(!Array.isArray(STATE[key]))STATE[key]=[]; const blank=key==='stills'?{title:'',image:''}:{cat:'commercial',catLabel:'',title:'',meta:'',poster:'',video:''}; STATE[key].unshift(blank); setDirty(true); subPorto(key); renderList(key); renderDashboard(); }
+function delItem(key,i){ if(!confirm('Hapus item ini?'))return; STATE[key].splice(i,1); setDirty(true); renderList(key); renderDashboard(); }
+function moveItem(key,i,d){ const a=STATE[key],j=i+d; if(j<0||j>=a.length)return; [a[i],a[j]]=[a[j],a[i]]; setDirty(true); renderList(key); }
+const MAX_MB=90;
+function pickUpload(key,i,which){
+  const inp=document.createElement('input'); inp.type='file'; inp.accept=(which==='video')?'video/*':'image/*';
+  inp.onchange=async()=>{ const f=inp.files[0]; if(!f)return;
+    if(f.size>MAX_MB*1024*1024){ toast('File terlalu besar ('+(f.size/1048576).toFixed(1)+' MB). Maksimum '+MAX_MB+' MB.'); return; }
+    toast('Mengunggah '+f.name+'…');
+    const it=STATE[key][i];
+    const fd=new FormData(); fd.append('file',f); fd.append('folder',which==='video'?'video':'img');
+    const base=(it.title||it.meta||'file').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
     const ext=(f.name.match(/\.[a-z0-9]+$/i)||[''])[0].toLowerCase(); fd.append('name',base+ext);
     const r=await fetch('/api/upload',{method:'POST',body:fd}).then(r=>r.json()).catch(()=>({ok:false,error:'Gagal.'}));
-    if(r.ok){STATE.works[i][which==='video'?'video':'poster']=r.url;setDirty(true);renderWorks();toast('Terunggah ✓');}else toast(r.error||'Gagal mengunggah');
+    if(r.ok){ const field=(which==='video')?'video':((which==='image')?'image':'poster'); STATE[key][i][field]=r.url; setDirty(true); renderList(key); toast('Terunggah ✓'); }
+    else toast(r.error||'Gagal mengunggah');
   }; inp.click();
 }
 /* ==================== ANALYTICS ==================== */
