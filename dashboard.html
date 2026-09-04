@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <!--
-  Hanoora Studio — Dashboard / CMS  (untuk situs live hanoorastudio.com)
-  Satu halaman: traffic + porto (poster+video, upload R2) + kontak + harga (USD+IDR).
-  Data lewat /api/* (Cloudflare Pages Functions). Login password.
-  URL: https://hanoorastudio.com/dashboard.html
+  Hanoora Studio — Dashboard / CMS + Tim
+  Login per-akun. Semua anggota bisa kelola situs (porto/kontak/harga) & ajukan izin/WFH.
+  Admin: panel Tim (kelola akun + lihat/ganti password), setujui permintaan ganti password.
+  Data lewat /api/* (Cloudflare Pages Functions). URL: /dashboard.html
 -->
 <html lang="id">
 <head>
@@ -14,7 +14,7 @@
 <link rel="icon" href="web/logo/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#fbfbfa;--bg2:#f1efea;--ink:#1a1a1a;--soft:rgba(26,26,26,.55);--faint:rgba(26,26,26,.4);--line:rgba(26,26,26,.13);--teal:#2a7a70;--mint:#37a291;--dark:#161817;}
+  :root{--bg:#fbfbfa;--bg2:#f1efea;--ink:#1a1a1a;--soft:rgba(26,26,26,.55);--faint:rgba(26,26,26,.4);--line:rgba(26,26,26,.13);--teal:#2a7a70;--mint:#37a291;}
   *{box-sizing:border-box}
   body{margin:0;font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
   .mono{font-family:'IBM Plex Mono',monospace}
@@ -22,7 +22,7 @@
   .fld:focus{outline:none;border-color:var(--teal)}
   textarea.fld{resize:vertical}
   .lb{display:block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);margin-bottom:.35rem}
-  .btn{border:none;border-radius:999px;font-weight:600;font-family:inherit;cursor:pointer;transition:transform .2s,background .2s,border-color .2s,filter .2s}
+  .btn{border:none;border-radius:999px;font-weight:600;font-family:inherit;cursor:pointer;transition:transform .2s,background .2s,border-color .2s,filter .2s;font-size:13px}
   .btn:hover{transform:translateY(-1px)}
   .btn-dark{background:var(--ink);color:#fff}
   .btn-teal{background:var(--teal);color:#fff}
@@ -33,7 +33,7 @@
   .btn-danger:hover{background:rgba(190,60,60,.08)}
   .card{background:#fff;border:1px solid var(--line);border-radius:16px}
   .bar{background:var(--teal);border-radius:4px 4px 0 0;min-height:2px}
-  .navlink{color:var(--soft);font-weight:500;font-size:14px;padding:.4rem .8rem;border-radius:999px;text-decoration:none}
+  .navlink{color:var(--soft);font-weight:500;font-size:14px;padding:.4rem .7rem;border-radius:999px;text-decoration:none;cursor:pointer}
   .navlink:hover{color:var(--ink);background:var(--bg2)}
   .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:.3s;z-index:90}
   .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -42,6 +42,9 @@
   .chev{transition:transform .25s}
   details[open] .chev{transform:rotate(180deg)}
   a{color:inherit}
+  .pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;padding:2px 8px;border-radius:999px}
+  .pill-admin{background:rgba(42,122,112,.12);color:var(--teal)}
+  .pill-member{background:var(--bg2);color:var(--soft)}
 </style>
 </head>
 <body>
@@ -51,8 +54,10 @@
   <div class="card" style="padding:32px;width:100%;max-width:380px">
     <img src="web/logo/logo.png" alt="Hanoora" style="height:26px;margin-bottom:22px">
     <h1 style="font-size:22px;margin:0 0 4px">Dashboard</h1>
-    <p style="color:var(--soft);font-size:14px;margin:0 0 22px">Masuk untuk mengelola situs.</p>
+    <p style="color:var(--soft);font-size:14px;margin:0 0 22px">Masuk dengan akunmu.</p>
     <form id="loginForm">
+      <label class="lb">Username</label>
+      <input id="lu" class="fld" autocomplete="username" required style="margin-bottom:14px">
       <label class="lb">Password</label>
       <input id="pw" type="password" class="fld" autocomplete="current-password" required>
       <button class="btn btn-dark" style="width:100%;padding:12px;margin-top:18px;font-size:14px">Masuk</button>
@@ -64,20 +69,23 @@
 <!-- APP -->
 <div id="app" style="display:none">
   <header style="position:sticky;top:0;z-index:40;background:rgba(251,251,250,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)">
-    <div style="max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div style="max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <img src="web/logo/logo.png" alt="Hanoora" style="height:24px">
-      <nav style="display:flex;gap:2px" class="hidesk">
-        <a href="#traffic" class="navlink">Traffic</a>
-        <a href="#porto" class="navlink">Portofolio</a>
-        <a href="#kontak" class="navlink">Kontak</a>
-        <a href="#harga" class="navlink">Harga</a>
+      <nav id="nav" style="display:flex;gap:2px;flex-wrap:wrap" class="hidesk">
+        <a class="navlink" onclick="go('traffic')">Traffic</a>
+        <a class="navlink" onclick="go('porto')">Portofolio</a>
+        <a class="navlink" onclick="go('kontak')">Kontak</a>
+        <a class="navlink" onclick="go('harga')">Harga</a>
+        <a class="navlink" onclick="go('izin')">Izin/WFH</a>
+        <a class="navlink adminonly" onclick="go('tim')" style="display:none">Tim</a>
       </nav>
       <div style="margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-        <span id="dirty" class="mono" style="display:none;font-size:11px;color:var(--teal);font-weight:600;text-transform:uppercase;letter-spacing:.1em">belum disimpan</span>
-        <a href="/" target="_blank" class="btn btn-ghost" style="padding:8px 14px;font-size:13px;text-decoration:none">Lihat situs</a>
-        <button onclick="downloadBackup()" class="btn btn-ghost" style="padding:8px 14px;font-size:13px">Backup</button>
-        <button onclick="save()" id="saveBtn" class="btn btn-teal" style="padding:8px 18px;font-size:13px">Simpan</button>
-        <button onclick="logout()" class="btn btn-ghost" style="padding:8px 14px;font-size:13px">Keluar</button>
+        <span id="who" class="mono" style="font-size:11px;color:var(--soft)"></span>
+        <span id="dirty" class="mono" style="display:none;font-size:11px;color:var(--teal);font-weight:600;text-transform:uppercase">belum disimpan</span>
+        <a href="/" target="_blank" class="btn btn-ghost" style="padding:8px 12px;text-decoration:none">Lihat situs</a>
+        <button onclick="myChangePw()" class="btn btn-ghost" style="padding:8px 12px">Ganti password</button>
+        <button onclick="save()" id="saveBtn" class="btn btn-teal" style="padding:8px 16px">Simpan</button>
+        <button onclick="logout()" class="btn btn-ghost" style="padding:8px 12px">Keluar</button>
       </div>
     </div>
   </header>
@@ -88,8 +96,8 @@
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <h2 style="font-size:19px;margin:0">Traffic</h2>
         <div style="display:flex;gap:6px">
-          <button onclick="loadAnalytics(7)"  data-range="7"  class="rbtn btn btn-ghost" style="padding:6px 12px;font-size:13px">7 hari</button>
-          <button onclick="loadAnalytics(30)" data-range="30" class="rbtn btn btn-ghost" style="padding:6px 12px;font-size:13px">30 hari</button>
+          <button onclick="loadAnalytics(7)"  data-range="7"  class="rbtn btn btn-ghost" style="padding:6px 12px">7 hari</button>
+          <button onclick="loadAnalytics(30)" data-range="30" class="rbtn btn btn-ghost" style="padding:6px 12px">30 hari</button>
         </div>
       </div>
       <div id="anWrap" class="card" style="padding:24px"><p style="color:var(--soft);font-size:14px;margin:0">Memuat…</p></div>
@@ -98,7 +106,7 @@
     <section id="porto" style="scroll-margin-top:80px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <h2 style="font-size:19px;margin:0">Portofolio <span id="wCount" style="color:var(--faint);font-weight:400"></span></h2>
-        <button onclick="addWork()" class="btn btn-dark" style="padding:8px 16px;font-size:13px">+ Tambah karya</button>
+        <button onclick="addWork()" class="btn btn-dark" style="padding:8px 16px">+ Tambah karya</button>
       </div>
       <div id="works" style="display:flex;flex-direction:column;gap:10px"></div>
     </section>
@@ -113,6 +121,35 @@
       <h2 style="font-size:19px;margin:0 0 16px">Harga (retainer)</h2>
       <div id="tiers" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px"></div>
     </section>
+
+    <!-- IZIN / WFH -->
+    <section id="izin" style="scroll-margin-top:80px">
+      <h2 style="font-size:19px;margin:0 0 16px">Izin / WFH</h2>
+      <div class="card" style="padding:24px;margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:150px 1fr 1fr;gap:12px;align-items:end">
+          <div><label class="lb">Jenis</label><select id="lvType" class="fld"><option value="izin">Izin</option><option value="wfh">WFH</option></select></div>
+          <div><label class="lb">Dari tanggal</label><input id="lvFrom" type="date" class="fld"></div>
+          <div><label class="lb">Sampai tanggal</label><input id="lvTo" type="date" class="fld"></div>
+        </div>
+        <div style="margin-top:12px"><label class="lb">Alasan / catatan</label><input id="lvReason" class="fld" placeholder="mis. acara keluarga"></div>
+        <button onclick="submitLeave()" class="btn btn-teal" style="padding:9px 18px;margin-top:14px">Ajukan</button>
+      </div>
+      <div id="leaveList" style="display:flex;flex-direction:column;gap:8px"></div>
+    </section>
+
+    <!-- TIM (admin) -->
+    <section id="tim" class="adminonly" style="scroll-margin-top:80px;display:none">
+      <h2 style="font-size:19px;margin:0 0 16px">Tim</h2>
+
+      <div id="pwReqWrap" style="margin-bottom:20px"></div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h3 style="font-size:15px;margin:0">Akun tim</h3>
+        <button onclick="addUser()" class="btn btn-dark" style="padding:8px 16px">+ Tambah akun</button>
+      </div>
+      <div id="userList" style="display:flex;flex-direction:column;gap:10px"></div>
+    </section>
+
     <div style="height:20px"></div>
   </main>
 </div>
@@ -121,7 +158,7 @@
 
 <script>
 /* ============================================================
-   DEFAULT (dipakai saat KV kosong) — cerminan situs live
+   DEFAULT konten (dipakai saat KV kosong)
    ============================================================ */
 const DEFAULT_CONTACT = { email:'hello@hanoorastudio.com', whatsapp:'', instagram:'', tiktok:'', linkedin:'', behance:'', youtube:'' };
 const DEFAULT_TIERS = [
@@ -136,33 +173,39 @@ const DEFAULT_TIERS = [
     items:['Unlimited active requests','A same-day priority lane','Live-action shoot days on request','A custom AI presenter, locked identity','A dedicated writer & editor pod','Contracts & SLAs written around you'] },
 ];
 const DEFAULT_WORKS = [{"cat": "commercial", "catLabel": "Cinematic Film", "title": "Sports watch campaign", "meta": "Garmin — 2025", "poster": "https://hanoorastudio.com/web/video/garmin.jpg", "video": "https://hanoorastudio.com/web/video/garmin.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Red Majesty fragrance launch", "meta": "Vitalis — 2025", "poster": "https://hanoorastudio.com/web/video/vitalis.jpg", "video": "https://hanoorastudio.com/web/video/vitalis.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Drinkware for an active life", "meta": "Corkcicle — 2025", "poster": "https://hanoorastudio.com/web/video/corkcicle.jpg", "video": "https://hanoorastudio.com/web/video/corkcicle.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Performance footwear campaign", "meta": "Ortuseight — 2025", "poster": "https://hanoorastudio.com/web/video/ortuseight.jpg", "video": "https://hanoorastudio.com/web/video/ortuseight.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Professional haircare series", "meta": "Takara — 2025", "poster": "https://hanoorastudio.com/web/video/takara.jpg", "video": "https://hanoorastudio.com/web/video/takara.mp4"}, {"cat": "commercial", "catLabel": "Cinematic Film", "title": "Men's body care, dark aesthetic", "meta": "FFAR — 2025", "poster": "https://hanoorastudio.com/web/video/ffar.jpg", "video": "https://hanoorastudio.com/web/video/ffar.mp4"}, {"cat": "social", "catLabel": "Social Film", "title": "Seasonal eyewear collection", "meta": "Keshvara — 2025", "poster": "https://hanoorastudio.com/web/video/keshvara.jpg", "video": "https://hanoorastudio.com/web/video/keshvara.mp4"}, {"cat": "social", "catLabel": "Social Film", "title": "First Kiss series", "meta": "Slavina — 2025", "poster": "https://hanoorastudio.com/web/video/slavina-firstkiss.jpg", "video": "https://hanoorastudio.com/web/video/slavina-firstkiss.mp4"}, {"cat": "ugc", "catLabel": "UGC / Creator", "title": "Talking-head conversion video", "meta": "Men's Fragrance — 2026", "poster": "https://hanoorastudio.com/web/video/ugc-kahf.jpg", "video": "https://hanoorastudio.com/web/video/ugc-kahf.mp4"}, {"cat": "ai", "catLabel": "AI Talent", "title": "A presenter that never sleeps", "meta": "AI Influencer — 2026", "poster": "https://hanoorastudio.com/web/video/ai-influencer.jpg", "video": "https://hanoorastudio.com/web/video/ai-influencer.mp4"}, {"cat": "branding", "catLabel": "Brand Film", "title": "Cinematic founder storytelling", "meta": "Personal Branding — 2026", "poster": "https://hanoorastudio.com/web/video/personal-branding.jpg", "video": "https://hanoorastudio.com/web/video/personal-branding.mp4"}, {"cat": "branding", "catLabel": "Identity", "title": "Full visual system build", "meta": "Keshvara — 2025", "poster": "https://hanoorastudio.com/web/img/foto-06.jpg", "video": ""}];
-const CAT_OPTS = ['commercial','social','ugc','ads','branding'];
+const CAT_OPTS = ['commercial','social','ugc','ai','branding'];
 
 /* ============================================================
    STATE
    ============================================================ */
-let STATE=null, dirty=false;
+let STATE=null, ME=null, dirty=false;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-let toastT; function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2600);}
+let toastT; function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2800);}
 function setDirty(v){dirty=v;$('dirty').style.display=v?'inline':'none';}
+function go(id){const el=$(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
 
 async function boot(){
   const me=await fetch('/api/me').then(r=>r.json()).catch(()=>({ok:false}));
-  if(me.ok) showApp(); else $('login').style.display='grid';
+  if(me.ok){ ME=me.user; showApp(); } else $('login').style.display='grid';
 }
 $('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();
-  const r=await fetch('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({password:$('pw').value})}).then(r=>r.json()).catch(()=>({ok:false,error:'Gagal terhubung.'}));
-  if(r.ok) location.reload(); else {const e2=$('loginErr');e2.textContent=r.error||'Password salah.';e2.style.display='block';}
+  const r=await fetch('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({username:$('lu').value,password:$('pw').value})}).then(r=>r.json()).catch(()=>({ok:false,error:'Gagal terhubung.'}));
+  if(r.ok) location.reload(); else {const e2=$('loginErr');e2.textContent=r.error||'Gagal masuk.';e2.style.display='block';}
 });
 async function logout(){await fetch('/api/logout',{method:'POST'});location.reload();}
 
 async function showApp(){
   $('login').style.display='none'; $('app').style.display='block';
+  const isAdmin=ME.role==='admin';
+  document.querySelectorAll('.adminonly').forEach(el=>el.style.display=isAdmin?(el.tagName==='SECTION'?'block':''):'none');
+  $('who').textContent='@'+ME.username+' · '+(isAdmin?'admin':'member');
   const c=await fetch('/api/content',{cache:'no-store'}).then(r=>r.json()).catch(()=>({}));
   STATE=normalize(c);
-  renderContact(); renderTiers(); renderWorks(); loadAnalytics(7); setDirty(false);
+  renderContact(); renderTiers(); renderWorks(); loadAnalytics(7); loadLeaves();
+  if(isAdmin){ loadUsers(); loadPwReqs(); }
+  setDirty(false);
 }
 function normalize(c){
   c=c||{};
@@ -174,21 +217,21 @@ function normalize(c){
   return {contact,prices:{tiers},works};
 }
 
-/* CONTACT */
+/* ---------- CONTACT ---------- */
 const CONTACT_FIELDS=[['email','Email'],['whatsapp','WhatsApp (nomor, mis. 62857…)'],['instagram','Instagram URL'],['tiktok','TikTok URL'],['linkedin','LinkedIn URL'],['behance','Behance URL'],['youtube','YouTube URL']];
 function renderContact(){
   $('contactGrid').innerHTML=CONTACT_FIELDS.map(([k,l])=>'<div><label class="lb">'+esc(l)+'</label><input class="fld" data-contact="'+k+'" value="'+esc(STATE.contact[k]||'')+'"></div>').join('');
   $('contactGrid').querySelectorAll('[data-contact]').forEach(i=>i.addEventListener('input',e=>{STATE.contact[e.target.dataset.contact]=e.target.value;setDirty(true);}));
 }
 
-/* PRICING */
+/* ---------- PRICING ---------- */
 function renderTiers(){
   $('tiers').innerHTML=STATE.prices.tiers.map((t,i)=>
     '<div class="card" style="padding:20px" data-tier="'+i+'">'+
       '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><input class="fld" style="font-weight:600" data-tf="name" value="'+esc(t.name)+'">'+
       '<label style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--soft);white-space:nowrap"><input type="checkbox" data-tf="hot" '+(t.hot?'checked':'')+'>populer</label></div>'+
       '<label class="lb">Tagline</label><textarea class="fld" rows="2" data-tf="desc" style="margin-bottom:12px">'+esc(t.desc)+'</textarea>'+
-      '<label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--soft);margin-bottom:12px"><input type="checkbox" data-tf="custom" '+(t.custom?'checked':'')+'>harga custom (mis. “Let’s talk”)</label>'+
+      '<label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--soft);margin-bottom:12px"><input type="checkbox" data-tf="custom" '+(t.custom?'checked':'')+'>harga custom</label>'+
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
         '<div><label class="lb">USD / bln</label><input class="fld" data-tf="usdM" value="'+esc(t.usdM)+'"></div>'+
         '<div><label class="lb">USD / thn</label><input class="fld" data-tf="usdY" value="'+esc(t.usdY)+'"></div>'+
@@ -202,7 +245,7 @@ function renderTiers(){
       if(f==='hot'||f==='custom')t[f]=inp.checked; else if(f==='items')t.items=inp.value.split('\n').map(s=>s.trim()).filter(Boolean); else t[f]=inp.value; setDirty(true);}));});
 }
 
-/* PORTFOLIO */
+/* ---------- PORTFOLIO ---------- */
 function renderWorks(){
   $('wCount').textContent='('+STATE.works.length+')';
   $('works').innerHTML=STATE.works.map((w,i)=>workRow(w,i)).join('');
@@ -226,17 +269,16 @@ function workRow(w,i){
     '<div style="padding:4px 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px">'+
       '<div style="grid-column:1/-1"><label class="lb">Judul</label><input class="fld" data-wf="title" value="'+esc(w.title)+'"></div>'+
       '<div><label class="lb">Kategori</label><select class="fld" data-wf="cat">'+CAT_OPTS.map(o=>'<option '+(w.cat===o?'selected':'')+'>'+o+'</option>').join('')+'</select></div>'+
-      '<div><label class="lb">Label kategori (mis. Cinematic Film)</label><input class="fld" data-wf="catLabel" value="'+esc(w.catLabel)+'"></div>'+
+      '<div><label class="lb">Label kategori</label><input class="fld" data-wf="catLabel" value="'+esc(w.catLabel)+'"></div>'+
       '<div style="grid-column:1/-1"><label class="lb">Meta (mis. Garmin — 2025)</label><input class="fld" data-wf="meta" value="'+esc(w.meta)+'"></div>'+
-      '<div><label class="lb">Video</label><div style="display:flex;gap:6px"><input class="fld" data-wf="video" value="'+esc(w.video)+'" placeholder="/media/video/…"><button onclick="pickUpload('+i+',\'video\')" class="btn btn-ghost" style="padding:0 12px;font-size:12px;white-space:nowrap">Upload</button></div></div>'+
-      '<div><label class="lb">Poster</label><div style="display:flex;gap:6px"><input class="fld" data-wf="poster" value="'+esc(w.poster)+'" placeholder="/media/img/…"><button onclick="pickUpload('+i+',\'poster\')" class="btn btn-ghost" style="padding:0 12px;font-size:12px;white-space:nowrap">Upload</button></div></div>'+
+      '<div><label class="lb">Video</label><div style="display:flex;gap:6px"><input class="fld" data-wf="video" value="'+esc(w.video)+'" placeholder="/media/video/…"><button onclick="pickUpload('+i+',\'video\')" class="btn btn-ghost" style="padding:0 12px;white-space:nowrap">Upload</button></div></div>'+
+      '<div><label class="lb">Poster</label><div style="display:flex;gap:6px"><input class="fld" data-wf="poster" value="'+esc(w.poster)+'" placeholder="/media/img/…"><button onclick="pickUpload('+i+',\'poster\')" class="btn btn-ghost" style="padding:0 12px;white-space:nowrap">Upload</button></div></div>'+
     '</div>'+
   '</details>';
 }
 function addWork(){STATE.works.unshift({cat:'commercial',catLabel:'',title:'',meta:'',poster:'',video:''});setDirty(true);renderWorks();}
 function delWork(i){if(!confirm('Hapus karya ini?'))return;STATE.works.splice(i,1);setDirty(true);renderWorks();}
 function moveWork(i,d){const j=i+d;if(j<0||j>=STATE.works.length)return;const a=STATE.works;[a[i],a[j]]=[a[j],a[i]];setDirty(true);renderWorks();}
-
 function pickUpload(i,which){
   const inp=document.createElement('input');inp.type='file';inp.accept=which==='video'?'video/*':'image/*';
   inp.onchange=async()=>{const f=inp.files[0];if(!f)return;toast('Mengunggah '+f.name+'…');
@@ -250,13 +292,13 @@ function pickUpload(i,which){
   inp.click();
 }
 
-/* ANALYTICS */
+/* ---------- ANALYTICS ---------- */
 async function loadAnalytics(range){
   document.querySelectorAll('.rbtn').forEach(b=>{const on=+b.dataset.range===range;b.classList.toggle('btn-dark',on);b.classList.toggle('btn-ghost',!on);});
   $('anWrap').innerHTML='<p style="color:var(--soft);font-size:14px;margin:0">Memuat…</p>';
   const a=await fetch('/api/analytics?range='+range).then(r=>r.json()).catch(()=>({ok:false}));
   if(!a.ok){$('anWrap').innerHTML='<p style="color:#b23;font-size:14px;margin:0">Gagal memuat analytics.</p>';return;}
-  if(a.enabled===false){$('anWrap').innerHTML='<div style="font-size:14px;color:var(--soft)"><p style="font-weight:600;color:var(--ink);margin:0 0 4px">Analytics belum aktif.</p><p style="margin:0">Atur <span class="mono">CF_API_TOKEN</span> + <span class="mono">CF_ZONE_TAG</span> di setup untuk melihat traffic di sini (opsional). Sementara itu tetap bisa dilihat di dashboard Cloudflare.</p></div>';return;}
+  if(a.enabled===false){$('anWrap').innerHTML='<div style="font-size:14px;color:var(--soft)"><p style="font-weight:600;color:var(--ink);margin:0 0 4px">Analytics belum aktif.</p><p style="margin:0">Atur <span class="mono">CF_API_TOKEN</span> + <span class="mono">CF_ZONE_TAG</span> untuk melihat traffic di sini (opsional).</p></div>';return;}
   if(a.error){$('anWrap').innerHTML='<p style="color:#b23;font-size:14px;margin:0">Cloudflare: '+esc(a.error)+'</p>';return;}
   const max=Math.max(1,...a.series.map(s=>s.pageViews));
   const bars=a.series.map(s=>'<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1"><div style="width:100%;display:flex;align-items:flex-end;height:120px"><div class="bar" style="width:100%;height:'+Math.round(s.pageViews/max*120)+'px" title="'+s.date+': '+s.pageViews+'"></div></div><span class="mono" style="font-size:9px;color:var(--faint)">'+s.date.slice(5)+'</span></div>').join('');
@@ -266,19 +308,124 @@ async function loadAnalytics(range){
     '<div style="display:grid;grid-template-columns:1fr 260px;gap:24px"><div><div style="display:flex;align-items:flex-end;gap:4px">'+bars+'</div></div><div><div class="lb" style="margin-bottom:8px">Negara teratas</div>'+co+'</div></div>';
 }
 
-/* SAVE / BACKUP */
+/* ---------- IZIN / WFH ---------- */
+function dayCount(from,to){ if(!from)return 0; const a=new Date(from), b=new Date(to||from); if(isNaN(a)||isNaN(b))return 1; return Math.max(1,Math.round((b-a)/86400000)+1); }
+async function submitLeave(){
+  const from=$('lvFrom').value, to=$('lvTo').value||from, type=$('lvType').value, reason=$('lvReason').value;
+  if(!from){toast('Isi tanggal mulai dulu.');return;}
+  const days=dayCount(from,to);
+  const r=await fetch('/api/leaves',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({type,from,to,reason})}).then(r=>r.json()).catch(()=>({ok:false,error:'Gagal.'}));
+  if(r.ok){ $('lvReason').value=''; loadLeaves(); toast('Pengajuan tercatat ✓');
+    if(days>1) setTimeout(()=>alert('Izin lebih dari 1 Hari jangan lupa chat HR ya!'),150);
+  } else toast(r.error||'Gagal mengajukan');
+}
+async function loadLeaves(){
+  const r=await fetch('/api/leaves').then(r=>r.json()).catch(()=>({ok:false,leaves:[]}));
+  const list=r.leaves||[];
+  $('leaveList').innerHTML = list.length? list.map(l=>{
+    const days=dayCount(l.from,l.to);
+    return '<div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">'+
+      '<span class="pill '+(l.type==='wfh'?'pill-member':'pill-admin')+'">'+(l.type==='wfh'?'WFH':'IZIN')+'</span>'+
+      '<span style="font-weight:600;font-size:14px">'+esc(l.from)+(l.to&&l.to!==l.from?' → '+esc(l.to):'')+'</span>'+
+      '<span class="mono" style="font-size:11px;color:var(--faint)">'+days+' hari</span>'+
+      (ME.role==='admin'?'<span class="mono" style="font-size:11px;color:var(--teal)">@'+esc(l.username)+'</span>':'')+
+      (l.reason?'<span style="font-size:13px;color:var(--soft)">— '+esc(l.reason)+'</span>':'')+
+    '</div>';
+  }).join('') : '<p style="color:var(--faint);font-size:13px">Belum ada pengajuan.</p>';
+}
+
+/* ---------- GANTI PASSWORD (self) ---------- */
+async function myChangePw(){
+  const np=prompt('Password baru:');
+  if(np===null) return;
+  if(np.length<4){toast('Minimal 4 karakter.');return;}
+  if(ME.role==='admin'){
+    const r=await fetch('/api/users',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'save',user:{username:ME.username,password:np,role:'admin',name:ME.name}})}).then(r=>r.json()).catch(()=>({ok:false}));
+    toast(r.ok?'Password admin diperbarui ✓':(r.error||'Gagal'));
+  } else {
+    const r=await fetch('/api/pwrequest',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({newPassword:np})}).then(r=>r.json()).catch(()=>({ok:false}));
+    toast(r.ok?'Permintaan dikirim — menunggu persetujuan admin.':(r.error||'Gagal'));
+  }
+}
+
+/* ---------- TIM: permintaan ganti password ---------- */
+async function loadPwReqs(){
+  const r=await fetch('/api/pwreqs').then(r=>r.json()).catch(()=>({ok:false,requests:[]}));
+  const reqs=r.requests||[];
+  if(!reqs.length){ $('pwReqWrap').innerHTML=''; return; }
+  $('pwReqWrap').innerHTML='<h3 style="font-size:15px;margin:0 0 10px">Permintaan ganti password ('+reqs.length+')</h3>'+
+    reqs.map(q=>'<div class="card" style="padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">'+
+      '<span class="mono" style="font-weight:600">@'+esc(q.username)+'</span>'+
+      '<span style="font-size:13px;color:var(--soft)">minta password baru: <b style="color:var(--ink)">'+esc(q.newPassword)+'</b></span>'+
+      '<div style="margin-left:auto;display:flex;gap:6px">'+
+        '<button onclick="decidePw(\''+q.id+'\',\'approve\')" class="btn btn-teal" style="padding:6px 14px">Setujui</button>'+
+        '<button onclick="decidePw(\''+q.id+'\',\'reject\')" class="btn btn-danger" style="padding:6px 14px">Tolak</button>'+
+      '</div></div>').join('');
+}
+async function decidePw(id,action){
+  const r=await fetch('/api/pwreqs',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id,action})}).then(r=>r.json()).catch(()=>({ok:false}));
+  if(r.ok){toast(action==='approve'?'Disetujui ✓':'Ditolak');loadPwReqs();loadUsers();}else toast(r.error||'Gagal');
+}
+
+/* ---------- TIM: akun ---------- */
+let USERS=[];
+async function loadUsers(){
+  const r=await fetch('/api/users').then(r=>r.json()).catch(()=>({ok:false,users:[]}));
+  USERS=r.users||[]; renderUsers();
+}
+function renderUsers(){
+  $('userList').innerHTML=USERS.map((u,i)=>userRow(u,i)).join('');
+}
+function userRow(u,i){
+  const isNew=u.__new;
+  return '<div class="card" style="padding:14px 16px" data-u="'+i+'">'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 130px auto;gap:10px;align-items:end">'+
+      '<div><label class="lb">Nama</label><input class="fld" data-uf="name" value="'+esc(u.name||'')+'"></div>'+
+      '<div><label class="lb">Username</label><input class="fld" data-uf="username" value="'+esc(u.username||'')+'" '+(isNew?'':'readonly style="background:var(--bg2)"')+'></div>'+
+      '<div><label class="lb">Password</label><input class="fld" data-uf="password" value="'+esc(u.password||'')+'"></div>'+
+      '<div><label class="lb">Role</label><select class="fld" data-uf="role"><option value="member" '+(u.role!=='admin'?'selected':'')+'>member</option><option value="admin" '+(u.role==='admin'?'selected':'')+'>admin</option></select></div>'+
+      '<div style="display:flex;gap:6px">'+
+        '<button onclick="saveUser('+i+')" class="btn btn-teal" style="padding:9px 14px">Simpan</button>'+
+        (isNew?'':'<button onclick="delUser('+i+')" class="btn btn-danger" style="padding:9px 12px">Hapus</button>')+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+function addUser(){ USERS.unshift({name:'',username:'',password:'',role:'member',__new:true}); renderUsers(); }
+function gatherUser(i){ const row=document.querySelector('[data-u="'+i+'"]'); const o={}; row.querySelectorAll('[data-uf]').forEach(inp=>o[inp.dataset.uf]=inp.value); return o; }
+async function saveUser(i){
+  const u=gatherUser(i);
+  if(!u.username){toast('Username wajib diisi.');return;}
+  const r=await fetch('/api/users',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'save',user:u})}).then(r=>r.json()).catch(()=>({ok:false}));
+  if(r.ok){toast('Akun disimpan ✓');loadUsers();}else toast(r.error||'Gagal');
+}
+async function delUser(i){
+  const u=USERS[i]; if(!confirm('Hapus akun @'+u.username+'?'))return;
+  const r=await fetch('/api/users',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'delete',username:u.username})}).then(r=>r.json()).catch(()=>({ok:false}));
+  if(r.ok){toast('Akun dihapus');loadUsers();}else toast(r.error||'Gagal');
+}
+
+/* ---------- SAVE / BACKUP konten ---------- */
 async function save(){
   $('saveBtn').textContent='Menyimpan…';
   const r=await fetch('/api/save',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(STATE)}).then(r=>r.json()).catch(()=>({ok:false,error:'Gagal terhubung.'}));
   $('saveBtn').textContent='Simpan';
   if(r.ok){setDirty(false);toast('Tersimpan & tayang ✓');}else toast(r.error||'Gagal menyimpan');
 }
-function downloadBackup(){window.open('/api/backup','_blank');}
 addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 
-/* responsive nav hide */
-const mq=matchMedia('(max-width:760px)');function mqf(){document.querySelectorAll('.hidesk').forEach(n=>n.style.display=mq.matches?'none':'flex');}mq.addEventListener('change',mqf);mqf();
-const gridMq=matchMedia('(max-width:760px)');function gf(){$('tiers')&&($('tiers').style.gridTemplateColumns=gridMq.matches?'1fr':'1fr 1fr 1fr');const cg=$('contactGrid');cg&&(cg.style.gridTemplateColumns=gridMq.matches?'1fr':'1fr 1fr');}gridMq.addEventListener('change',gf);setTimeout(gf,50);
+/* ---------- responsive ---------- */
+const mq=matchMedia('(max-width:820px)');
+function mqf(){ document.querySelectorAll('.hidesk').forEach(n=>n.style.display=mq.matches?'none':'flex');
+  const g=mq.matches?'1fr':'1fr 1fr 1fr'; if($('tiers'))$('tiers').style.gridTemplateColumns=g;
+  if($('contactGrid'))$('contactGrid').style.gridTemplateColumns=mq.matches?'1fr':'1fr 1fr'; }
+mq.addEventListener('change',mqf); setTimeout(mqf,40);
+
+/* ---------- auto-logout 10 menit idle ---------- */
+const IDLE_MS=10*60*1000; let idleT;
+function resetIdle(){ clearTimeout(idleT); idleT=setTimeout(()=>{ toast('Sesi berakhir karena tidak ada aktivitas'); setTimeout(logout,900); }, IDLE_MS); }
+['click','keydown','mousemove','touchstart','scroll','input'].forEach(ev=>addEventListener(ev,resetIdle,{passive:true}));
+resetIdle();
 
 boot();
 </script>
