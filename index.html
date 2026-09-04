@@ -486,7 +486,7 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
       <a href="#faq">FAQ</a>
     </nav>
     <div class="nav-cta">
-      <a href="#contact" class="btn"><span class="ic">↗</span><span class="lbl">Book a call</span></a>
+      <a href="https://wa.me/6285759971420" target="_blank" rel="noopener" id="talkBtn" class="btn"><span class="ic">↗</span><span class="lbl">Talk to us</span></a>
     </div>
     <div class="burger" id="burger"><span></span><span></span><span></span></div>
   </div>
@@ -608,7 +608,7 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
     <div class="work rv d1" data-c="branding"><img src="https://hanoorastudio.com/web/video/personal-branding.jpg" alt=""><video src="https://hanoorastudio.com/web/video/personal-branding.mp4" muted loop playsinline preload="metadata"></video><div class="play">▶</div><div class="ov"><div class="cat">Brand Film</div><div class="t">Cinematic founder storytelling</div><div class="m">Personal Branding — 2026</div></div></div>
   </div>
   <div class="work-nav"><button id="wPrev" aria-label="Previous">←</button><button id="wNext" aria-label="Next">→</button></div>
-  <div class="work-more-wrap"><button id="workMore" class="work-more">View More <span>↓</span></button></div>
+  <div class="work-more-wrap"><button id="workMore" class="work-more">Lihat selengkapnya <span>↓</span></button></div>
   </div>
   </div>
 </section>
@@ -1039,7 +1039,7 @@ document.querySelectorAll('#capDeck .cpanel').forEach(p=>{
   if(moreBtn){ moreBtn.addEventListener('click',function(){
     var on=moreBtn.getAttribute('data-open')!=='1'; moreBtn.setAttribute('data-open',on?'1':'0');
     document.querySelectorAll('.more-sec').forEach(function(s){ s.classList.toggle('on',on); if(on)s.querySelectorAll('.rv').forEach(function(e){e.classList.add('in');}); });
-    moreBtn.innerHTML=on?'View less <span>\u2191</span>':'Lihat selengkapnya <span>\u2193</span>';
+    moreBtn.innerHTML=on?'Tampilkan lebih sedikit <span>\u2191</span>':'Lihat selengkapnya <span>\u2193</span>';
   }); }
 })();
 
@@ -1125,6 +1125,8 @@ document.querySelectorAll('#capDeck .cpanel').forEach(p=>{
 
   function wireContact(ct){
     if(ct.email){ document.querySelectorAll('a[href^="mailto:"]').forEach(function(a){ a.href='mailto:'+ct.email; }); }
+    var wa=(ct.whatsapp||'').trim();
+    if(wa){ var num=wa.replace(/[^0-9]/g,''); var href=/^https?:/i.test(wa)?wa:(num?('https://wa.me/'+num):''); var tb=document.getElementById('talkBtn'); if(href&&tb){ tb.href=href; tb.target='_blank'; tb.rel='noopener'; } }
     var map={instagram:ct.instagram,behance:ct.behance,linkedin:ct.linkedin,youtube:ct.youtube,tiktok:ct.tiktok};
     document.querySelectorAll('footer .foot-col').forEach(function(col){
       var h=col.querySelector('h4'); if(!h||h.textContent.trim().toLowerCase()!=='follow') return;
