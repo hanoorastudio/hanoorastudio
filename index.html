@@ -463,9 +463,8 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
 .land-sec{padding-top:clamp(24px,3.4vw,44px)!important;padding-bottom:clamp(30px,4vw,50px)!important}
 .stills-sec{padding-top:clamp(24px,3.4vw,44px)!important}
 .work-more:hover{background:var(--ink,#0e1a1c);color:#fff}
-.work-sec.expanded .work-carousel{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));overflow:visible;scroll-snap-type:none;cursor:default}
-.work-sec.expanded .work-carousel .work{flex:none}
-.work-sec.expanded #wPrev,.work-sec.expanded #wNext{display:none}
+.more-sec{display:none}
+.more-sec.on{display:block}
 .deck-cta{display:flex;justify-content:center;margin-top:40px}
 .btn-deck{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono,monospace);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:16px 30px;border-radius:999px;background:var(--ink,#0e1a1c);color:#fff;transition:.25s}
 .btn-deck:hover{background:var(--teal,#2a7a70)}
@@ -615,7 +614,7 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
 </section>
 
 <!-- LANDSCAPE 16:9 -->
-<section class="sec land-sec" id="landscape">
+<section class="sec land-sec more-sec" id="landscape">
   <div class="wrap">
   <div class="work-head">
     <div><div class="eyebrow rv">Showreel</div>
@@ -633,7 +632,7 @@ footer::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-
 </section>
 
 <!-- STILLS 3:4 -->
-<section class="sec stills-sec" id="stills">
+<section class="sec stills-sec more-sec" id="stills">
   <div class="wrap">
   <div class="work-head">
     <div><div class="eyebrow rv">Stills</div>
@@ -1036,8 +1035,12 @@ document.querySelectorAll('#capDeck .cpanel').forEach(p=>{
   dragScroll(wg); dragScroll(lg);
   arrows(wg,document.getElementById('wPrev'),document.getElementById('wNext'));
   arrows(lg,document.getElementById('lPrev'),document.getElementById('lNext'));
-  var wsec=document.getElementById('work'), moreBtn=document.getElementById('workMore');
-  if(wsec&&moreBtn){ moreBtn.addEventListener('click',function(){ var ex=wsec.classList.toggle('expanded'); moreBtn.innerHTML=ex?'Tampilkan lebih sedikit <span>\u2191</span>':'Lihat selengkapnya <span>\u2193</span>'; }); }
+  var moreBtn=document.getElementById('workMore');
+  if(moreBtn){ moreBtn.addEventListener('click',function(){
+    var on=moreBtn.getAttribute('data-open')!=='1'; moreBtn.setAttribute('data-open',on?'1':'0');
+    document.querySelectorAll('.more-sec').forEach(function(s){ s.classList.toggle('on',on); if(on)s.querySelectorAll('.rv').forEach(function(e){e.classList.add('in');}); });
+    moreBtn.innerHTML=on?'Tampilkan lebih sedikit <span>\u2191</span>':'Lihat selengkapnya <span>\u2193</span>';
+  }); }
 })();
 
 // experiences carousel arrows
