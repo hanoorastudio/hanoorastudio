@@ -66,7 +66,7 @@ Diambil langsung dari logo. Kalau warnanya diubah, logonya ikut diganti juga.
 
 Tipografi: **Instrument Serif** untuk judul, **Inter** untuk sisanya.
 
-## Catatan teknis
+## Catatan teknis ##
 
 - Situs berbahasa Inggris saja. `data/works.js` masih menyimpan teks `{en,id}`;
   halaman hanya membaca `.en` lewat helper `tr()`. Format `works.js` jangan
